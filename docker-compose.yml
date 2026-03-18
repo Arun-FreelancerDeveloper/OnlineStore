@@ -1,0 +1,75 @@
+version: '3.9'
+
+services:
+
+  # 🔹 PostgreSQL Database
+  db:
+    image: postgres:15
+    container_name: ebook-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ebook_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # 🔹 pgAdmin (Optional - DB UI)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: ebook-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
+  # 🔹 Backend API (Node.js)
+  api:
+    build:
+      context: ./ebook-api
+      dockerfile: Dockerfile
+    container_name: ebook-api
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      DB_URL: postgres://postgres:postgres@db:5432/ebook_db
+      JWT_SECRET: mysecretkey
+    depends_on:
+      - db
+    volumes:
+      - ./ebook-api:/app
+      - /app/node_modules
+
+  # 🔹 Angular Client
+  client:
+    build:
+      context: ./ebook-clientportal
+      dockerfile: Dockerfile
+    container_name: ebook-client
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+
+  # 🔹 Angular Admin
+  admin:
+    build:
+      context: ./ebook-adminportal
+      dockerfile: Dockerfile
+    container_name: ebook-admin
+    ports:
+      - "4201:80"
+    depends_on:
+      - api
+
+# 🔹 Volume for PostgreSQL
+volumes:
+  pgdata:
