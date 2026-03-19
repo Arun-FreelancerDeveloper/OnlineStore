@@ -12,10 +12,18 @@ AuthRoutes = require('../modules/auth/auth.routes');
 UserRoutes = require('../modules/user/user.routes');
 CategoryGroupRoutes = require('../modules/categorygroup/categorygroup.routes');
 CategoryRoutes = require('../modules/category/category.routes');
+ProductRoutes = require('../modules/products/product.routes');
+CartRoutes = require('../modules/carts/cart.routes');
+ShippingRoutes = require('../modules/shipping/shipping.routes');
+OrderRoutes = require('../modules/orders/order.routes');
 
 /* Use Module Routes */
 router.use('/auth', AuthRoutes);
 router.use('/user', UserRoutes);
 router.use('/categorygroup', CategoryGroupRoutes);
 router.use('/category', CategoryRoutes);
+router.use('/product', ProductRoutes);
+router.use('/cart', CartRoutes);
+router.use('/shipping', ShippingRoutes);
+router.use('/order', OrderRoutes);
 module.exports = router;
