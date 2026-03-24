@@ -1,0 +1,109 @@
+{
+  "app": {
+    "name": "JAYS App",
+    "version": "1.0.0",
+    "environment": "development",
+    "debug": true
+  },
+  "api": {
+    "baseUrl": "http://localhost:3001/api",
+    "imageUrl": "http://localhost:3001",
+    "timeout": 10000,
+    "retryAttempts": 3,
+    "defaultImage": "/core/assets/images/bg/1-general-books.png"
+  },
+  "company": {
+    "name": "JAYS Limited",
+    "tagline": "Quality stationery with a customer-first approach",
+    "branding": {
+      "logo": {
+        "url": "assets/images/logo/logo-png5.png",
+        "alt": "JAYS Limited Logo"
+      },
+      "favicon": "assets/images/logo/favicon.ico",
+      "themeColor": "#0d6efd"
+    },
+    "address": {
+      "line": "42 Kennedy Avenue",
+      "city": "Roseau",
+      "country": "Dominica",
+      "postalCode": "",
+      "full": "42 Kennedy Avenue, Roseau, Dominica"
+    },
+    "contact": {
+      "primaryPhone": "+17674484024",
+      "displayPhone": "+1 (767) 448-4024",
+      "email": "manager@jaysltd.net"
+    },
+    "support": {
+      "email": "support@jaysltd.net",
+      "phone": "tel:+17674484024",
+      "displayPhone": "+1 (767) 448-4024",
+      "workingHours": "Mon-Fri 9:00 AM - 5:00 PM"
+    },
+    "socialMedia": [
+      {
+        "key": "facebook",
+        "url": "https://www.facebook.com/JaysLimited",
+        "icon": "ph-fill ph-facebook-logo",
+        "toolTip": "Facebook",
+        "enabled": true
+      },
+      {
+        "key": "instagram",
+        "url": "https://www.instagram.com/JaysLimited",
+        "icon": "ph-fill ph-instagram-logo",
+        "toolTip": "Instagram",
+        "enabled": true
+      }
+    ]
+  },
+  "insights": {
+    "recommendation_Percentage": 20,
+    "bestSeller_MinSold": 100,
+    "hotDeal_DiscountPercentage": 20,
+    "newArrival_MaxSold": 10
+  },
+  "currency": {
+    "base": "INR",
+    "default": "XCD",
+    "defaultCountry": "DM",
+    "autoDetect": true,
+    "apis": {
+      "exchange": "https://open.er-api.com/v6/latest/",
+      "geo": "https://ipapi.co/json/"
+    },
+    "countryMap": {
+      "DM": "XCD",
+      "IN": "INR",
+      "US": "USD",
+      "GB": "GBP",
+      "FR": "EUR",
+      "DE": "EUR"
+    },
+    "format": {
+      "showSymbol": true,
+      "decimalPlaces": 2
+    }
+  },
+  "features": {
+    "enableCurrencyAutoDetect": true,
+    "enableSocialMedia": true,
+    "enableLogging": true,
+    "enableDebugTools": true
+  },
+  "logging": {
+    "level": "info",
+    "enableRemoteLogging": false
+  },
+  "security": {
+    "enableCSP": true,
+    "allowedDomains": [
+      "http://localhost:3001"
+    ]
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 300000
+  }
+}

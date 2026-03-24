@@ -1,0 +1,70 @@
+<div class="banner">
+  <div class="container container-lg">
+    <div class="banner-item rounded-24 overflow-hidden position-relative arrow-center">
+
+      <!-- Scroll Button -->
+      <a *ngIf="items.length"
+         [routerLink]="items.length ? (items[items.length - 1].link || '/') : '/'"
+         class="scroll-down w-84 h-84 text-center flex-center bg-main-600 rounded-circle border border-5 text-white border-white position-absolute start-50 translate-middle-x bottom-0 hover-bg-main-800">
+        <span class="icon line-height-0">
+          <i class="ph ph-caret-double-down"></i>
+        </span>
+      </a>
+
+      <!-- Content -->
+      <div class="banner-slider">
+        <div class="banner-slider__item">
+          <div class="banner-slider__inner flex-between position-relative">
+
+            <!-- LEFT CONTENT -->
+            <div class="banner-item__content">
+
+              <!-- Subtitle -->
+              <span *ngIf="subtitle"
+                    class="fw-semibold text-success-600 mb-8">
+                {{ subtitle }}
+              </span>
+
+              <!-- Title -->
+              <h2 class="banner-item__title max-w-700 mb-30"
+                  [innerHTML]="title">
+              </h2>
+
+              <!-- Breadcrumb -->
+              <div class="d-flex align-items-center gap-8 flex-wrap">
+
+                <ng-container *ngFor="let item of items; let last = last">
+
+                  <!-- Link -->
+                  <a *ngIf="!last && item.link"
+                     [routerLink]="item.link"
+                     class="text-main-600">
+                    {{ item.label }}
+                  </a>
+
+                  <!-- Last item (no link) -->
+                  <span *ngIf="last" class="text-heading fw-semibold">
+                    {{ item.label }}
+                  </span>
+
+                  <!-- Separator -->
+                  <span *ngIf="!last">/</span>
+
+                </ng-container>
+
+              </div>
+
+            </div>
+
+            <!-- RIGHT IMAGE -->
+            <div class="banner-item__thumb">
+              <img src="assets/images/icon/slider-4.png" alt="Banner Image" />
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

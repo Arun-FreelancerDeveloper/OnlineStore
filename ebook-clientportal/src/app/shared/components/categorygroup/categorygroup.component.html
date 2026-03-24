@@ -1,0 +1,51 @@
+<div class="feature" id="featureSection">
+  <div class="container container-lg">
+    <div class="position-relative arrow-center gradient-shadow">
+
+      <div class="flex-align">
+        <button type="button" id="feature-item-wrapper-prev"
+          class="slick-prev slick-arrow flex-center rounded-circle bg-white text-xl hover-bg-main-600 hover-text-white transition-1">
+          <i class="ph ph-caret-left"></i>
+        </button>
+
+        <button type="button" id="feature-item-wrapper-next"
+          class="slick-next slick-arrow flex-center rounded-circle bg-white text-xl hover-bg-main-600 hover-text-white transition-1">
+          <i class="ph ph-caret-right"></i>
+        </button>
+      </div>
+
+      <ngx-slick-carousel class="feature-item-wrapper"
+        #slickModal="slick-carousel"
+        [config]="CategoryGroupSlideConfig">
+
+        <div ngxSlickItem
+          *ngFor="let item of lstCategoryGroups; trackBy: trackByGroup"
+          class="feature-item text-center">
+
+          <div class="feature-item__thumb rounded-circle">
+            <a (click)="loadCategoriesByGroupID(item.groupid, item.groupname)"
+              class="w-100 h-100 flex-center">
+
+              <img
+                [src]="item.imagepath"
+                [alt]="item.groupname">
+            </a>
+          </div>
+
+          <div class="feature-item__content mt-16">
+            <h6 class="text-lg mb-8">
+              <a
+                (click)="loadCategoriesByGroupID(item.groupid, item.groupname)"
+                class="text-inherit">
+                {{ item.groupname }}
+              </a>
+            </h6>
+          </div>
+
+        </div>
+
+      </ngx-slick-carousel>
+
+    </div>
+  </div>
+</div>

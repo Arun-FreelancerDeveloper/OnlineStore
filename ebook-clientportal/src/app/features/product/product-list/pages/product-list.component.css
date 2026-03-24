@@ -1,0 +1,15 @@
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #ddd;
+    border-top: 4px solid #1c799b;
+    border-radius: 50%;
+    animation: _ngcontent-ng-c3885213510_spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

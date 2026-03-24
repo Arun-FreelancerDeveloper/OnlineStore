@@ -1,0 +1,56 @@
+
+<div data-aos="fade-up" data-aos-duration="200" class="aos-init aos-animate">
+  <div class="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
+    <a class="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative" [routerLink]="['/Products', product.productid]">
+      <img alt="" class="w-auto max-w-unset"
+          [src]="product.productimage"
+          [alt]="product.productname" />
+      <span *ngIf="getTag() === 'best seller'" class="bg-primary-600 inset-block-start-0 inset-inline-start-0 position-absolute product-card__badge px-8 py-4 text-sm text-white"> Best Sale </span>
+      <span *ngIf="getTag() === 'recommended'" class="bg-primary-600 inset-block-start-0 inset-inline-start-0 position-absolute product-card__badge px-8 py-4 text-sm text-white"> Recommended </span>
+      <span *ngIf="getTag() === 'hot deal'" class="bg-danger-600 inset-block-start-0 inset-inline-start-0 position-absolute product-card__badge px-8 py-4 text-sm text-white"> Sale {{ getDiscountPercentage() }}% </span>
+      <span *ngIf="getTag() === 'new arrival'" class="bg-warning-600 inset-block-start-0 inset-inline-start-0 position-absolute product-card__badge px-8 py-4 text-sm text-white"> New </span>
+    </a>
+    <div class="product-card__content mt-16" style="width: 100%;">
+        <h6 class="title text-sm fw-semibold mt-12 mb-8">
+          <a tabindex="0" class="link text-line-2" [routerLink]="['/Products', product.productid]">
+          {{ product.productname }}
+          </a>
+        </h6>
+        <div *ngIf="product.total_stars"  class="flex-align mb-20 mt-16 gap-6">
+          <span class="text-xs fw-medium text-gray-500">
+            {{
+              product.total_stars || '0'
+            }}
+          </span>
+          <span class="text-xs fw-medium text-warning-600 d-flex">
+          <i class="ph-fill ph-star"></i>
+          </span>
+        </div>
+        <div class="mt-8">
+          <div role="progressbar" aria-valuemin="0" aria-valuemax="100" class="progress w-100 bg-color-three rounded-pill h-4">
+              <div class="progress-bar bg-main-two-600 rounded-pill" [style.width.%]="(product.total_sold || 0) / (product.total_stock ? product.total_stock : ((product.total_sold || 0) + 1)) * 100">
+              </div>
+          </div>
+          <span class="text-gray-900 text-xs fw-medium mt-8">
+            <!-- If total_stock is available, display it; otherwise, calculate it Reson for +1 is Needed more then sold -->
+            <!-- Sold: {{ product.total_sold }} / {{ product.total_stock ? product.total_stock : ((product.total_sold || 0 ) + 1) }} -->
+            Sold: {{ (product.total_sold || 0) > 0 ? product.total_sold : 1 }}
+          </span>
+        </div>
+        <div class="product-card__price my-20">
+          <span class="text-gray-400 text-md fw-semibold text-decoration-line-through">{{ dealPrice }}</span>
+          &nbsp;<span class="text-heading text-md fw-semibold">{{ mrpPrice }}
+          <!-- <span class="text-gray-500 fw-normal">/Qty</span> -->
+          </span>
+        </div>
+        <!-- ADD TO CART -->
+        <button (click)="addToCart(product.productid)"
+          class="product-card__cart btn bg-main-50 text-main-600 hover-bg-main-600 hover-text-white py-11 px-24 rounded-pill flex-align gap-8 mt-24 w-100 justify-content-center">
+          Add To Cart
+          <i class="ph ph-shopping-cart"></i>
+        </button>
+        <!-- <a tabindex="0" class="product-card__cart btn bg-gray-50 text-heading hover-bg-main-600 hover-text-white py-11 px-24 rounded-8 flex-center gap-8 fw-medium" href="/shop/cart"> Add To Cart <i class="ph ph-shopping-cart"></i>
+        </a> -->
+    </div>
+  </div>
+</div>

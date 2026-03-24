@@ -60,8 +60,7 @@ exports.createCategoryGroup = async (data) => {
  * @returns {Promise<Object>}
  */
 exports.getAllCategoryGroups = async (page = 1, pageSize = 10, findWhat = '') => {
-  const offset = (page - 1) * pageSize;
-
+  const offset = (page - 1) * pageSize; 
   // Base queries
   let dataQuery = `
     SELECT
@@ -98,7 +97,6 @@ exports.getAllCategoryGroups = async (page = 1, pageSize = 10, findWhat = '') =>
     ORDER BY g.groupname
     LIMIT $${params.length + 1} OFFSET $${params.length + 2};
   `;
-
   params.push(pageSize, offset);
 
   // Execute queries
@@ -107,6 +105,8 @@ exports.getAllCategoryGroups = async (page = 1, pageSize = 10, findWhat = '') =>
 
   const totalRecords = parseInt(countResult.rows[0].total);
   const totalPages = Math.ceil(totalRecords / pageSize);
+
+
 
   return {
     currentPage: page,

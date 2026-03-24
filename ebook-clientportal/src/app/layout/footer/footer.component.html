@@ -1,0 +1,96 @@
+<footer class="footer py-120 footercolor">
+  <div class="container container-lg">
+    <div class="footer-item-wrapper d-flex align-items-start flex-wrap">
+
+      <!-- Logo & About -->
+      <div class="footer-item">
+        <div class="max-w-340">
+          <div class="footer-item__logo">
+            <a [routerLink]="['/home']">
+              <img [src]="company?.branding?.logo?.url" [alt]="company?.branding?.logo?.alt">
+            </a>
+          </div>
+
+          <p class="mb-28 text-heading">
+            {{ company?.tagline }}
+          </p>
+
+          <div class="d-flex flex-column gap-8">
+            <p class="text-heading fw-medium">
+              <i class="ph-fill ph-map-pin"></i>
+              {{ company?.address.full }}
+            </p>
+
+            <a [href]="'mailto:' + company.contact.email"
+               class="text-heading fw-medium hover-text-main-600">
+              <i class="ph-fill ph-envelope"></i>
+              {{ company?.contact.email }}
+            </a>
+
+            <a [href]="'tel:' + company.contact.phone"
+               class="text-heading fw-medium hover-text-main-600">
+              <i class="ph-fill ph-phone-call"></i>
+              {{ company?.contact.displayPhone }}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dynamic Sections -->
+      <div *ngFor="let section of footerSections" class="footer-item">
+        <h6 class="footer-item__title">{{ section.title }}</h6>
+
+        <ul class="footer-menu">
+          <li *ngFor="let link of section.links; let last = last"
+              [class.mb-16]="!last">
+            <a [routerLink]="link.route"
+               class="text-heading hover-text-main-600">
+              {{ link.label }}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Shopping Info -->
+      <div class="footer-item">
+        <h6>Easy Shopping</h6>
+        <p class="mb-16">Shop your favorite stationery items anytime.</p>
+
+        <div class="my-32">
+          <div class="mt-24">
+            <img src="assets/images/thumbs/method.png" alt="Payment Methods">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+<!-- Bottom Footer -->
+<div class="bottom-footer py-8">
+  <div class="container container-lg">
+    <div class="bottom-footer__inner flex-between flex-wrap gap-16 py-16 border-top border-neutral-50">
+
+      <p class="bottom-footer__text text-heading fw-medium">
+    {{currentYear}} {{ company.name }}. All rights reserved.
+      </p>
+
+      <div class="flex-align gap-8 flex-wrap">
+        <ul class="flex-align gap-16">
+
+          <li *ngFor="let socialMedia of company?.socialMedia">
+            <a *ngIf="socialMedia.enabled" [href]="socialMedia.url"
+               target="_blank"
+               [title]="socialMedia.toolTip"
+               class="w-44 h-44 flex-center bg-white shadow-sm text-main-600 text-xl rounded-circle hover-bg-main-600 hover-text-white">
+              <i [class]="socialMedia.icon"></i>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>

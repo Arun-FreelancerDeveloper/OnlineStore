@@ -1,0 +1,54 @@
+<!-- ========================= Breadcrumb Start =============================== -->
+<app-breadcrumb title = "Sign-In"></app-breadcrumb>
+<!-- ========================= Breadcrumb End =============================== -->
+
+<!-- =============================== Account Section Start =========================== -->
+<section class="account py-80">
+    <div class="container container-lg">
+
+            <div class="row gy-4">
+
+                <!-- Login Card Start -->
+                <div class="col-xl-4 pe-xl-2"></div>
+                <div class="col-xl-4 pe-xl-5">
+                   <form (ngSubmit)="login()" #loginForm="ngForm">
+
+                      <div class="mb-24">
+                          <label class="text-neutral-900 text-lg mb-8 fw-medium">
+                          Email <span class="text-danger">*</span>
+                          </label>
+                          <input
+                          type="text"
+                          class="common-input"
+                          name="email"
+                          [(ngModel)]="loginData.email"
+                          required
+                          placeholder="Email">
+                      </div>
+
+                      <div class="mb-24">
+                          <label class="text-neutral-900 text-lg mb-8 fw-medium">Password <span class="text-danger">*</span></label>
+
+                          <input
+                          type="password"
+                          class="common-input"
+                          name="password"
+                          [(ngModel)]="loginData.password"
+                          required
+                          placeholder="Enter Password">
+                      </div>
+
+                      <button type="submit" class="btn btn-main py-18 px-40" [disabled]="isLoading">
+                        {{ isLoading ? 'Verification ...' : 'Sign-In' }}
+                      </button>
+
+                    </form>
+
+                </div>
+                 <div class="col-xl-4 pe-xl-2"></div>
+                <!-- Login Card End -->
+            </div>
+    </div>
+</section>
+<!-- =============================== Account Section End =========================== -->
+
