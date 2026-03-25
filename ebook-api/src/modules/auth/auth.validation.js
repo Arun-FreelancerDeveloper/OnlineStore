@@ -22,3 +22,8 @@ exports.validateLogin = (req, res, next) => {
 exports.changePasswordSchema = Joi.object({
   newPassword: Joi.string().min(6).required()
 });
+
+
+exports.forgotPasswordSchema = Joi.object({
+ email: Joi.string().email().required(),
+});

@@ -49,10 +49,10 @@ const { validateBody, validateQuery, validateParams, createUserSchema, getUsersS
  *                 example: 123456
  *               userType:
  *                 type: string
- *                 example: Customer
+ *                 example: User
  *               vendorNumber:
  *                 type: string
- *                 example: 123456
+ *                 example: 00000
  *     responses:
  *       200:
  *         description: User created successfully

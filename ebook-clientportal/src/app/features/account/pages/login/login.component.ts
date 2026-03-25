@@ -4,7 +4,7 @@
 import { Component } from '@angular/core';
 import { BreadcrumbComponent } from "../../../../shared/components/breadcrumb/breadcrumb.component";
 import { AuthStorageService } from '../../../../core/services/auth-storage/auth-storage.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AlertService } from '../../../../shared/services/alert/alert.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { LoginModel } from '../../models/login.model';
@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [BreadcrumbComponent, CommonModule, FormsModule],
+  imports: [BreadcrumbComponent, CommonModule, FormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

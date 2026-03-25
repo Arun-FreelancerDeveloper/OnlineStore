@@ -95,11 +95,7 @@ export class CartFacadeService {
    * LOAD CART COUNT (ON APP START)
    * ===================================================== */
   loadCartCount(): void {
-
-    console.log('USER:', this.user); // 👈 check this
-
     if (!this.user) return;
-
     this.cartService.loadCartCount(this.user.userid).subscribe({
       next: (res) => {
         console.log('CART API RESPONSE:', res); // 👈 check this

@@ -10,9 +10,7 @@ export class ConfigService {
   async load(): Promise<void> {
     const response = await fetch('/assets/app-config/config.json');
     const json = await response.json();
-
     this.config = json;
-    console.log('✅ Config Loaded:', this.config);
   }
 
   get(): AppConfig {

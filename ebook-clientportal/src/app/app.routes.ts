@@ -11,6 +11,8 @@ import { ContactComponent } from './pages/contact/contact.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { RefundComponent } from './pages/refund/refund.component';
 import { TermsconditionsComponent } from './pages/termsconditions/termsconditions.component';
+import { ForgotPasswordComponent } from './features/account/pages/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './features/account/pages/reset-password/reset-password.component';
 
 export const routes: Routes = [
   {
@@ -60,6 +62,15 @@ export const routes: Routes = [
   {
     path: 'signup',
     component: RegistrationComponent
-  }
+  },
+  {
+    path: 'forgotpassword',
+    component: ForgotPasswordComponent
+  },
+  {
+    path: 'resetpassword/:token',
+    component: ResetPasswordComponent
+  },
+
 ];
 export class AppRoutingModule { }

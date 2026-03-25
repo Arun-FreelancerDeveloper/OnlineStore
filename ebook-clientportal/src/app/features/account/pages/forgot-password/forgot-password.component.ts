@@ -1,3 +1,4 @@
+
 /* =====================================================
  * 1. IMPORTS
  * ===================================================== */
@@ -7,34 +8,30 @@ import { Router, RouterLink } from '@angular/router';
 import { AlertService } from '../../../../shared/services/alert/alert.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../../../core/services/auth/auth.service';
-import { AuthStorageService } from '../../../../core/services/auth-storage/auth-storage.service';
 import { CartFacadeService } from '../../../../core/facades/cart-facade.service';
 import { CommonModule } from '@angular/common';
-import { UserCreationModel } from '../../../../core/models/useraccount/useraccount.model';
+import { ForgotPasswordRequest, UserCreationModel } from '../../../../core/models/useraccount/useraccount.model';
 
 /* =====================================================
  * 2. COMPONENT DECORATOR
  * ===================================================== */
 @Component({
-  selector: 'app-registration',
+  selector: 'app-forgot-password',
   standalone: true,
   imports: [BreadcrumbComponent, CommonModule, FormsModule, RouterLink],
-  templateUrl: './registration.component.html',
-  styleUrl: './registration.component.css'
+  templateUrl: './forgot-password.component.html',
+  styleUrl: './forgot-password.component.css'
 })
 
 /* =====================================================
  * 3. COMPONENT CLASS
  * ===================================================== */
-export class RegistrationComponent {
+export class ForgotPasswordComponent {
 
-  /* Set Register Model */
-  registerData: UserCreationModel = {
-    fullname: '',
+  /* Set Forgot Password Model */
+  forgotPasswordData: ForgotPasswordRequest = {
     email: '',
-    password: '',
-    userType: 'User',
-    vendorNumber: ''
+    callbackurl: window.location.origin + '\resetpassword'
   };
 
   isLoading = false;
@@ -43,7 +40,6 @@ export class RegistrationComponent {
    * 4. DEPENDENCY INJECTION
    * ===================================================== */
   constructor(
-    private authStorage: AuthStorageService,
     private router: Router,
     private alertService: AlertService,
     private authService: AuthService,
@@ -51,63 +47,46 @@ export class RegistrationComponent {
   ) { }
 
   /* =====================================================
-   * 5. REGISTER METHOD
+   * 5. Send Mail
    * ===================================================== */
-  register(form: NgForm) {
+  sendRequest(form: NgForm) {
 
     if (form.invalid) {
-      this.alertService.error('Please complete all required fields.');
-      form.control.markAllAsTouched(); // 🔥 highlights fields
+      this.alertService.error('Please enter your email.');
+      form.control.markAllAsTouched();
       return;
     }
 
     this.isLoading = true;
+
     const payload = {
-      fullname: this.registerData.fullname,
-      email: this.registerData.email,
-      password: this.registerData.password,
-      userType: 'User',
-      vendorNumber: '-'
+      email: this.forgotPasswordData.email,
+      callbackurl: window.location.origin + '/resetpassword'  // ✅ fix slash
     };
 
-    this.authService.createUser(payload).subscribe({
+    this.authService.forgotPassword(payload).subscribe({
       next: (res) => {
 
         this.isLoading = false;
 
-        if (!res?.data) {
-          this.alertService.error(res?.message || 'Registration failed. Please check your details and try again.');
+        if (!res?.success) {
+          this.alertService.error(res?.message || 'Request failed');
           return;
         }
 
-        const response = res.data;
+        // ✅ SUCCESS (No login here)
+        this.alertService.success(
+          'Password reset link has been sent to your email.'
+        );
 
-         // ✅ Extract user properly
-        const userData = {
-          userid: response.user.userid,
-          displayName: response.user.displayName,
-          role: response.user.usertype,
-          token: response.token
-        };
-
-        // ✅ Save user
-        this.authStorage.saveUser(userData);
-
-        // 🔥 VERY IMPORTANT (your cart issue fix)
-        this.cartFacade.loadCartCount();
-
-        // ✅ Success message
-        this.alertService.success(`Welcome ${response.user.displayName}! Your account has been created successfully.`);
-
-        // ✅ Redirect
-        this.router.navigate(['/']);
-
+        // ✅ Optional redirect
+        this.router.navigate(['/signin']);
       },
 
       error: (err: any) => {
         this.isLoading = false;
         this.alertService.error(
-          err?.error?.message || 'Oops! Registration failed. Please try again.'
+          err?.error?.message || 'Something went wrong'
         );
       }
     });

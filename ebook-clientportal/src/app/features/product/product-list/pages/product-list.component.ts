@@ -10,13 +10,14 @@ import { ProductModel } from '../../../../core/models/product/product.model';
 import { RecommendedProductCardComponent } from "../../../../shared/components/product-with-feature-card/product-with-feature-card.component";
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { signal } from '@angular/core';
+import { ShoppingCardComponent } from "../../../../shared/components/shopping-card/shopping-card.component";
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   templateUrl: './product-list.component.html',
   styleUrl : './product-list.component.css',
-  imports: [BreadcrumbComponent, CategoryGroupCarouselComponent, CommonModule, ProductCardComponent,  SlickCarouselModule, RecommendedProductCardComponent]
+  imports: [BreadcrumbComponent, CategoryGroupCarouselComponent, CommonModule, ProductCardComponent, SlickCarouselModule, RecommendedProductCardComponent, ShoppingCardComponent]
 })
 export class ProductListComponent implements OnInit {
 

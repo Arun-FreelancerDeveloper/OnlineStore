@@ -1,7 +1,7 @@
-export interface UserCreation {
+export interface UserCreationModel {
   fullname: string;
   email: string;
-  passwordhash: string;
+  password: string;
   userType : string,
   vendorNumber : string
 }
@@ -17,4 +17,17 @@ export interface LoginResponse {
   email: string;
   token: string;
   expiresIn: number;
+}
+
+
+export interface ForgotPasswordRequest {
+  email: string;
+  callbackurl: string;
+}
+
+
+export interface ResetPasswordRequest {
+  token: string;
+  newpassword: string;
+  confirmPassword : string;
 }

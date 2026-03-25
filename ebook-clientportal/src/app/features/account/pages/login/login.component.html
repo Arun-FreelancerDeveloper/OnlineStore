@@ -10,7 +10,7 @@
 
                 <!-- Login Card Start -->
                 <div class="col-xl-4 pe-xl-2"></div>
-                <div class="col-xl-4 pe-xl-5">
+                <div class="col-xl-4 pe-xl-5 border border-gray-100 hover-border-main-600 transition-1 rounded-16 px-24 py-40">
                    <form (ngSubmit)="login()" #loginForm="ngForm">
 
                       <div class="mb-24">
@@ -38,9 +38,19 @@
                           placeholder="Enter Password">
                       </div>
 
-                      <button type="submit" class="btn btn-main py-18 px-40" [disabled]="isLoading">
+                      <button type="submit" class="btn btn-main py-18 w-100 rounded-8" [disabled]="isLoading">
                         {{ isLoading ? 'Verification ...' : 'Sign-In' }}
                       </button>
+                      <div class="col-xl-12 pe-xl-3">
+                        <div class="mt-12"><a [routerLink]="['/forgotpassword']" class="text-danger-600 text-sm fw-semibold hover-text-decoration-underline">Forgot your password?</a></div>
+                      </div>
+                      <div class="col-xl-12 pe-xl-3 text-center mt-12">
+                        OR
+                      </div>
+                       <a [routerLink]="['/signup']" class="btn btn-main py-18 w-100 rounded-8">
+                        Create account
+                       </a>
+
 
                     </form>
 

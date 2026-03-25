@@ -1,6 +1,7 @@
 const service = require('./user.service');
 const ApiResponse = require('../../utils/apiResponse');
 const { json } = require('express');
+const jwt = require('jsonwebtoken');
 const { sendWelcomeEmail } = require('../../services/email.service');
 /**
  * User Controller
@@ -34,14 +35,42 @@ exports.createUser = async (req, res, next) => {
 
     /* Create user */
     const data = await service.createUser(req.body);
-    res.json(ApiResponse.success(data, 'Your account has been created successfully.'));
+    if (data) {
+        // ✅ Create token
+      const token = jwt.sign(
+        {
+          userId: data.userid,
+          displayName: data.fullname,
+          role: data.usertype
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '1d' }
+      );
 
-    /* Send welcome email */
-    await sendWelcomeEmail({
-      email: data.email,
-      fullname: data.fullname
-    });
+      // ✅ Proper response structure
+      const response = {
+        token,
+        user: {
+          userid: data.userid,
+          displayName: data.fullname,
+          usertype: data.usertype,
+          email: data.email   // optional
+        }
+      };
 
+      res.json(
+        ApiResponse.success(
+          response,
+          'Your account has been created successfully.'
+        )
+      );
+
+      // ✅ Send email (async - don't block response)
+      sendWelcomeEmail({
+        email: data.email,
+        fullname: data.fullname
+      });
+    }
 
   } catch (err) {
     next(err);

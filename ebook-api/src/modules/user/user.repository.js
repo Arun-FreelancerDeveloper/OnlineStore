@@ -38,6 +38,10 @@ exports.isEmailExists = async (email) => {
  * - @returns {Object} Created user
  */
 exports.createUser = async (user) => {
+
+   // 1️⃣ Hash password
+  let hashedPassword = await bcrypt.hash(user.password, 10);
+
   const sql = `
     INSERT INTO tbuser
       (fullname, email, passwordhash,userType,vendorNumber, phone, isactive,
@@ -49,13 +53,13 @@ exports.createUser = async (user) => {
        1, NOW(),
        1, NOW(),
        0, 0, NULL)
-    RETURNING userid, fullname, email, userType;
+    RETURNING userid, fullname, email, usertype;
   `;
 
   const { rows } = await pool.query(sql, [
     user.fullname,
     user.email,
-    user.password,
+    hashedPassword,
     user.userType,
     user.vendorNumber
   ]);

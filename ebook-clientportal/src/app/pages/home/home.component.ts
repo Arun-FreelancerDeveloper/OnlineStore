@@ -8,11 +8,12 @@ import { FlashSaleCardComponent } from "../../shared/components/flashsale-card/f
 import { RecommendedCardComponent } from "../../shared/components/recommended-card/recommended-card.component";
 import { DiscountCardComponent } from "../../shared/components/discount-card/discount-card.component";
 import { NewsletterCardComponent } from "../../shared/components/newsletter-card/newsletter-card.component";
+import { ShoppingCardComponent } from "../../shared/components/shopping-card/shopping-card.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [BreadcrumbComponent, CategoryGroupCarouselComponent, BannerComponent, ProductCardComponent, FlashSaleCardComponent, RecommendedCardComponent, DiscountCardComponent, NewsletterCardComponent],
+  imports: [BreadcrumbComponent, CategoryGroupCarouselComponent, BannerComponent, ProductCardComponent, FlashSaleCardComponent, RecommendedCardComponent, DiscountCardComponent, NewsletterCardComponent, ShoppingCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

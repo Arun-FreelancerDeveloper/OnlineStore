@@ -16,18 +16,15 @@ const sendEmail = async ({ to, subject, html, text }) => {
 
 
 /**
- * Welcome Email – E-commerce Account Creation
- */
-/**
- * Welcome Email – JAYS Online Store
+ * Welcome Email – JAYS Online Store (Professional Version)
  */
 const sendWelcomeEmail = async ({ email, fullname }) => {
   const year = new Date().getFullYear();
 
   return sendEmail({
     to: email,
-    subject: 'Welcome to JAYS Online Store 🛍️',
-    text: `Hi ${fullname}, your JAYS Online Store account has been created successfully. Start shopping now!`,
+    subject: 'Welcome to JAYS Online Store',
+    text: `Hello ${fullname}, your JAYS Online Store account has been created successfully. You can now start exploring and shopping with us.`,
     html: `
 <!DOCTYPE html>
 <html>
@@ -35,28 +32,28 @@ const sendWelcomeEmail = async ({ email, fullname }) => {
   <meta charset="UTF-8" />
   <title>Welcome to JAYS</title>
 </head>
-<body style="margin:0; padding:0; background-color:#d5d7d7; font-family: Arial, Helvetica, sans-serif;">
+<body style="margin:0; padding:0; background-color:#f2f4f4; font-family: Arial, Helvetica, sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
       <td align="center" style="padding:30px 10px;">
         <table width="100%" cellpadding="0" cellspacing="0"
-          style="max-width:600px; background:#ffffff; border-radius:10px; overflow:hidden;">
+          style="max-width:600px; background:#ffffff; border-radius:8px; overflow:hidden;">
           
           <!-- Logo -->
           <tr>
             <td align="center" style="padding:20px 0;">
               <img src="https://jaysltd.mtgapps.in/assets/images/logo/logo-png3.png"
                    alt="JAYS Online Store"
-                   width="150"
+                   width="140"
                    style="display:block; border:0;" />
             </td>
           </tr>
 
           <!-- Header -->
           <tr>
-            <td style="background:#1d799b; padding:15px; text-align:center;">
-              <h1 style="color:#ffffff; margin:0; font-size:24px;">
-                Welcome to JAYS
+            <td style="background:#1d799b; padding:16px; text-align:center;">
+              <h1 style="color:#ffffff; margin:0; font-size:22px;">
+                Welcome to JAYS Online Store
               </h1>
             </td>
           </tr>
@@ -64,39 +61,49 @@ const sendWelcomeEmail = async ({ email, fullname }) => {
           <!-- Body -->
           <tr>
             <td style="padding:25px; color:#333333;">
-              <h2 style="margin-top:0;">Hi <strong>${fullname}!</strong></h2>
+              <h2 style="margin-top:0; font-size:18px;">
+                Hello ${fullname},
+              </h2>
 
-              <p style="font-size:15px; line-height:1.6;">
-                Welcome to JAYS Online Store — your one-stop shop for quality products and great deals.
-                Your account has been successfully created, and we’re excited to have you with us!
+              <p style="font-size:14px; line-height:1.6;">
+                Thank you for creating an account with <strong>JAYS Online Store</strong>.
+                Your account has been successfully registered.
+              </p>
+
+              <p style="font-size:14px; line-height:1.6;">
+                You can now browse our products, discover great deals, and enjoy a seamless shopping experience.
               </p>
 
               <p style="font-size:14px;">
-                <strong>Email:</strong> ${email}
+                <strong>Registered Email:</strong> ${email}
               </p>
 
               <!-- CTA -->
               <div style="text-align:center; margin:30px 0;">
                 <a href="https://jaysltd.mtgapps.in"
                    style="background:#1d799b; color:#ffffff; text-decoration:none;
-                          padding:12px 28px; border-radius:6px;
-                          font-size:18px; display:inline-block;">
-                  Shop Now
+                          padding:12px 26px; border-radius:5px;
+                          font-size:16px; display:inline-block;">
+                  Start Shopping
                 </a>
               </div>
 
-              <p style="font-size:14px; margin:0;">
-                Enjoy your shopping experience! 😊<br/>
-                <strong>Team JAYS</strong>
+              <p style="font-size:13px; color:#555;">
+                If you did not create this account, please contact our support team immediately.
+              </p>
+
+              <p style="font-size:14px; margin-top:20px;">
+                Regards,<br/>
+                <strong>JAYS Online Store Team</strong>
               </p>
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td style="background:#c3efff; padding:15px; text-align:center;
-                       font-size:12px; color:#0f0e0e;">
-              © ${year} JAYS Online Store · All rights reserved
+            <td style="background:#f0f3f4; padding:15px; text-align:center;
+                       font-size:12px; color:#666;">
+              © ${year} JAYS Online Store. All rights reserved.
             </td>
           </tr>
 
@@ -109,7 +116,6 @@ const sendWelcomeEmail = async ({ email, fullname }) => {
     `
   });
 };
-
 
 /**
  * Order Confirmation Email
@@ -246,9 +252,119 @@ const sendOtpEmail = async ({ email, otp }) => {
   });
 };
 
+/**
+ * Reset Password Email – JAYS Online Store
+ */
+const sendResetPasswordEmail = async ({ email, fullname, resetLink }) => {
+  const year = new Date().getFullYear();
+
+  return sendEmail({
+    to: email,
+    subject: 'Reset Your Password – JAYS',
+    text: `Hi ${fullname}, you requested to reset your password. Use this link: ${resetLink}`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Reset Password - JAYS</title>
+</head>
+<body style="margin:0; padding:0; background-color:#d5d7d7; font-family: Arial, Helvetica, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center" style="padding:30px 10px;">
+        <table width="100%" cellpadding="0" cellspacing="0"
+          style="max-width:600px; background:#ffffff; border-radius:10px; overflow:hidden;">
+          
+          <!-- Logo -->
+          <tr>
+            <td align="center" style="padding:20px 0;">
+              <img src="https://jaysltd.mtgapps.in/assets/images/logo/logo-png3.png"
+                   alt="JAYS Online Store"
+                   width="150"
+                   style="display:block; border:0;" />
+            </td>
+          </tr>
+
+          <!-- Header -->
+          <tr>
+            <td style="background:#d9534f; padding:15px; text-align:center;">
+              <h1 style="color:#ffffff; margin:0; font-size:22px;">
+                Password Reset Request
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:25px; color:#333333;">
+              <h2 style="margin-top:0;">Hi <strong>${fullname}</strong>,</h2>
+
+              <p style="font-size:15px; line-height:1.6;">
+                We received a request to reset your password for your JAYS Online Store account.
+              </p>
+
+              <p style="font-size:14px;">
+                Click the button below to set a new password:
+              </p>
+
+              <!-- CTA -->
+              <div style="text-align:center; margin:30px 0;">
+                <a href="${resetLink}"
+                   style="background:#d9534f; color:#ffffff; text-decoration:none;
+                          padding:12px 28px; border-radius:6px;
+                          font-size:16px; display:inline-block;">
+                  Reset Password
+                </a>
+              </div>
+
+              <p style="font-size:13px; color:#555;">
+                If the button doesn't work, copy and paste this link into your browser:
+              </p>
+
+              <p style="font-size:13px; word-break:break-all; color:#1d799b;">
+                ${resetLink}
+              </p>
+
+              <p style="font-size:13px; color:#999;">
+                ⚠️ This link will expire shortly for security reasons.
+              </p>
+
+              <p style="font-size:14px;">
+                If you did not request this, please ignore this email. Your account is safe.
+              </p>
+
+              <p style="font-size:14px; margin-top:20px;">
+                Regards,<br/>
+                <strong>Team JAYS</strong>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f5f5f5; padding:15px; text-align:center;
+                       font-size:12px; color:#666;">
+              © ${year} JAYS Online Store · All rights reserved
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+    `
+  });
+};
+
+
+
 module.exports = {
   sendEmail,
   sendWelcomeEmail,
+  sendResetPasswordEmail,
   sendOrderEmail,
   sendOtpEmail
 };

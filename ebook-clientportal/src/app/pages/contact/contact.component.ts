@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { BreadcrumbComponent } from "../../shared/components/breadcrumb/breadcrumb.component";
 import { ConfigService } from '../../core/config/config.service';
 import { AppConfig } from '../../core/config/config.types';
+import { ShoppingCardComponent } from "../../shared/components/shopping-card/shopping-card.component";
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [BreadcrumbComponent],
+  imports: [BreadcrumbComponent, ShoppingCardComponent],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.css'
 })
@@ -18,5 +19,5 @@ export class ContactComponent {
   }
   currentYear = new Date().getFullYear();
 
-  
+
 }

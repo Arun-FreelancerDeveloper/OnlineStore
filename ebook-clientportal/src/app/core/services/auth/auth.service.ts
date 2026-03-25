@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { ConfigService } from '../../config/config.service';
 import { ApiResponse } from '../../models/api-response/api-response.model';
-import { LoginRequest, UserCreation } from '../../models/useraccount/useraccount.model';
+import { ForgotPasswordRequest, LoginRequest, ResetPasswordRequest, UserCreationModel } from '../../models/useraccount/useraccount.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,12 +31,11 @@ export class AuthService {
   /* =====================================================
    * CREATE USER
    * ===================================================== */
-  createUser(payload: UserCreation): Observable<UserCreation> {
-    return this.http
-      .post<ApiResponse<any>>(this.apiUrl, payload)
-      .pipe(
-        map(res => res.data)
-      );
+  createUser(payload: UserCreationModel): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
+      `${this.apiUrl}/user`,
+      payload
+    );
   }
 
   /* =====================================================
@@ -45,6 +44,26 @@ export class AuthService {
   loginUser(payload: LoginRequest): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(
       `${this.apiUrl}/auth`,
+      payload
+    );
+  }
+
+  /* =====================================================
+   * Forgot Password
+   * ===================================================== */
+  forgotPassword(payload: ForgotPasswordRequest): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
+      `${this.apiUrl}/auth/forgotPassword`,
+      payload
+    );
+  }
+
+  /* =====================================================
+   * Change Password
+   * ===================================================== */
+  changePassword(payload: ResetPasswordRequest): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
+      `${this.apiUrl}/auth/changepassword`,
       payload
     );
   }
