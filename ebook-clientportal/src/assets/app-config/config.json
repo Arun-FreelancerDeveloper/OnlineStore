@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "JAYS App",
+    "name": "JAYS",
     "version": "1.0.0",
     "environment": "development",
     "debug": true
@@ -39,7 +39,8 @@
       "email": "support@jaysltd.net",
       "phone": "tel:+17674484024",
       "displayPhone": "+1 (767) 448-4024",
-      "workingHours": "Mon-Fri 9:00 AM - 5:00 PM"
+      "workingHours": "Mon-Fri 9:00 AM - 5:00 PM",
+      "mapLink" : "https://www.facebook.com/JaysLimited"
     },
     "socialMedia": [
       {

@@ -9,6 +9,10 @@ exports.getCartByUserId = async (userid) => {
   return await cartRepo.getCartByUserId(userid);
 };
 
+exports.getUserDiscountRule = async (userid) => {
+  return await cartRepo.getUserDiscountRule(userid);
+};
+
 exports.updateCartQty = async (cartid, qty, modifiedby) => {
   return await cartRepo.updateCartQty(cartid, qty, modifiedby);
 };

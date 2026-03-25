@@ -95,8 +95,9 @@ export class HeaderComponent implements OnInit {
       .then(res => {
         if (res.isConfirmed) {
           this.authStorage.clear();
-          this.cartService.clearCart();
-          this.router.navigate(['/login']);
+          this.cartFacade.clearCartCache();
+          this.cartFacade.loadCartCount();
+          this.router.navigate(['/signin']);
           this.alert.success('Logged out successfully');
         }
       });

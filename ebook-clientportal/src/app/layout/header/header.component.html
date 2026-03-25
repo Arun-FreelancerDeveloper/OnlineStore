@@ -45,16 +45,16 @@
         <div class="mobile-menu__menu">
             <!-- Nav Menu Start -->
             <ul class="nav-menu flex-align nav-menu--mobile">
-                <li class="nav-menu__item" [routerLinkActive]="'activePage'" (click)="toggleSubmenu('home')">
+                <li class="nav-menu__item" (click)="toggleSubmenu('home')">
                     <a [routerLink]="['']" class="nav-menu__link text-heading-two">Home</a>
                 </li>
-                <li class="nav-menu__item" [routerLinkActive]="'activePage'" (click)="toggleSubmenu('aboutus')">
+                <li class="nav-menu__item"  (click)="toggleSubmenu('aboutus')">
                     <a [routerLink]="['aboutus']" class="nav-menu__link text-heading-two">About Us</a>
                 </li>
-                <li class="nav-menu__item" [routerLinkActive]="'activePage'" (click)="toggleSubmenu('Booksshop')">
+                <li class="nav-menu__item" (click)="toggleSubmenu('products')">
                     <a [routerLink]="['products']" class="nav-menu__link text-heading-two">Products</a>
                 </li>
-                 <li class="nav-menu__item" [routerLinkActive]="'activePage'" (click)="toggleSubmenu('contact')">
+                 <li class="nav-menu__item" (click)="toggleSubmenu('contact')">
                     <a [routerLink]="['contact']" class="nav-menu__link text-heading-two">Contact Us</a>
                 </li>
             </ul>

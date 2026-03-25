@@ -26,7 +26,14 @@ export interface AppConfig {
       favicon: string;
       themeColor: string;
     };
-
+    address: {
+      line:  string;
+      city: string;
+      country:  string;
+      postalCode:  string;
+      full:  string;
+      mapLink : string;
+    },
     contact: {
       primaryPhone: string;
       displayPhone: string;

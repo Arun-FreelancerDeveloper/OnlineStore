@@ -6,6 +6,11 @@ import { ProductListComponent } from '../app/features/product/product-list/pages
 import { LoginComponent } from './features/account/pages/login/login.component';
 import { RegistrationComponent } from './features/account/pages/registration/registration.component';
 import { CartListComponent } from './features/cart/pages/cart-list/cart-list.component';
+import { AboutusComponent } from './pages/aboutus/aboutus.component';
+import { ContactComponent } from './pages/contact/contact.component';
+import { PrivacyComponent } from './pages/privacy/privacy.component';
+import { RefundComponent } from './pages/refund/refund.component';
+import { TermsconditionsComponent } from './pages/termsconditions/termsconditions.component';
 
 export const routes: Routes = [
   {
@@ -17,16 +22,36 @@ export const routes: Routes = [
     component: HomeComponent
   },
   {
-    path : 'products',
-    component : ProductListComponent
+    path: 'aboutus',
+    component: AboutusComponent
   },
   {
-    path : 'products/:groupId',
-    component : ProductListComponent
+    path: 'contact',
+    component: ContactComponent
   },
   {
-    path : 'viewcart',
-    component : CartListComponent
+    path: 'privacy',
+    component: PrivacyComponent
+  },
+  {
+    path: 'refund',
+    component: RefundComponent
+  },
+  {
+    path: 'termsconditions',
+    component: TermsconditionsComponent
+  },
+  {
+    path: 'products',
+    component: ProductListComponent
+  },
+  {
+    path: 'products/:groupId',
+    component: ProductListComponent
+  },
+  {
+    path: 'viewcart',
+    component: CartListComponent
   },
   {
     path: 'signin',
@@ -37,4 +62,4 @@ export const routes: Routes = [
     component: RegistrationComponent
   }
 ];
-export class AppRoutingModule {}
+export class AppRoutingModule { }

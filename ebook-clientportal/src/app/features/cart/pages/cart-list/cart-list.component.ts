@@ -1,88 +1,283 @@
-import { Component, OnInit } from '@angular/core';
-import { CartService } from '../../../../core/services/cart/cart.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { Subject, combineLatest } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
+
 import { BreadcrumbComponent } from "../../../../shared/components/breadcrumb/breadcrumb.component";
+import { CartModel, DiscountRuleModel } from '../../../../core/models/cart/cart.model';
+import { AuthStorageService } from '../../../../core/services/auth-storage/auth-storage.service';
+import { ConfigService } from '../../../../core/config/config.service';
+import { CartFacadeService } from '../../../../core/facades/cart-facade.service';
+import { AlertService } from '../../../../shared/services/alert/alert.service';
+import { CurrencyService } from '../../../../core/services/currency/currency.service';
 
 @Component({
   selector: 'app-cart-list',
   standalone: true,
   templateUrl: './cart-list.component.html',
-  imports: [BreadcrumbComponent]
+  imports: [BreadcrumbComponent, CommonModule],
+  providers: [CurrencyPipe]
 })
-export class CartListComponent implements OnInit {
+export class CartListComponent implements OnInit, OnDestroy {
 
-  products: any[] = [];
-  isLoading = false;
+  /* =====================================================
+   * STATE VARIABLES
+   * ===================================================== */
+  cartItems: CartModel[] = [];
+  isLoading = true;
+  currentCurrency: string = '';
+  currentUserDiscountRule: DiscountRuleModel = {
+    displayName: '',
+    orderCount: 0,
+    rule: '',
+    discount: 0,
+  };
 
-  subtotal = 0;
-  tax = 0;
-  total = 0;
+  private destroy$ = new Subject<void>();
 
-  userId = 1; // 🔥 replace with logged-in user
+  /* =====================================================
+   * CONSTRUCTOR (DEPENDENCY INJECTION)
+   * ===================================================== */
+  constructor(
+    private authStorage: AuthStorageService,
+    private config: ConfigService,
+    private cartFacade: CartFacadeService,
+    private alertService: AlertService,
+    private currencyService: CurrencyService,
+    private currencyPipe: CurrencyPipe
+  ) { }
 
-  constructor(private cartService: CartService) { }
+  /* =====================================================
+   * LIFECYCLE HOOKS
+   * ===================================================== */
 
+  /**
+   * Initialize component
+   * → Load cart data
+   */
   ngOnInit(): void {
+    this.loadDiscountRule();
     this.loadCart();
   }
 
-  // ================= LOAD CART =================
-  loadCart() {
+  /**
+   * Cleanup subscriptions to avoid memory leaks
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /* =====================================================
+   * DATA LOADING
+   * ===================================================== */
+
+  /* Business Logic Based and User Discount Rule */
+  private loadDiscountRule(): void {
+    this.cartFacade.getDiscountRule()?.subscribe(res => {
+      if (res.success) {
+        this.currentUserDiscountRule = {
+          displayName: this.getDiscountDisplayName(res.data.rule, res.data.discount, res.data.orderCount),
+          orderCount: res.data.orderCount,
+          rule: res.data.rule,
+          discount: res.data.discount,
+        }
+      }
+    });
+  }
+  private getDiscountDisplayName(rule: string, discount: number, orderCount: number): string {
+
+    switch (rule) {
+
+      case 'FIRST_ORDER':
+        return `🎉 First order offer! You get ${discount}% OFF`;
+
+      case 'LOYAL_CUSTOMER':
+        return `❤️ Thanks for your ${orderCount} orders! Enjoy ${discount}% OFF`;
+
+      case 'BULK_ORDER':
+        return `🛒 Bulk order discount applied – Save ${discount}%`;
+
+      case 'FESTIVE_OFFER':
+        return `🎊 Special festive offer – ${discount}% OFF`;
+
+      default:
+        return `💸 You saved ${discount}% on this order`;
+    }
+  }
+
+  /**
+   * Fetch cart items + listen to currency changes
+   * → Combines API response with currency stream
+   * → Applies conversion & formatting
+   */
+  private loadCart(): void {
+
     this.isLoading = true;
 
-    this.cartService.getCartItems(this.userId).subscribe({
-      next: (res) => {
-        this.products = res.data || [];
-        this.calculateTotals();
-        this.isLoading = false;
-      },
-      error: () => {
-        this.isLoading = false;
+    const cart$ = this.cartFacade.getCartItems();
+
+    if (!cart$) {
+      this.isLoading = false;
+      return;
+    }
+
+    combineLatest([cart$, this.currencyService.currency$])
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.isLoading = false)
+      )
+      .subscribe({
+        next: ([res, currency]) => {
+          const items = res?.data ?? [];
+          this.currentCurrency = currency;
+
+          this.cartItems = items.map(item =>
+            this.mapCartItem(item, currency)
+          );
+        },
+        error: () => this.cartItems = []
+      });
+  }
+
+
+  /**
+   * Transform raw cart item
+   * → Handles currency conversion
+   * → Adds calculated fields
+   */
+  private mapCartItem(item: CartModel, currency: string): CartModel {
+
+    const marketPrice = this.currencyService.convertPrice(item.marketprice, currency);
+    const dealPrice = this.currencyService.convertPrice(item.dealprice, currency);
+    const total = dealPrice * item.qty;
+
+    return {
+      ...item,
+
+      /* Raw numeric values */
+      convertcurrenyprice: dealPrice,
+      saveprice: marketPrice - dealPrice,
+
+      /* Formatted values */
+      displayprice: this.formatCurrency(dealPrice),
+      displayamountprice: this.formatCurrency(total)
+    };
+  }
+
+  /* =====================================================
+   * UI ACTIONS (USER INTERACTIONS)
+   * ===================================================== */
+
+  /**
+   * Increase item quantity
+   */
+  increaseQty(item: CartModel): void {
+    item.qty++;
+    this.updateItemTotal(item);
+  }
+
+  /**
+   * Decrease item quantity (min = 1)
+   */
+  decreaseQty(item: CartModel): void {
+    if (item.qty > 1) {
+      item.qty--;
+      this.updateItemTotal(item);
+    }
+  }
+
+  /**
+   * Remove item from cart
+   * → Optimistic UI update
+   * → Backend sync
+   */
+  removeItem(cartId: number): void {
+
+    this.alertService.customConfirm({
+      title: 'Remove Item',
+      message: 'Are you sure you want to remove this item from cart?',
+      confirmButtonText: 'Yes, Remove',
+      cancelButtonText: 'No',
+      callback: () => {
+        this.cartItems = this.cartItems.filter(x => x.cartid !== cartId);
+        this.cartFacade.removeFromCart(cartId);
       }
     });
   }
 
-  // ================= TRACK BY =================
-  trackByProduct(index: number, item: any) {
-    return item.cartid;
-  }
+  /* =====================================================
+   * CALCULATIONS
+   * ===================================================== */
 
-  // ================= QTY CHANGE =================
-  onQtyChange(product: any) {
-    product.amount = product.qty * product.displayprice;
-    this.calculateTotals();
-  }
-
-  // ================= REMOVE =================
-  removeProduct(cartid: number) {
-    this.cartService.removeItem(cartid, this.userId).subscribe(() => {
-      this.products = this.products.filter(p => p.cartid !== cartid);
-      this.calculateTotals();
-    });
-  }
-
-  // ================= UPDATE CART =================
-  updateCart() {
-    const payload = {
-      modifiedby: this.userId,
-      items: this.products.map(p => ({
-        cartid: p.cartid,
-        qty: p.qty
-      }))
-    };
-
-    this.cartService.updateCartItems(payload).subscribe(() => {
-      console.log('Cart updated');
-    });
-  }
-
-  // ================= TOTAL CALC =================
-  calculateTotals() {
-    this.subtotal = this.products.reduce(
-      (sum, p) => sum + (p.qty * p.displayprice),
+  /**
+   * Calculate total cart value (RAW)
+   */
+  getCartTotal(): number {
+    return this.cartItems.reduce(
+      (sum, item) => sum + (item.qty * item.convertcurrenyprice),
       0
     );
+  }
 
-    this.tax = this.subtotal * 0.05; // 5% tax
-    this.total = this.subtotal + this.tax;
+  /**
+   * Get formatted cart total
+   */
+  getFormattedTotal(): string {
+    return this.formatCurrency(this.getCartTotal());
+  }
+
+
+  getDiscountAmount(): number {
+    if (!this.currentUserDiscountRule) return 0;
+    const total = this.getCartTotal();
+    const discountPercent = this.currentUserDiscountRule.discount || 0;
+    return (total * discountPercent) / 100;
+  }
+  getFormattedTotalDiscount(): string {
+    return this.formatCurrency(this.getDiscountAmount());
+  }
+
+  getPayAmount(): number {
+    if (!this.currentUserDiscountRule) return 0;
+    const total = this.getCartTotal();
+    const discountPercent = this.currentUserDiscountRule.discount || 0;
+    return total - (total * discountPercent) / 100;
+  }
+  getFormattedTotalPay(): string {
+    return this.formatCurrency(this.getPayAmount());
+  }
+
+  /**
+   * Update item total when qty changes
+   */
+  private updateItemTotal(item: CartModel): void {
+    const total = item.qty * item.convertcurrenyprice;
+    item.displayamountprice = this.formatCurrency(total);
+  }
+
+  /* =====================================================
+   * HELPERS
+   * ===================================================== */
+
+  /**
+   * Format currency consistently
+   */
+  private formatCurrency(value: number): string {
+    return this.currencyPipe.transform(
+      value,
+      this.currentCurrency,
+      'symbol',
+      '1.2-2'
+    ) || '';
+  }
+
+  /**
+   * Get product image URL
+   */
+  getProductImage(item: CartModel): string {
+    return item.image
+      ? `${this.config.api.imageUrl}/${item.image}`
+      : `${this.config.api.imageUrl}/images/default.jpg`;
   }
 }

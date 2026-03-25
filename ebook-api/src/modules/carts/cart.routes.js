@@ -77,6 +77,32 @@ router.get('/:userid', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/cart/discountrule/{userid}:
+ *   get:
+ *     summary: Get discount by user based
+ *     tags: [Cart]
+ *     parameters:
+ *       - in: path
+ *         name: userid
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: User cart fetched
+ */
+router.get('/discountrule/:userid', async (req, res) => {
+  try {
+    const data = await cartService.getUserDiscountRule(req.params.userid);
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+
 // /**
 //  * @swagger
 //  * /api/cart/{cartid}:

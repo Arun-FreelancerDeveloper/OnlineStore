@@ -16,7 +16,7 @@ export class CartFacadeService {
   private readonly alertService = inject(AlertService);
   private readonly router = inject(Router);
 
-   // ✅ ADD THIS LINE
+  // ✅ ADD THIS LINE
   cartCount$ = this.cartService.cartCount$;
 
   /* =====================================================
@@ -109,6 +109,18 @@ export class CartFacadeService {
   }
 
   /* =====================================================
+ * LOAD CART (ON APP START)
+ * ===================================================== */
+  getCartItems() {
+    if (!this.user) {
+      this.loginRequired();
+      return null; // ⚠️ handle in component
+    }
+    return this.cartService.getCartItems(this.user.userid);
+  }
+
+
+  /* =====================================================
    * REFRESH CART COUNT
    * ===================================================== */
   private refreshCartCount(): void {
@@ -135,5 +147,25 @@ export class CartFacadeService {
         });
       }
     });
+  }
+
+  /* =====================================================
+ * GET DISCOUNT RULE
+ * ===================================================== */
+  getDiscountRule() {
+    if (!this.user) {
+      this.loginRequired();
+      return null; // ⚠️ handle in component
+    }
+    return this.cartService.getDiscountRule(this.user.userid);
+  }
+
+  clearCartCache(): void {
+
+    this.cartService.setCartCache([]);
+
+    // 🔄 Sync again
+    this.refreshCartCount();
+
   }
 }

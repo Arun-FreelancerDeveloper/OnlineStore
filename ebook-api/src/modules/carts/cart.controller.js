@@ -21,6 +21,15 @@ exports.getCartByUserId = async (req, res, next) => {
   }
 };
 
+exports.getUserDiscountRule = async (req, res, next) => {
+  try {
+    const data = await service.getUserDiscountRule(req.params.userid);
+    res.json(ApiResponse.success(data));
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.updateCartQty = async (req, res, next) => {
   try {
     const data = await service.updateCartQty(

@@ -65,8 +65,9 @@ exports.getCartByUserId = async (userid) => {
       c.qty,
       p.productid,
       p.productname,
-      COALESCE(pp.mrp, 0) AS mrp,
-      COALESCE(pp.wholesaleprice, 0) AS wholesaleprice,
+      COALESCE(pp.mrp, 0) AS marketprice,
+      COALESCE(pp.wholesaleprice, 0) AS dealprice,
+      COALESCE(pp.mrp, 0) - COALESCE(pp.wholesaleprice, 0) AS saveprice,
       COALESCE(pi.imagepath, '/images/default.jpg') AS image,
       (COALESCE(pp.mrp, 0) * c.qty) AS totalamount
     FROM tbcart c
@@ -82,6 +83,83 @@ exports.getCartByUserId = async (userid) => {
 
   const { rows } = await pool.query(sql, [userid]);
   return rows;
+};
+
+
+/**
+ * ===============================
+ * GET THE USER DISCOUNT BASED RULES
+ * ===============================
+ */
+exports.getUserDiscountRule = async (userid) => {
+
+  /* =========================================
+   * 1. GET USER ORDER COUNT
+   * ========================================= */
+  const orderCountSql = `
+    SELECT COUNT(*) AS total_orders
+    FROM tborder
+    WHERE userid = $1
+      AND delflag = 0;
+  `;
+
+  const orderResult = await pool.query(orderCountSql, [userid]);
+  const orderCount = parseInt(orderResult.rows[0].total_orders, 10);
+
+  /* =========================================
+   * 2. FETCH ACTIVE RULES (PRIORITY ORDER)
+   * ========================================= */
+  const rulesSql = `
+    SELECT *
+    FROM discount_rules
+    WHERE is_active = TRUE
+      AND (valid_from IS NULL OR valid_from <= NOW())
+      AND (valid_to IS NULL OR valid_to >= NOW())
+    ORDER BY priority ASC;
+  `;
+
+  const { rows: rules } = await pool.query(rulesSql);
+
+  /* =========================================
+   * 3. APPLY RULE ENGINE
+   * ========================================= */
+  let matchedRule = null;
+
+  for (const rule of rules) {
+
+    switch (rule.rule_type) {
+
+      case 'FIRST_ORDER':
+        if (orderCount === 0) {
+          matchedRule = rule;
+        }
+        break;
+
+      case 'ORDER_COUNT':
+        if (
+          (rule.min_orders === null || orderCount >= rule.min_orders) &&
+          (rule.max_orders === null || orderCount <= rule.max_orders)
+        ) {
+          matchedRule = rule;
+        }
+        break;
+
+      case 'DEFAULT':
+        matchedRule = rule;
+        break;
+    }
+
+    if (matchedRule) break;
+  }
+
+  /* =========================================
+   * 4. RETURN RESULT
+   * ========================================= */
+  return {
+    orderCount,
+    rule: matchedRule ? matchedRule.rule_type : null,
+    discount: matchedRule ? Number(matchedRule.discount_percent) : 0
+  };
 };
 
 /**

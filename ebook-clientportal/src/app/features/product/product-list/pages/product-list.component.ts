@@ -124,7 +124,7 @@ export class ProductListComponent implements OnInit {
     const scrollPosition = window.innerHeight + window.scrollY;
     // ✅ 80% scroll
     const threshold = document.body.offsetHeight * 0.5;
-    if (scrollPosition >= threshold) {
+    if (scrollPosition >= threshold ) {
       this.loadNextPage();
     }
   }
@@ -155,5 +155,7 @@ export class ProductListComponent implements OnInit {
         this.loading = false;
       });
   }
+
+
 }
 

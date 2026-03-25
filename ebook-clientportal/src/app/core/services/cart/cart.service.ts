@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiResponse } from '../../models/api-response/api-response.model';
-import { CartItem } from '../../models/cart/cart.model';
+import { CartModel, DiscountRuleModel } from '../../models/cart/cart.model';
 import { ConfigService } from '../../config/config.service';
 
 
@@ -22,9 +22,10 @@ export class CartService {
   // ===== CART COUNT =====
   private cartCountSubject = new BehaviorSubject<number>(0);
   cartCount$ = this.cartCountSubject.asObservable();
+  private discountCache?: DiscountRuleModel;
 
   // ===== CACHE =====
-  private cartCache: CartItem[] = [];
+  private cartCache: CartModel[] = [];
 
   constructor() {
     // ✅ SAME AS YOUR FlashSaleService
@@ -41,11 +42,11 @@ export class CartService {
   /* =====================================================
    * CACHE METHODS
    * ===================================================== */
-  getCartCache(): CartItem[] {
+  getCartCache(): CartModel[] {
     return this.cartCache;
   }
 
-  setCartCache(items: CartItem[]): void {
+  setCartCache(items: CartModel[]): void {
     this.cartCache = items;
     this.setCartCount(items.length);
   }
@@ -58,17 +59,17 @@ export class CartService {
   /* =====================================================
    * GET CART ITEMS
    * ===================================================== */
-  getCartItems(userid: number): Observable<ApiResponse<CartItem[]>> {
+  getCartItems(userid: number): Observable<ApiResponse<CartModel[]>> {
 
     if (this.cartCache.length > 0) {
       return of({
         success: true,
         data: this.cartCache
-      } as ApiResponse<CartItem[]>);
+      } as ApiResponse<CartModel[]>);
     }
 
     return this.http
-      .get<ApiResponse<CartItem[]>>(`${this.apiUrl}/${userid}`)
+      .get<ApiResponse<CartModel[]>>(`${this.apiUrl}/${userid}`)
       .pipe(
         tap(res => {
           if (res?.data) {
@@ -85,6 +86,7 @@ export class CartService {
     return this.http.post(this.apiUrl, payload).pipe(
       tap(() => {
         // OPTIONAL: Just increase count locally
+        this.cartCache = [];
         const current = this.cartCountSubject.value;
         this.setCartCount(current + 1);
       })
@@ -139,6 +141,30 @@ export class CartService {
         tap(res => {
           const count = res?.data?.length || 0;
           this.setCartCount(count);
+        })
+      );
+  }
+
+  /* =====================================================
+ * GET DISCOUNT RULE
+ * ===================================================== */
+  getDiscountRule(userId: number): Observable<ApiResponse<DiscountRuleModel>> {
+    if (this.discountCache) {
+      return of({
+        success: true,
+        data: this.discountCache
+      } as ApiResponse<DiscountRuleModel>);
+    }
+
+    return this.http
+      .get<ApiResponse<DiscountRuleModel>>(
+        `${this.apiUrl}/discountrule/${userId}`
+      )
+      .pipe(
+        tap(res => {
+          if (res?.data) {
+            this.discountCache = res.data;
+          }
         })
       );
   }

@@ -31,8 +31,8 @@ export class FooterComponent {
     {
       title: 'Information',
       links: [
-        { label: 'Sell on Our Platform', route: ['shop'] },
-        { label: 'Terms & Conditions', route: ['terms'] },
+        { label: 'Sell on Our Platform', route: ['products'] },
+        { label: 'Terms & Conditions', route: ['termsconditions'] },
         { label: 'Privacy Policy', route: ['privacy'] },
         { label: 'Returns & Refunds', route: ['refund'] }
       ]
@@ -41,7 +41,7 @@ export class FooterComponent {
       title: 'Customer Support',
       links: [
         { label: 'Contact Us', route: ['contact'] },
-        { label: 'Store Policies', route: ['policies'] },
+        // { label: 'Store Policies', route: ['policies'] },
         { label: 'Shop Now', route: ['products'] }
       ]
     },
@@ -50,7 +50,7 @@ export class FooterComponent {
       links: [
         { label: 'Account Dashboard', route: ['account'] },
         { label: 'Order History', route: ['orderhistory'] },
-        { label: 'Cart', route: ['cart'] }
+        { label: 'Cart', route: ['viewcart'] }
       ]
     }
   ];

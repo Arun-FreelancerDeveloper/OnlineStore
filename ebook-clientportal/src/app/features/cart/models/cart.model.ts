@@ -8,7 +8,7 @@ export interface CartItem {
   wholesaleprice: number;
   qty: number;
   amount: number,
-  images: {
+  image: {
     imagepath: string;
     isprimary: boolean;
     productimageid: number;

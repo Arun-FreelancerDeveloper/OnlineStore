@@ -55,7 +55,7 @@ exports.createUser = async (user) => {
   const { rows } = await pool.query(sql, [
     user.fullname,
     user.email,
-    user.passwordhash,
+    user.password,
     user.userType,
     user.vendorNumber
   ]);

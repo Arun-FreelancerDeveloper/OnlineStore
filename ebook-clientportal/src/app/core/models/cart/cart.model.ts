@@ -1,14 +1,18 @@
-export interface CartItem {
+export interface CartModel {
   cartid: number;
   productid: number;
   productname: string;
   primaryImage: string;
-  displayprice: number;
   mrp: number;
-  wholesaleprice: number;
   qty: number;
-  amount: number,
-  images: {
+  marketprice: number;
+  dealprice: number;
+  saveprice: number;
+  convertcurrenyprice : number;
+  displayprice: string;
+  amount: number;
+  displayamountprice: string;
+  image: {
     imagepath: string;
     isprimary: boolean;
     productimageid: number;
@@ -21,4 +25,12 @@ export interface CartUpdateItem {
 export interface CartUpdateRequest {
   modifiedby: number;
   items: CartUpdateItem[];
+}
+
+
+export interface DiscountRuleModel {
+  displayName : string;
+  orderCount: number;
+  rule: string;
+  discount: number;
 }

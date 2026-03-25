@@ -34,7 +34,7 @@ const { validateBody, validateQuery, validateParams, createUserSchema, getUsersS
  *             required:
  *               - fullname
  *               - email
- *               - passwordhash
+ *               - password
  *               - userType
  *               - vendorNumber
  *             properties:
@@ -44,7 +44,7 @@ const { validateBody, validateQuery, validateParams, createUserSchema, getUsersS
  *               email:
  *                 type: string
  *                 example: john@example.com
- *               passwordhash:
+ *               password:
  *                 type: string
  *                 example: 123456
  *               userType:

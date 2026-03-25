@@ -57,7 +57,6 @@ export class CartService {
         }),
         shareReplay(1) // 🚀 important
       );
-
     return this.cartRequest$;
   }
 
