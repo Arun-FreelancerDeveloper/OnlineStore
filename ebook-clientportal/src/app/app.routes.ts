@@ -13,6 +13,7 @@ import { RefundComponent } from './pages/refund/refund.component';
 import { TermsconditionsComponent } from './pages/termsconditions/termsconditions.component';
 import { ForgotPasswordComponent } from './features/account/pages/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './features/account/pages/reset-password/reset-password.component';
+import { CheckoutComponent } from './features/checkout/checkout/checkout.component';
 
 export const routes: Routes = [
   {
@@ -71,6 +72,9 @@ export const routes: Routes = [
     path: 'resetpassword/:token',
     component: ResetPasswordComponent
   },
-
+  {
+    path: 'checkout',
+    component: CheckoutComponent
+  },
 ];
 export class AppRoutingModule { }

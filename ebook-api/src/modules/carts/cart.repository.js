@@ -195,31 +195,36 @@ exports.updateCartQty = async (cartid, qty, userid) => {
  * ===============================
  */
 exports.updateCartBulk = async (items, userid) => {
-  const values = [];
-  const ids = [];
+  const client = await pool.connect();
 
-  items.forEach((item) => {
-    if (!item.cartid || item.qty < 1) return;
+  try {
+    await client.query('BEGIN');
 
-    values.push(item.cartid, item.qty);
-    ids.push(`($${values.length - 1}, $${values.length})`);
-  });
+    for (const item of items) {
+      if (!item.cartid || item.qty < 1) continue;
 
-  if (values.length === 0) return false;
+      const sql = `
+        UPDATE tbcart
+        SET qty = $1,
+            modifiedon = NOW()
+        WHERE cartid = $2
+          AND userid = $3
+          AND delflag = 0;
+      `;
 
-  const sql = `
-    UPDATE tbcart AS c SET
-      qty = v.qty,
-      modifiedon = NOW()
-    FROM (VALUES ${ids.join(',')}) AS v(cartid, qty)
-    WHERE c.cartid = v.cartid
-      AND c.userid = $${values.length + 1}
-      AND c.delflag = 0;
-  `;
+      await client.query(sql, [item.qty, item.cartid, userid]);
+    }
 
-  await pool.query(sql, [...values, userid]);
+    await client.query('COMMIT');
+    return true;
 
-  return true;
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+
+  } finally {
+    client.release();
+  }
 };
 
 /**

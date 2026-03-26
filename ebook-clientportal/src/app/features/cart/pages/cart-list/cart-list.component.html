@@ -1,5 +1,7 @@
 <!-- ========================= Breadcrumb Start =============================== -->
-<app-breadcrumb title = "My Cart"></app-breadcrumb>
+<app-breadcrumb title="My Cart" [items]="[
+  { label: 'My Cart' }
+]"></app-breadcrumb>
 <!-- ========================= Breadcrumb End =============================== -->
 
 <!-- ========================= Shopping Cart Start =============================== -->
@@ -84,7 +86,7 @@
                <div class="flex-between flex-wrap gap-16 mt-16">
                   <!-- <div class="flex-align gap-16"><input type="text" placeholder="Coupon Code" class="common-input"><button type="submit" class="btn btn-main py-18 w-100 rounded-8">Apply Coupon</button></div> -->
                    <h5 *ngIf="this.currentUserDiscountRule.discount > 0" class="mb-24">{{this.currentUserDiscountRule.displayName}}.</h5>
-                  <button type="submit" class="text-lg btn btn-main mt-40 py-18 rounded-8">Update Cart</button>
+                  <button type="submit" (click)="updateCart()" class="text-lg btn btn-main mt-40 py-18 rounded-8">Update Cart</button>
 
                </div>
             </div>
@@ -99,10 +101,17 @@
                <div class="bg-color-three rounded-8 p-24 mt-24">
                   <div class="flex-between gap-8"><span class="text-gray-900 text-xl fw-semibold">Total</span><span class="text-gray-900 text-xl fw-semibold">{{ getFormattedTotalPay() }}</span></div>
                </div>
-               <a class="btn btn-main mt-40 py-18 w-100 rounded-8" href="/cart/checkout">Proceed to checkout</a>
+               <a class="btn btn-main mt-40 py-18 w-100 rounded-8" [routerLink]="['/checkout']">Proceed to checkout</a>
             </div>
          </div>
       </div>
    </div>
 </section>
 <!-- ========================= Shopping Cart End =============================== -->
+
+
+<!-- ========================= Shopping Start =============================== -->
+<div class="pt-30">
+  <app-shopping-card></app-shopping-card>
+</div>
+<!-- ========================= Shopping End =============================== -->

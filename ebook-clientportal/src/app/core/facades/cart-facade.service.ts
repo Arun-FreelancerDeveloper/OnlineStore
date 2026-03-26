@@ -164,4 +164,11 @@ export class CartFacadeService {
     this.refreshCartCount();
 
   }
+
+/* =====================================================
+* UPDATE CART
+* ===================================================== */
+  updateCartItems(payload: any) {
+    return this.cartService.updateCartItems(payload);
+  }
 }

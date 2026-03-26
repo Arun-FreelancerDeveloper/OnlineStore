@@ -10,12 +10,14 @@ import { ConfigService } from '../../../../core/config/config.service';
 import { CartFacadeService } from '../../../../core/facades/cart-facade.service';
 import { AlertService } from '../../../../shared/services/alert/alert.service';
 import { CurrencyService } from '../../../../core/services/currency/currency.service';
+import { RouterLink } from "@angular/router";
+import { ShoppingCardComponent } from "../../../../shared/components/shopping-card/shopping-card.component";
 
 @Component({
   selector: 'app-cart-list',
   standalone: true,
   templateUrl: './cart-list.component.html',
-  imports: [BreadcrumbComponent, CommonModule],
+  imports: [BreadcrumbComponent, CommonModule, RouterLink, ShoppingCardComponent],
   providers: [CurrencyPipe]
 })
 export class CartListComponent implements OnInit, OnDestroy {
@@ -279,5 +281,36 @@ export class CartListComponent implements OnInit, OnDestroy {
     return item.image
       ? `${this.config.api.imageUrl}/${item.image}`
       : `${this.config.api.imageUrl}/images/default.jpg`;
+  }
+
+
+
+  /* =====================================================
+   * Update Cart
+   * ===================================================== */
+  updateCart(): void {
+    const user = this.authStorage.getUser(); // get current user
+    const payload = {
+      modifiedby: user?.userid || 0,
+      items: this.cartItems.map(item => ({
+        cartid: item.cartid,
+        qty: item.qty
+      }))
+    };
+
+    this.cartFacade.updateCartItems(payload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.alertService.success('Item quantity updated successfully');
+          } else {
+            this.alertService.error('Failed to update cart');
+          }
+        },
+        error: () => {
+          this.alertService.error('Something went wrong while updating cart');
+        }
+      });
   }
 }

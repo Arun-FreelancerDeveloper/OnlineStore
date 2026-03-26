@@ -1,0 +1,146 @@
+<!-- ========================= Breadcrumb Start =============================== -->
+<app-breadcrumb title="Checkout" [items]="[
+  { label: 'My Cart', link: '/viewcart' },
+  { label: 'Checkout' }
+]"></app-breadcrumb>
+<!-- ========================= Breadcrumb End =============================== -->
+
+<!-- ========================= Checkout Start =============================== -->
+<section class="checkout py-80">
+  <div class="container container-lg">
+    <div class="row">
+      <!-- Checkout Form -->
+      <div class="col-xl-7 col-lg-7">
+        <form action="#" class="pe-xl-5">
+          <div class="row gy-3">
+            <div class="col-sm-6 col-xs-6">
+              <input type="text" placeholder="First Name" class="common-input border-gray-100">
+            </div>
+            <div class="col-sm-6 col-xs-6">
+              <input type="text" placeholder="Last Name" class="common-input border-gray-100">
+            </div>
+            <div class="col-12">
+              <input type="text" placeholder="Business Name" class="common-input border-gray-100">
+            </div>
+            <div class="col-12">
+              <input type="text" placeholder="United states (US)" class="common-input border-gray-100">
+            </div>
+            <div class="col-12">
+              <input type="text" placeholder="House number and street name" class="common-input border-gray-100">
+            </div>
+            <div class="col-12">
+              <input type="text" placeholder="Apartment, suite, unit, etc. (Optional)" class="common-input border-gray-100">
+            </div>
+            <div class="col-12">
+              <input type="text" placeholder="City" class="common-input border-gray-100">
+            </div>
+            <div class="col-12">
+              <input type="text" placeholder="San Francisco" class="common-input border-gray-100">
+            </div>
+            <div class="col-12">
+              <input type="text" placeholder="Post Code" class="common-input border-gray-100">
+            </div>
+            <div class="col-12">
+              <input type="number" placeholder="Phone" class="common-input border-gray-100">
+            </div>
+            <div class="col-12">
+              <input type="email" placeholder="Email Address" class="common-input border-gray-100">
+            </div>
+            <div class="col-12">
+              <div class="my-40">
+                <h6 class="text-lg mb-24">Additional Information</h6>
+                <input type="text" placeholder="Notes about your order, e.g. special notes for delivery." class="common-input border-gray-100">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Checkout Sidebar -->
+      <div class="col-xl-5 col-lg-5">
+        <div class="checkout-sidebar">
+          <!-- Header -->
+          <div class="bg-color-three rounded-8 p-24 text-center">
+            <span class="text-gray-900 text-xl fw-semibold">Your Orders</span>
+          </div>
+
+          <!-- Cart Items -->
+          <div class="border border-gray-100 rounded-8 px-24 py-40 mt-24" *ngIf="cartItems.length > 0; else emptyCart">
+            <div class="mb-32 pb-32 border-bottom border-gray-100 flex-between gap-8">
+              <span class="text-gray-900 fw-medium text-xl font-heading-two">Product</span>
+              <span class="text-gray-900 fw-medium text-xl font-heading-two">Subtotal</span>
+            </div>
+
+            <!-- Loop through cart items -->
+            <div class="flex-between gap-24 mb-32" *ngFor="let item of cartItems">
+              <div class="flex-align gap-12">
+                <span class="text-gray-900 fw-normal text-md font-heading-two w-250">{{ item.productname }}</span>
+                <span class="text-gray-900 fw-normal text-md font-heading-two">x {{ item.qty }}</span>
+              </div>
+              <span class="text-gray-900 fw-bold text-md font-heading-two">
+                {{ formatCurrency(item.qty * item.convertcurrenyprice) }}
+              </span>
+            </div>
+
+            <!-- Totals -->
+            <div class="border-top border-gray-100 pt-30 mt-30">
+              <div class="mb-32 flex-between gap-8">
+                <span class="text-gray-900 font-heading-two text-xl fw-semibold">Subtotal</span>
+                <span class="text-gray-900 font-heading-two text-md fw-bold">{{ formatCurrency(getCartTotal()) }}</span>
+              </div>
+
+              <div class="mb-32 flex-between gap-8" *ngIf="getDiscountAmount() > 0">
+                <span class="text-gray-900 font-heading-two text-xl fw-semibold">Discount</span>
+                <span class="text-gray-900 font-heading-two text-md fw-bold">- {{ formatCurrency(getDiscountAmount()) }}</span>
+              </div>
+
+              <div class="mb-0 flex-between gap-8">
+                <span class="text-gray-900 font-heading-two text-xl fw-semibold">Total</span>
+                <span class="text-gray-900 font-heading-two text-md fw-bold">{{ formatCurrency(getPayAmount()) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty Cart Template -->
+          <ng-template #emptyCart>
+            <p class="text-center text-gray-500 py-40">Your cart is empty.</p>
+          </ng-template>
+
+          <!-- Payment Options -->
+          <div class="mt-32">
+            <div class="payment-item" *ngFor="let pay of paymentMethods; let i = index">
+              <div class="form-check common-check common-radio py-16 mb-0">
+                <input type="radio" name="payment" [id]="'payment'+i" class="form-check-input"
+                       [value]="pay.label" [(ngModel)]="selectedPayment">
+                <label [for]="'payment'+i" class="form-check-label fw-semibold text-neutral-600">{{ pay.label }}</label>
+              </div>
+              <div class="payment-item__content px-16 py-24 rounded-8 bg-main-50 position-relative">
+                <p class="text-gray-800">{{ pay.description }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Privacy Note -->
+          <div class="mt-32 pt-32 border-top border-gray-100">
+            <p class="text-gray-500">
+              Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our
+              <a href="#" class="text-main-600 text-decoration-underline">privacy policy</a>.
+            </p>
+          </div>
+
+          <!-- Place Order Button -->
+          <button class="btn btn-main mt-40 py-18 w-100 rounded-8" (click)="placeOrder()">
+            Place Order
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ========================= Checkout End =============================== -->
+
+<!-- ========================= Shopping Start =============================== -->
+<div class="pt-30">
+  <app-shopping-card></app-shopping-card>
+</div>
+<!-- ========================= Shopping End =============================== -->

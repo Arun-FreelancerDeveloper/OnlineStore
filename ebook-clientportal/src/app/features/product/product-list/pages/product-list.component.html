@@ -1,5 +1,8 @@
 <!-- ========================= Breadcrumb Start =============================== -->
-<app-breadcrumb title = "Products" [subtitle]="this.GroupName"></app-breadcrumb>
+<app-breadcrumb title="Products" [items]="[
+  { label: 'Products', link: '/products' },
+  { label: this.GroupName }
+]"></app-breadcrumb>
 <!-- ========================= Breadcrumb End =============================== -->
 
 <!-- ========================= Category Groups Start =============================== -->
