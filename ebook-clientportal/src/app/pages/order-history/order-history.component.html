@@ -1,0 +1,74 @@
+<!-- ========================= Breadcrumb Start =============================== -->
+<app-breadcrumb title="My Orders" [items]="[
+  { label: 'My Orders' }
+]"></app-breadcrumb>
+<!-- ========================= Breadcrumb End =============================== -->
+<div class="order-history container py-4">
+
+<div class="col-xl-12 col-lg-12">
+  <div class="list-grid-wrapper order-history-wrapper grid-cols-3 gap-24">
+    <div
+      class="order-card rounded-12 overflow-hidden bg-color-three border border-neutral-50 hover-border-main-two-600 transition-2"
+      *ngFor="let order of orders"
+    >
+      <!-- Top overlay with background -->
+      <div
+        class="order-card__top bg-overlay position-relative h-160 flex-center"
+        [style.backgroundImage]="'url(https://tse2.mm.bing.net/th/id/OIP.nBRuog-9Mj7sW5gSTh-IeQHaEK?rs=1&pid=ImgDetMain&o=7&rm=3)'"
+        style="background-size: cover; background-position: center;"
+      >
+        <div class="position-absolute top-0 inset-0 p-16 z-1 d-flex flex-column justify-content-between">
+
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="order-card__content p-24 flex-grow-1 d-flex flex-column gap-12">
+        <div class="d-flex flex-column gap-14">
+        <div class="">
+              <div class="d-flex justify-content-between">
+                <span class="text-gray-900 fw-medium">#{{ order.orderno }}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-gray-900 fw-medium"><i class="ph ph-calendar"></i>&nbsp;{{ order.orderdate | date:'mediumDate' }}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-gray-900 fw-medium"><i class="ph ph-truck"></i>&nbsp;{{ order.orderstatus }}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-gray-900 fw-medium"><i class="ph ph-hand-coins"></i>&nbsp;{{ order.paymentstatus }}</span>
+              </div>
+          </div>
+        </div>
+        <hr>
+        <div class="flex-column gap-8">
+          <div class="d-flex justify-content-between">
+            <span class="text-gray-900 fw-medium">Total Amount:</span>
+            <span class="text-main-two-600 fw-semibold">{{ format(order.totalamount, order.currency ) }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-gray-900 fw-medium">Discount:</span>
+            <span class="text-success fw-semibold">- {{ format(order.discountamount, order.currency ) }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-gray-900 fw-medium">Payable:</span>
+            <span class="text-main-two-600 fw-semibold"> {{ format(order.payamount || (order.totalamount - (order.discountamount || 0)), order.currency ) }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-gray-900 fw-medium">Savings:</span>
+            <span class="text-success fw-semibold"> {{ format(order.discountamount || 0, order.currency) }}</span>
+          </div>
+        </div>
+
+        <a
+          class="btn bg-neutral-600 hover-bg-neutral-700 text-white py-12 px-24 rounded-8 flex-center gap-8 fw-medium mt-16"
+
+        >
+          View Details
+          <span class="text-xl d-flex text-main-two-600"><i class="ph ph-eye"></i></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

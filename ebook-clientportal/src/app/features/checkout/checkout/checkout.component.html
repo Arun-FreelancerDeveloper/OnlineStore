@@ -9,53 +9,148 @@
 <section class="checkout py-80">
   <div class="container container-lg">
     <div class="row">
-      <!-- Checkout Form -->
       <div class="col-xl-7 col-lg-7">
-        <form action="#" class="pe-xl-5">
+        <form #form="ngForm" class="pe-xl-5">
           <div class="row gy-3">
-            <div class="col-sm-6 col-xs-6">
-              <input type="text" placeholder="First Name" class="common-input border-gray-100">
-            </div>
-            <div class="col-sm-6 col-xs-6">
-              <input type="text" placeholder="Last Name" class="common-input border-gray-100">
-            </div>
+
+            <!-- Full Name -->
             <div class="col-12">
-              <input type="text" placeholder="Business Name" class="common-input border-gray-100">
+              <label class="text-neutral-900 text-lg mb-8 fw-medium">Full Name <span class="text-danger">*</span></label>
+              <input type="text" name="fullname"
+                [(ngModel)]="shippingModel.fullname"
+                required
+                placeholder="John Smith"
+                class="common-input border-gray-100"  #fullname="ngModel" required >
+                <div class="text-danger" *ngIf="fullname.invalid && fullname.touched">
+  Full Name is required
+</div>
             </div>
+
+            <!-- Phone -->
             <div class="col-12">
-              <input type="text" placeholder="United states (US)" class="common-input border-gray-100">
+              <label class="text-neutral-900 text-lg mb-8 fw-medium">Phone Number <span class="text-danger">*</span></label>
+              <input type="tel" name="phone"
+                [(ngModel)]="shippingModel.phone"
+                required maxlength="10"
+                placeholder="9876543210"
+                class="common-input border-gray-100"  #phone="ngModel" required pattern="^[0-9]{10}$">
+                <div class="text-danger" *ngIf="phone.invalid && phone.touched">
+  Enter valid 10 digit phone number
+</div>
             </div>
-            <div class="col-12">
-              <input type="text" placeholder="House number and street name" class="common-input border-gray-100">
-            </div>
-            <div class="col-12">
-              <input type="text" placeholder="Apartment, suite, unit, etc. (Optional)" class="common-input border-gray-100">
-            </div>
-            <div class="col-12">
-              <input type="text" placeholder="City" class="common-input border-gray-100">
-            </div>
-            <div class="col-12">
-              <input type="text" placeholder="San Francisco" class="common-input border-gray-100">
-            </div>
-            <div class="col-12">
-              <input type="text" placeholder="Post Code" class="common-input border-gray-100">
-            </div>
-            <div class="col-12">
-              <input type="number" placeholder="Phone" class="common-input border-gray-100">
-            </div>
-            <div class="col-12">
-              <input type="email" placeholder="Email Address" class="common-input border-gray-100">
-            </div>
-            <div class="col-12">
-              <div class="my-40">
-                <h6 class="text-lg mb-24">Additional Information</h6>
-                <input type="text" placeholder="Notes about your order, e.g. special notes for delivery." class="common-input border-gray-100">
+
+            <!-- PIN + Location Button -->
+            <div class="col-12 d-flex gap-2">
+              <div class="flex-grow-1">
+                <label class="text-neutral-900 text-lg mb-8 fw-medium">PIN Code <span class="text-danger">*</span></label>
+                <input type="text" name="postalcode"
+                  [(ngModel)]="shippingModel.postalcode"
+                  (ngModelChange)="onPincodeChange($event)"
+                  maxlength="6"
+                  required
+                  placeholder="600017"
+                  class="common-input border-gray-100" #postal="ngModel">
+                  <div class="text-danger" *ngIf="postal.invalid && postal.touched">
+  Valid PIN code required
+</div>
+              </div>
+
+              <div class="align-self-end">
+                <button type="button"
+                  class="btn btn-main mt-34 py-18 w-100 rounded-8"
+                  (click)="this.useCurrentLocation()">
+                  <i class="ph ph-map-pin"></i> Use Location
+                </button>
               </div>
             </div>
+
+            <!-- Address Line 1 -->
+            <div class="col-12">
+              <label class="text-neutral-900 text-lg mb-8 fw-medium">Address Line 1 <span class="text-danger">*</span></label>
+              <input type="text" name="addressline1"
+                [(ngModel)]="shippingModel.addressline1"
+                required
+                placeholder="House No, Street Name"
+                class="common-input border-gray-100" #addressline1="ngModel">
+                 <div class="text-danger" *ngIf="addressline1.invalid && addressline1.touched">
+                    Valid PIN code required
+                </div>
+            </div>
+
+            <!-- Address Line 2 -->
+            <div class="col-12">
+              <label class="text-neutral-900 text-lg mb-8 fw-medium">Address Line 2</label>
+              <input type="text" name="addressline2"
+                [(ngModel)]="shippingModel.addressline2"
+                placeholder="Apartment, Landmark (Optional)"
+                class="common-input border-gray-100">
+            </div>
+
+            <!-- Country -->
+            <div class="col-12">
+              <label class="text-neutral-900 text-lg mb-8 fw-medium">Country <span class="text-danger">*</span></label>
+              <input type="text"
+                      class="common-input"
+                      name="country"
+                      [(ngModel)]="shippingModel.country"
+                      (input)="filterCountries()"
+                      placeholder="Select Country" />
+
+                <ul *ngIf="filteredCountries.length > 0" class="dropdown-list">
+                  <li *ngFor="let c of filteredCountries"
+                      (click)="selectCountry(c)">
+                    {{ c.name }}
+                  </li>
+                </ul>
+            </div>
+
+            <!-- State -->
+            <div class="col-12">
+              <label class="text-neutral-900 text-lg mb-8 fw-medium">State <span class="text-danger">*</span></label>
+              <input type="text"
+                    class="common-input"
+                    name="state"
+                    [(ngModel)]="shippingModel.state"
+                    (input)="filterStates()"
+                    placeholder="Select State" />
+
+              <ul *ngIf="filteredStates.length > 0" class="dropdown-list">
+                <li *ngFor="let s of filteredStates"
+                    (click)="selectState(s)">
+                  {{ s.name }}
+                </li>
+              </ul>
+            </div>
+
+            <!-- City -->
+            <div class="col-12">
+              <label class="text-neutral-900 text-lg mb-8 fw-medium">City <span class="text-danger">*</span></label>
+             <input type="text"
+                    class="common-input"
+                    name="city"
+                    [(ngModel)]="shippingModel.city"
+                    (input)="filterCities()"
+                    placeholder="Select City" />
+
+              <ul *ngIf="filteredCities.length > 0" class="dropdown-list">
+                <li *ngFor="let city of filteredCities"
+                    (click)="selectCity(city)">
+                  {{ city }}
+                </li>
+              </ul>
+            </div>
+
+            <!-- Notes -->
+            <div class="col-12">
+              <label class="text-neutral-900 text-lg mb-8 fw-medium">Delivery Notes</label>
+              <input type="text"  [(ngModel)]="shippingModel.deliverynote"
+                placeholder="e.g. Call before delivery"
+                class="common-input border-gray-100">
+            </div>
+
           </div>
         </form>
       </div>
-
       <!-- Checkout Sidebar -->
       <div class="col-xl-5 col-lg-5">
         <div class="checkout-sidebar">
@@ -129,7 +224,7 @@
           </div>
 
           <!-- Place Order Button -->
-          <button class="btn btn-main mt-40 py-18 w-100 rounded-8" (click)="placeOrder()">
+          <button class="btn btn-main mt-40 py-18 w-100 rounded-8" (click)="placeOrder(form)">
             Place Order
           </button>
         </div>

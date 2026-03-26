@@ -49,7 +49,7 @@ export class FooterComponent {
       title: 'My Account',
       links: [
         { label: 'Account Dashboard', route: ['account'] },
-        { label: 'Order History', route: ['orderhistory'] },
+        { label: 'Order History', route: ['orders'] },
         { label: 'Cart', route: ['viewcart'] }
       ]
     }

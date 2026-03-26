@@ -44,9 +44,18 @@ const controller = require('./order.controller');
  *               totalamount:
  *                 type: integer
  *                 example: 100.00
+ *               discountamount:
+ *                 type: integer
+ *                 example: 30.00
+ *               payamount:
+ *                 type: integer
+ *                 example: 70.00
+ *               currency:
+ *                 type: string
+ *                 example: INR
  *               paymentstatus:
  *                 type: string
- *                 example: PAID
+ *                 example: Cash on delivery
  *               createdby:
  *                 type: integer
  *                 example: 1

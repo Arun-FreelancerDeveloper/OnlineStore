@@ -14,6 +14,7 @@ import { TermsconditionsComponent } from './pages/termsconditions/termscondition
 import { ForgotPasswordComponent } from './features/account/pages/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './features/account/pages/reset-password/reset-password.component';
 import { CheckoutComponent } from './features/checkout/checkout/checkout.component';
+import { OrderHistoryComponent } from './pages/order-history/order-history.component';
 
 export const routes: Routes = [
   {
@@ -75,6 +76,10 @@ export const routes: Routes = [
   {
     path: 'checkout',
     component: CheckoutComponent
+  },
+  {
+    path: 'orders',
+    component: OrderHistoryComponent
   },
 ];
 export class AppRoutingModule { }

@@ -26,7 +26,7 @@ exports.createorder = async (data) => {
     const orderSql = `
       INSERT INTO tborder (
         userid, orderno, orderdate, orderstatus,
-        totalamount, paymentstatus, shippingaddressid,
+        totalamount,discountamount,payamount,currency, paymentstatus, shippingaddressid,
         isactive, createdby, createdon,
         modifiedby, modifiedon,
         delflag, deletedby
@@ -45,6 +45,9 @@ exports.createorder = async (data) => {
       userid,
       orderno,
       totalamount,
+      discountamount,
+      payamount,
+      currency,
       paymentstatus,
       shippingaddressid,
       createdby
@@ -191,6 +194,9 @@ exports.getOrdersByUserId = async (userid) => {
       orderdate,
       orderstatus,
       totalamount,
+	  discountamount,
+	  payamount,
+	  currency
       paymentstatus
     FROM tborder
     WHERE userid = $1

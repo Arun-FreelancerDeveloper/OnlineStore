@@ -76,6 +76,9 @@ export interface AppConfig {
       showSymbol: boolean;
       decimalPlaces: number;
     };
-
   };
+  location : {
+    pincodeApi : string;
+    liveLocationApi : string;
+  }
 }

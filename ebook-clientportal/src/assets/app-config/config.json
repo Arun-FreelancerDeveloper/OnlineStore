@@ -66,9 +66,9 @@
     "newArrival_MaxSold": 10
   },
   "currency": {
-    "base": "INR",
-    "default": "XCD",
-    "defaultCountry": "DM",
+    "base": "XCD",
+    "default": "INR",
+    "defaultCountry": "IN",
     "autoDetect": true,
     "apis": {
       "exchange": "https://open.er-api.com/v6/latest/",
@@ -102,6 +102,10 @@
     "allowedDomains": [
       "http://localhost:3001"
     ]
+  },
+  "location" : {
+    "pincodeApi" : "https://api.postalpincode.in/pincode",
+    "liveLocationApi" : "https://nominatim.openstreetmap.org/reverse"
   },
   "cache": {
     "enabled": true,

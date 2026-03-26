@@ -1,0 +1,20 @@
+.order-card {
+  background: #fefefe;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    border-color: #ff5722;
+  }
+
+  &__top {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  &__content {
+    flex-grow: 1;
+  }
+}

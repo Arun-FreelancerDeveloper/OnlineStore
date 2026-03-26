@@ -36,4 +36,10 @@ export class ConfigService {
    get insights() {
     return this.get().insights;
   }
+
+  get location() {
+    return this.get().location;
+  }
+
+
 }
