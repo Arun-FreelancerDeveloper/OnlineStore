@@ -12,6 +12,9 @@
     "retryAttempts": 3,
     "defaultImage": "/core/assets/images/bg/1-general-books.png"
   },
+  "TaxSettings" : {
+    "StandardTax" : 10
+  },
   "company": {
     "name": "JAYS Limited",
     "tagline": "Quality stationery with a customer-first approach",
@@ -32,13 +35,13 @@
     },
     "contact": {
       "primaryPhone": "+17674484024",
-      "displayPhone": "+1 (767) 448-4024",
+      "displayPhone": "+1 (767) 448-4025",
       "email": "manager@jaysltd.net"
     },
     "support": {
       "email": "support@jaysltd.net",
       "phone": "tel:+17674484024",
-      "displayPhone": "+1 (767) 448-4024",
+      "displayPhone": "+1 (767) 448-4025",
       "workingHours": "Mon-Fri 9:00 AM - 5:00 PM",
       "mapLink" : "https://www.facebook.com/JaysLimited"
     },

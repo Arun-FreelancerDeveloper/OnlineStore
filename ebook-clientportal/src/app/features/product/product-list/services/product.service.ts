@@ -76,6 +76,10 @@ export class ProductService {
       productimage: item.image
         ? `${this.config.api.imageUrl}/${item.image}`
         : `${this.config.api.imageUrl}/images/default.jpg`,
+      ishasclude: item.ishasclude,
+      cludeimage: item.cludeimage
+        ? `${item.cludeimage}`
+        : `${this.config.api.imageUrl}/images/default.jpg`,
 
       groupid: item.groupid,
       groupname: item.groupname,

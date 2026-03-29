@@ -90,3 +90,39 @@ exports.deleteProduct = async (req, res, next) => {
     next(err);
   }
 };
+
+
+// ================= UPDATE PRODUCT IMAGES =================
+exports.updateProductImages = async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+
+    // You can get userId from token (recommended)
+    const userId = req.user?.id || req.body.userId;
+
+    if (!userId) {
+      return res
+        .status(400)
+        .json(ApiResponse.error('userId is required'));
+    }
+
+    if (!req.files || req.files.length === 0) {
+      return res
+        .status(400)
+        .json(ApiResponse.error('No images uploaded'));
+    }
+
+    const data = await service.updateProductImages(
+      productId,
+      req.files,
+      userId
+    );
+
+    res.json(
+      ApiResponse.success(data, 'Product images updated successfully.')
+    );
+
+  } catch (err) {
+    next(err);
+  }
+};

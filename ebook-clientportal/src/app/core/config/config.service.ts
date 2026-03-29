@@ -41,5 +41,8 @@ export class ConfigService {
     return this.get().location;
   }
 
+  get TaxSettings(){
+    return this.get().TaxSettings;
+  }
 
 }

@@ -69,6 +69,8 @@ exports.getCartByUserId = async (userid) => {
       COALESCE(pp.wholesaleprice, 0) AS dealprice,
       COALESCE(pp.mrp, 0) - COALESCE(pp.wholesaleprice, 0) AS saveprice,
       COALESCE(pi.imagepath, '/images/default.jpg') AS image,
+      pi.ishasclude,
+      COALESCE(pi.cludeimagepath, '/images/default.jpg') AS cludeimage,
       (COALESCE(pp.mrp, 0) * c.qty) AS totalamount
     FROM tbcart c
     JOIN tbproduct p 

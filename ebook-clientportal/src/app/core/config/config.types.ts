@@ -5,7 +5,6 @@ export interface AppConfig {
     environment: string;
     debug: boolean;
   };
-
   api: {
     baseUrl: string;
     imageUrl: string;
@@ -13,7 +12,9 @@ export interface AppConfig {
     timeout: number;
     retryAttempts: number;
   };
-
+  TaxSettings: {
+    StandardTax: number
+  },
   company: {
     name: string;
     tagline: string;
@@ -27,12 +28,12 @@ export interface AppConfig {
       themeColor: string;
     };
     address: {
-      line:  string;
+      line: string;
       city: string;
-      country:  string;
-      postalCode:  string;
-      full:  string;
-      mapLink : string;
+      country: string;
+      postalCode: string;
+      full: string;
+      mapLink: string;
     },
     contact: {
       primaryPhone: string;
@@ -77,8 +78,8 @@ export interface AppConfig {
       decimalPlaces: number;
     };
   };
-  location : {
-    pincodeApi : string;
-    liveLocationApi : string;
+  location: {
+    pincodeApi: string;
+    liveLocationApi: string;
   }
 }

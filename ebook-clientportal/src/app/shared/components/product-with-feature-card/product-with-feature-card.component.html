@@ -16,7 +16,7 @@
     [routerLink]="['/Products', product.productid]"
     class="product-card__thumb flex-center overflow-hidden">
     <img
-      [src]="product.productimage"
+      [src]="(product.ishasclude == true) ? product.cludeimage : product.productimage"
       [alt]="product.productname" />
   </a>
 

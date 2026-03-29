@@ -4,6 +4,9 @@ export interface ProductModel {
   productname: string;
   shortdescription: string;
   productimage: string;
+  ishasclude: boolean;
+  cludeimage: string;
+
   groupid: number;
   groupname: string;
   categoryid: number;

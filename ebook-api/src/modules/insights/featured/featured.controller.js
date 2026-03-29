@@ -1,5 +1,5 @@
 const service = require('./featured.service');
-const ApiResponse = require('../../../utils/ApiResponse');
+const ApiResponse = require('../../../utils/apiResponse');
 
 /**
  * GET /api/products/flash-sale

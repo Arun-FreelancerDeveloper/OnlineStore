@@ -225,4 +225,47 @@ router.delete(
   controller.deleteProduct
 );
 
+
+/**
+ * @swagger
+ * /api/product/{productId}/images:
+ *   put:
+ *     summary: Update product images only
+ *     tags: [Product]
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - images
+ *             properties:
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       200:
+ *         description: Product images updated successfully
+ *       400:
+ *         description: Validation error
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Internal server error
+ */
+router.put(
+  '/:productId/images',
+  uploadProductImages,
+  controller.updateProductImages
+);
+
 module.exports = router;

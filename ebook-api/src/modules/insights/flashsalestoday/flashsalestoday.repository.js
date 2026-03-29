@@ -24,6 +24,8 @@ exports.getFlashSaleProducts = async (page = 1, pageSize = 10) => {
               p.productcode,
 
               COALESCE(i.imagepath, '/images/default.jpg') AS productimage,
+              i.ishasclude,
+              COALESCE(i.cludeimagepath, '/images/default.jpg') AS productcludeimage,
 
               cg.groupid,
               cg.groupname,
@@ -99,6 +101,8 @@ exports.getFlashSaleProducts = async (page = 1, pageSize = 10) => {
               p.productname,
               p.productcode,
               i.imagepath,
+              i.ishasclude,
+              i.cludeimagepath,
               cg.groupid,
               cg.groupname,
               c.categoryid,

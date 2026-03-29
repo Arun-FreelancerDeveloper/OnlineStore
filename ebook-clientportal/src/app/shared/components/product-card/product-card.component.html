@@ -3,8 +3,10 @@
   <div class="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
     <a class="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative" [routerLink]="['/Products', product.productid]">
       <img alt="" class="w-auto max-w-unset"
-          [src]="product.productimage"
+          [src]="(product.ishasclude == true) ? product.cludeimage : product.productimage"
           [alt]="product.productname" />
+
+
       <span *ngIf="getTag() === 'best seller'" class="bg-primary-600 inset-block-start-0 inset-inline-start-0 position-absolute product-card__badge px-8 py-4 text-sm text-white"> Best Sale </span>
       <span *ngIf="getTag() === 'recommended'" class="bg-primary-600 inset-block-start-0 inset-inline-start-0 position-absolute product-card__badge px-8 py-4 text-sm text-white"> Recommended </span>
       <span *ngIf="getTag() === 'hot deal'" class="bg-danger-600 inset-block-start-0 inset-inline-start-0 position-absolute product-card__badge px-8 py-4 text-sm text-white"> Sale {{ getDiscountPercentage() }}% </span>

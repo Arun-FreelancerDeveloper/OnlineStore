@@ -16,14 +16,15 @@ import { ShippingService } from '../../../core/services/shipping/shipping.servic
 import { LocationService } from '../../../shared/services/location/location.service';
 import { OrderService } from '../../../core/services/order/order.service';
 import { PlaceOrderPayload } from '../../../core/models/order/order.model';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
-  styleUrl : './checkout.component.css',
+  styleUrl: './checkout.component.css',
   standalone: true,
   providers: [CurrencyPipe],
-  imports: [CommonModule, FormsModule, ShoppingCardComponent, BreadcrumbComponent]
+  imports: [CommonModule, FormsModule, ShoppingCardComponent, BreadcrumbComponent ,RouterLink ]
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
 
@@ -85,7 +86,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private shippingService: ShippingService,
     private locationService: LocationService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private route: ActivatedRoute,
 
   ) { }
 
@@ -214,8 +216,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         userid: user.userid,
         shippingaddressid: this.shippingModel.addressid,
         totalamount: this.getPayAmount() + this.getDiscountAmount(),
-        discountamount : this.getDiscountAmount(),
-        payamount : this.getPayAmount() - this.getDiscountAmount(),
+        discountamount: this.getDiscountAmount(),
+        payamount: this.getPayAmount() - this.getDiscountAmount(),
         currency: this.currentCurrency,
         paymentstatus: this.selectedPayment,
         createdby: user.userid,
@@ -234,8 +236,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           if (res.success) {
             // ✅ optional actions
             this.alertService.success('Order Placed successfully');
-            //this.router.navigate(['/order-success']);
             this.cartFacade.clearCartCache();
+            //this.rout(['/']);
           } else {
             this.alertService.error(
               res.message, 'Order failed:'

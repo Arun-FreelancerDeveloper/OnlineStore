@@ -28,6 +28,7 @@ export class CartListComponent implements OnInit, OnDestroy {
   cartItems: CartModel[] = [];
   isLoading = true;
   currentCurrency: string = '';
+  currentTaxPercentage : number = 0;
   currentUserDiscountRule: DiscountRuleModel = {
     displayName: '',
     orderCount: 0,
@@ -58,6 +59,8 @@ export class CartListComponent implements OnInit, OnDestroy {
    * → Load cart data
    */
   ngOnInit(): void {
+    /* Get the Default Tax From Configuration */
+    this.currentTaxPercentage = this.config.TaxSettings.StandardTax;
     this.loadDiscountRule();
     this.loadCart();
   }
@@ -240,11 +243,22 @@ export class CartListComponent implements OnInit, OnDestroy {
     return this.formatCurrency(this.getDiscountAmount());
   }
 
+  getTaxAmount(): number {
+    if (!this.currentTaxPercentage) return 0;
+    const total = this.getCartTotal() - (this. getDiscountAmount() || 0);
+    const taxPercent = this.currentTaxPercentage || 0;
+    return (total * taxPercent) / 100;
+  }
+  getFormattedTotalTax(): string {
+    return this.formatCurrency(this.getTaxAmount());
+  }
+
   getPayAmount(): number {
     if (!this.currentUserDiscountRule) return 0;
     const total = this.getCartTotal();
     const discountPercent = this.currentUserDiscountRule.discount || 0;
-    return total - (total * discountPercent) / 100;
+    const taxPercent = this.currentTaxPercentage || 0;
+    return total - ((total * discountPercent) / 100) + ((total * taxPercent) / 100);
   }
   getFormattedTotalPay(): string {
     return this.formatCurrency(this.getPayAmount());

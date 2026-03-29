@@ -88,3 +88,26 @@ exports.updateProduct = async (productId, data, files) => {
 exports.deleteProduct = async (productId, deletedBy) => {
   return await repo.deleteProduct(productId, deletedBy);
 };
+
+
+/**
+ * ================= UPDATE PRODUCT IMAGES ONLY =================
+ * - Only updates product images
+ * - Does not touch product data
+ * - @param {number} productId
+ * - @param {Array} files
+ * - @param {number} userId
+ */
+exports.updateProductImages = async (productId, files, userId) => {
+  if (!files || files.length === 0) {
+    throw new Error('No images uploaded');
+  }
+
+  // Convert uploaded files to required format
+  const images = files.map((file, index) => ({
+    imagename: file.filename || file.originalname,
+    imagepath: file.path
+  }));
+
+  return await repo.updateProductImages(productId, images, userId);
+};

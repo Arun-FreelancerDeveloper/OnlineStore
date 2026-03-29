@@ -97,6 +97,7 @@
                <div class="bg-color-three rounded-8 p-24">
                   <div class="mb-32 flex-between gap-8"><span class="text-gray-900 font-heading-two">Subtotal</span><span class="text-gray-900 fw-semibold">{{ getFormattedTotal() }}</span></div>
                   <div *ngIf="this.currentUserDiscountRule.discount > 0" class="mb-32 flex-between gap-8"><span class="text-gray-900 font-heading-two">Discount {{this.currentUserDiscountRule.discount}}%</span><span class="text-gray-900 fw-semibold">{{getFormattedTotalDiscount()}}</span></div>
+                  <div *ngIf="this.currentTaxPercentage > 0" class="mb-32 flex-between gap-8"><span class="text-gray-900 font-heading-two">Tax {{this.currentTaxPercentage}}%</span><span class="text-gray-900 fw-semibold">{{ getFormattedTotalTax() }}</span></div>
                </div>
                <div class="bg-color-three rounded-8 p-24 mt-24">
                   <div class="flex-between gap-8"><span class="text-gray-900 text-xl fw-semibold">Total</span><span class="text-gray-900 text-xl fw-semibold">{{ getFormattedTotalPay() }}</span></div>

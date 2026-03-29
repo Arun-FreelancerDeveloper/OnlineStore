@@ -111,6 +111,8 @@ exports.getAllProducts = async (categoryId, page = 1, pageSize = 10, findWhat = 
         p.shortdescription,
 
         COALESCE(img.imagepath, '/images/default.jpg') AS image,
+        img.ishasclude,
+        COALESCE(img.cludeimagepath, '/images/default.jpg') AS cludeimage,
 
         cg.groupid,
         cg.groupname,
@@ -179,6 +181,8 @@ exports.getAllProducts = async (categoryId, page = 1, pageSize = 10, findWhat = 
         p.productname,
         p.shortdescription,
         img.imagepath,
+        img.ishasclude,
+        img.cludeimagepath,
         cg.groupid,
         cg.groupname,
         c.categoryid,
@@ -242,7 +246,17 @@ exports.getProductById = async (productId) => {
           )
         ) FILTER (WHERE pi.productimageid IS NOT NULL),
         '[]'
-      ) AS images
+      ) AS images,
+      COALESCE(
+        json_agg(
+          json_build_object(
+            'cludeimagepath', pi.cludeimagepath,
+            'isprimary', pi.isprimary
+          )
+        ) FILTER (WHERE pi.productimageid IS NOT NULL),
+        '[]'
+      ) AS cludeimagepath,
+      img.ishasclude,
     FROM tbproduct p
     LEFT JOIN tbproductimage pi 
       ON p.productid = pi.productid
@@ -339,4 +353,117 @@ exports.deleteProduct = async (productId, deletedBy) => {
      WHERE productid = $2`,
     [deletedBy, productId]
   );
+};
+
+
+/**
+ * ================= UPDATE PRODUCT IMAGES ONLY =================
+ */
+/**
+ * ================= UPDATE PRODUCT IMAGES (CORRECTED) =================
+ */
+exports.updateProductImages = async (productId, images, userId) => {
+  if (!productId || isNaN(productId)) {
+    throw new Error('Invalid Product ID');
+  }
+
+  if (!images || !Array.isArray(images) || images.length === 0) {
+    throw new Error('Images array is required');
+  }
+
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    // 1️⃣ Check product exists
+    const check = await client.query(
+      `SELECT productid FROM tbproduct 
+       WHERE productid = $1 AND delflag = false`,
+      [productId]
+    );
+
+    if (!check.rows.length) {
+      throw new Error('Product not found');
+    }
+
+    // 2️⃣ Soft delete old images (BEST PRACTICE)
+    await client.query(
+      `UPDATE tbproductimage
+       SET delflag = 1,
+           isactive = false,
+           deletedby = $1,
+           deletedon = NOW()
+       WHERE productid = $2`,
+      [userId, productId]
+    );
+
+    // 3️⃣ Bulk insert new images
+    const values = images
+      .map((img, i) => {
+        const baseIndex = i * 7;
+        return `(
+          $1, 
+          $${baseIndex + 2},  -- imagename
+          $${baseIndex + 3},  -- imagepath
+          $${baseIndex + 4},  -- isprimary
+          $${baseIndex + 5},  -- sortorder
+          true,               -- isactive
+          $${baseIndex + 6},  -- createdby
+          NOW(),
+          $${baseIndex + 7},  -- modifiedby
+          NOW(),
+          0,                  -- delflag
+          0,                  -- deletedby
+          NULL                -- deletedon
+        )`;
+      })
+      .join(',');
+
+    const params = [productId];
+
+    images.forEach((img, index) => {
+      params.push(img.imagename);           // imagename
+      params.push(true);           // imagename
+      params.push(img.imagepath);           // imagepath
+      params.push(index === 0);             // isprimary (first image)
+      params.push(index + 1);               // sortorder
+      params.push(userId);                  // createdby
+      params.push(userId);                  // modifiedby
+    });
+
+    await client.query(
+      `INSERT INTO tbproductimage
+      (
+        productid,
+        ishasclude
+        cludeimagepath,
+        isprimary,
+        sortorder,
+        isactive,
+        createdby,
+        createdon,
+        modifiedby,
+        modifiedon,
+        delflag,
+        deletedby,
+        deletedon
+      )
+      VALUES ${values}`,
+      params
+    );
+
+    await client.query('COMMIT');
+
+    return {
+      message: 'Product images updated successfully',
+      productId
+    };
+
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
 };

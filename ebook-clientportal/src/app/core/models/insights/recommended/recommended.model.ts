@@ -3,6 +3,8 @@ export interface RecommendedProductModel {
   productname: string;
   productcode: string;
   productimage: string;
+  ishasclude: boolean;
+  cludeimage: string;
   shortdescription: string;
   groupid: number;
   groupname: string;
