@@ -76,9 +76,9 @@ export class FlashSaleService {
 
       // ✅ FIX: API already gives productimage
           // 🔥 Your API uses "image" not "productimage"
-      productimage: ${this.config.api.imageUrl}/${item.image},
+      productimage: ${this.config.api.imageUrl}/${item.productimage},
       ishasclude: item.ishasclude,
-      cludeimage: ${this.config.api.imageUrl}/${item.image},
+      cludeimage: ${this.config.api.imageUrl}/${item.productimage},
 
 
       groupid: item.groupid,
