@@ -16,13 +16,20 @@ export class RecommendedService {
   private readonly config = inject(ConfigService);
 
   // ===== API =====
-  private apiUrl!: string;
+  private apiUrl: string;
 
-  // ===== CACHE =====
-  private cache = new Map<string, Observable<ApiPaginationResponse<RecommendedProductModel>>>();
+  // ===== CACHE WITH TTL =====
+  private cache = new Map<
+    string,
+    { expiry: number; data$: Observable<ApiPaginationResponse<RecommendedProductModel>> }
+  >();
+
+  private readonly CACHE_TTL = 5 * 60 * 1000;
+
+  // Default image
+  private readonly DEFAULT_IMAGE = 'assets/images/no-image.png';
 
   constructor() {
-    // ✅ Correct way to access config
     this.apiUrl = `${this.config.api.baseUrl}/insights/recommended`;
   }
 
@@ -33,85 +40,114 @@ export class RecommendedService {
     page: number = 1,
     pageSize: number = 10
   ): Observable<ApiPaginationResponse<RecommendedProductModel>> {
-    const key = `recommended-${page}-${pageSize}`;
-    if (!this.cache.has(key)) {
-      const request$ = this.http
-        .get<any>(`${this.apiUrl}?page=${page}&pageSize=${pageSize}`)
-        .pipe(
-          map(res => ({
-            success: res.success,
-            message: res.message,
-            data: {
-              currentPage: res.data.currentPage,
-              pageSize: res.data.pageSize,
-              totalPages: res.data.totalPages,
-              totalRecords: res.data.totalRecords,
 
-              // ✅ IMPORTANT FIX
-              data: res.data.data.map((item: any) =>
-                this.mapProduct(item)
-              )
-            }
-          })),
-          shareReplay(1)
-        );
-      this.cache.set(key, request$);
+    const key = `recommended-${page}-${pageSize}`;
+    const now = Date.now();
+
+    const cached = this.cache.get(key);
+
+    // ✅ Return cached if not expired
+    if (cached && cached.expiry > now) {
+      return cached.data$;
     }
-    return this.cache.get(key)!;
+
+    const request$ = this.http
+      .get<ApiPaginationResponse<any>>(
+        `${this.apiUrl}?page=${page}&pageSize=${pageSize}`
+      )
+      .pipe(
+        map(res => ({
+          success: res?.success ?? false,
+          message: res?.message ?? '',
+          data: {
+            currentPage: res?.data?.currentPage ?? 1,
+            pageSize: res?.data?.pageSize ?? pageSize,
+            totalPages: res?.data?.totalPages ?? 0,
+            totalRecords: res?.data?.totalRecords ?? 0,
+
+            data: (res?.data?.data || []).map((item: any) =>
+              this.mapProduct(item)
+            )
+          }
+        })),
+        shareReplay({ bufferSize: 1, refCount: true })
+      );
+
+    // ✅ Cache only on success
+    request$.subscribe({
+      next: () => {
+        this.cache.set(key, {
+          expiry: now + this.CACHE_TTL,
+          data$: request$
+        });
+      },
+      error: () => {
+        this.cache.delete(key);
+      }
+    });
+
+    return request$;
   }
 
   /* =====================================================
-   * MAP PRODUCT (BASED ON YOUR RESPONSE)
+   * CLEAR CACHE
+   * ===================================================== */
+  clearCache(): void {
+    this.cache.clear();
+  }
+
+  /* =====================================================
+   * MAP PRODUCT
    * ===================================================== */
   private mapProduct(item: any): RecommendedProductModel {
+
+    // 🔥 FIX: Use correct field (image)
+    const imagePath = item?.image
+      ? `${this.config.api.imageUrl}/${item.image}`
+      : this.DEFAULT_IMAGE;
+
+    const cludeImagePath = item?.cludeimage
+      ? `${this.config.api.imageUrl}/${item.cludeimage}`
+      : this.DEFAULT_IMAGE;
+
     return {
-      productid: item.productid,
-      productcode: item.productcode,
-      productname: item.productname,
+      productid: item?.productid ?? 0,
+      productcode: item?.productcode ?? '',
+      productname: item?.productname ?? '',
       shortdescription: "",
 
- // 🔥 Your API uses "image" not "productimage"
-      productimage: item.image
-        ? `${this.config.api.imageUrl}/${item.priductimage}`
-        : `${this.config.api.imageUrl}/images/default.jpg`,
-      ishasclude: item.ishasclude,
-      cludeimage: item.cludeimage
-        ? `${item.cludeimage}`
-        : `${this.config.api.imageUrl}/images/default.jpg`,
+      productimage: imagePath,
+      ishasclude: Boolean(item?.ishasclude),
+      cludeimage: cludeImagePath,
 
-      groupid: item.groupid,
-      groupname: item.groupname,
+      groupid: item?.groupid ?? 0,
+      groupname: item?.groupname ?? '',
 
-      categoryid: item.categoryid,
-      categoryname: item.categoryname,
+      categoryid: item?.categoryid ?? 0,
+      categoryname: item?.categoryname ?? '',
 
-      subcategoryid: item.subcategoryid,
-      subcategoryname: item.subcategoryname,
+      subcategoryid: item?.subcategoryid ?? 0,
+      subcategoryname: item?.subcategoryname ?? '',
 
-      deptid: item.deptid,
-      deptname: item.deptname,
+      deptid: item?.deptid ?? 0,
+      deptname: item?.deptname ?? '',
 
-      storeid: item.storeid,
-      storename: item.storename,
+      storeid: item?.storeid ?? 0,
+      storename: item?.storename ?? '',
 
-      // ✅ PRICE
-      mrp: Number(item.mrp) || 0,
-      wholesaleprice: Number(item.wholesaleprice) || 0,
+      mrp: Number(item?.mrp) || 0,
+      wholesaleprice: Number(item?.wholesaleprice) || 0,
 
-      // 🔥 CORRECT SELLING PRICE
-      displayprice: Number(item.wholesaleprice || item.mrp) || 0,
+      displayprice: Number(item?.wholesaleprice || item?.mrp) || 0,
 
-      // ✅ SALES DATA
-      total_sold: Number(item.total_sold) || 0,
-      total_stock: Number(item.total_stock) || 0,
+      total_sold: Number(item?.total_sold) || 0,
+      total_stock: Number(item?.total_stock) || 0,
 
-      // ✅ PERCENTAGES
-      total_soldpercentage: Number(item.total_soldpercentage) || 0,
-      discount_percentage: Number(item.discount_percentage) || 0,
+      total_soldpercentage: Number(item?.total_soldpercentage) || 0,
+      discount_percentage: Number(item?.discount_percentage) || 0,
 
-      // ✅ RECOMMENDATION SCORE
-      recommendation_score: Number(item.recommendation_score) || 0,
-      // ✅ IMAGES ARRAY
+      recommendation_score: Number(item?.recommendation_score) || 0,
+
       images: []
     };
   }
