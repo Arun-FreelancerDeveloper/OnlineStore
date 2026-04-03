@@ -102,12 +102,12 @@ export class RecommendedService {
   private mapProduct(item: any): RecommendedProductModel {
 
     // 🔥 FIX: Use correct field (image)
-    const imagePath = item?.image
+    const imagePath = item?.productimage
       ? `${this.config.api.imageUrl}/${item.productimage}`
       : this.DEFAULT_IMAGE;
 
-    const cludeImagePath = item?.cludeimage
-      ? `${this.config.api.imageUrl}/${item.cludeimage}`
+    const cludeImagePath = item?.productimage
+      ? `${this.config.api.imageUrl}/${item.productimage}`
       : this.DEFAULT_IMAGE;
 
     return {
