@@ -103,7 +103,7 @@ export class RecommendedService {
 
     // 🔥 FIX: Use correct field (image)
     const imagePath = item?.image
-      ? `${this.config.api.imageUrl}/${item.image}`
+      ? `${this.config.api.imageUrl}/${item.productimage}`
       : this.DEFAULT_IMAGE;
 
     const cludeImagePath = item?.cludeimage
