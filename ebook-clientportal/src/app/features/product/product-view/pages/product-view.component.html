@@ -1,0 +1,100 @@
+<!-- ========================= Breadcrumb Start =============================== -->
+<app-breadcrumb title="Products" [items]="[
+  { label: 'Products', link: '/products' },
+  { label: this.GroupName }
+]"></app-breadcrumb>
+<!-- ========================= Breadcrumb End =============================== -->
+
+<!-- ========================= Category Groups Start =============================== -->
+<app-categorygroup-carousel></app-categorygroup-carousel>
+<!-- ========================= Category Groups End =============================== -->
+
+<!-- ========================= Product List =============================== -->
+<section class="shop py-80">
+   <div class="container container-lg">
+      <div class="row">
+         <div class="col-lg-3">
+            <div class="shop-sidebar">
+               <button type="button" class="shop-sidebar__close d-lg-none d-flex w-32 h-32 flex-center border border-gray-100 rounded-circle hover-bg-main-600 position-absolute inset-inline-end-0 me-10 mt-8 hover-text-white hover-border-main-600"><i class="ph ph-x"></i></button>
+               <div class="shop-sidebar__box border border-gray-100 rounded-8 p-32 mb-32">
+                  <h6 class="text-xl border-bottom border-gray-100 pb-24 mb-24">{{this.GroupName}}</h6>
+                  <ul class="max-h-540 overflow-y-auto scroll-sm">
+
+                     <li class="mb-24" *ngFor="let item of this.category;">
+                       <button
+                        class="text-gray-900 hover-text-main-600"
+                        (click)="onClickCategory(item.categoryid)">
+                                {{ item.categoryname }} - ({{ item.activeproductcount }})
+                       </button>
+                      </li>
+                  </ul>
+               </div>
+
+            </div>
+         </div>
+         <div class="col-lg-9">
+            <div class="flex-between gap-16 flex-wrap mb-40">
+               <span class="text-gray-900">Showing {{this.products.length}} of {{this.totalpageSize}} result</span>
+               <div class="position-relative flex-align gap-16 flex-wrap">
+                  <div class="list-grid-btns flex-align gap-16">
+                    <!-- List View Button -->
+                    <button type="button" class="w-44 h-44 flex-center border rounded-6 text-2xl list-btn"
+                        [ngClass]="{'border-gray-100 text-gray-700': viewMode() !== 'list', 'border-main-600 text-white bg-main-600': viewMode() === 'list'}" (click)="setListView()">
+                        <i class="ph-bold ph-list-dashes"></i>
+                    </button>
+
+                    <!-- Grid View Button -->
+                    <button type="button" class="w-44 h-44 flex-center border rounded-6 text-2xl grid-btn"
+                        [ngClass]="{'border-gray-100 text-gray-700': viewMode() !== 'grid','border-main-600 text-white bg-main-600': viewMode() === 'grid'}" (click)="setGridView()">
+                        <i class="ph ph-squares-four"></i>
+                    </button>
+                  </div>
+                  <!-- <div class="position-relative text-gray-500 flex-align gap-4 text-14">
+                     <label for="sorting" class="text-inherit flex-shrink-0">Sort by: </label>
+                     <select id="sorting" class="form-control common-input px-14 py-14 text-inherit rounded-6 w-auto">
+                        <option value="1" selected="">Popular</option>
+                        <option value="1">Latest</option>
+                        <option value="1">Trending</option>
+                        <option value="1">Matches</option>
+                     </select>
+                  </div> -->
+                  <button type="button" class="w-44 h-44 d-lg-none d-flex flex-center border border-gray-100 rounded-6 text-2xl sidebar-btn"><i class="ph-bold ph-funnel"></i></button>
+               </div>
+            </div>
+            <div class="list-grid-wrapper"  [ngClass]="{'list-view': viewMode() === 'list', 'grid-view': viewMode() === 'grid'}">
+              <app-product-card
+                *ngFor="let item of products"
+                [product]="item">
+              </app-product-card>
+            </div>
+            <!-- Loader -->
+            <div *ngIf="loading" class="text-center my-4">
+              <div class="spinner"></div>
+            </div>
+
+
+            <!-- No More Data -->
+            <div *ngIf="!hasMore && !loading" class="text-center my-4">
+              No more products
+            </div>
+            <!-- <ul class="pagination flex-center flex-wrap gap-16">
+               <li class="page-item"><a href="#" class="page-link h-64 w-64 flex-center text-xxl rounded-8 fw-medium text-neutral-600 border border-gray-100 disabled"><i class="ph-bold ph-arrow-left"></i></a></li>
+               <li class="page-item active"><a href="#" class="page-link h-64 w-64 flex-center text-md rounded-8 fw-medium text-neutral-600 border border-gray-100"> 01 </a></li>
+               <li class="page-item"><a href="#" class="page-link h-64 w-64 flex-center text-md rounded-8 fw-medium text-neutral-600 border border-gray-100"> 02 </a></li>
+               <li class="page-item"><a href="#" class="page-link h-64 w-64 flex-center text-md rounded-8 fw-medium text-neutral-600 border border-gray-100"> 03 </a></li>
+               <li class="page-item"><a href="#" class="page-link h-64 w-64 flex-center text-md rounded-8 fw-medium text-neutral-600 border border-gray-100"> 04 </a></li>
+               <li class="page-item"><a href="#" class="page-link h-64 w-64 flex-center text-md rounded-8 fw-medium text-neutral-600 border border-gray-100"> 05 </a></li>
+               <li class="page-item"><a href="#" class="page-link h-64 w-64 flex-center text-md rounded-8 fw-medium text-neutral-600 border border-gray-100"> 06 </a></li>
+               <li class="page-item"><a href="#" class="page-link h-64 w-64 flex-center text-md rounded-8 fw-medium text-neutral-600 border border-gray-100"> 07 </a></li>
+
+               <li class="page-item"><a href="#" class="page-link h-64 w-64 flex-center text-xxl rounded-8 fw-medium text-neutral-600 border border-gray-100"><i class="ph-bold ph-arrow-right"></i></a></li>
+            </ul> -->
+         </div>
+      </div>
+   </div>
+</section>
+<!-- ========================= Product List =============================== -->
+
+<!-- ========================= Shopping Start =============================== -->
+<app-shopping-card></app-shopping-card>
+<!-- ========================= Shopping End =============================== -->
