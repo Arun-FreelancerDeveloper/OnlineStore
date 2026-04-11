@@ -15,6 +15,7 @@ import { ForgotPasswordComponent } from './features/account/pages/forgot-passwor
 import { ResetPasswordComponent } from './features/account/pages/reset-password/reset-password.component';
 import { CheckoutComponent } from './features/checkout/checkout/checkout.component';
 import { OrderHistoryComponent } from './pages/order-history/order-history.component';
+import { ProductViewComponent } from './features/product/product-view/pages/product-view.component';
 
 export const routes: Routes = [
   {
@@ -52,6 +53,10 @@ export const routes: Routes = [
   {
     path: 'products/:groupId',
     component: ProductListComponent
+  },
+  {
+    path: 'productview/:productId',
+    component: ProductViewComponent
   },
   {
     path: 'viewcart',

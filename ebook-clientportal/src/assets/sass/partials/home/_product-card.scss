@@ -9,7 +9,7 @@
             transform: scale(1.2);
         }
     }
-    &__cart {   
+    &__cart {
         @include xxl-screen {
             font-size: 12px;
             padding: 9px 12px !important;
@@ -23,7 +23,7 @@
         width: 100%;
         transition: 0s !important;
         img {
-            max-width: 160px;
+            max-width: 160px !important;
             width: 100%;
             transition: .2s linear;
         }
@@ -51,7 +51,7 @@
         &__thumb {
             min-height: 160px;
             img {
-                max-width: 120px;
+                max-width: 120px !important;
             }
         }
         &__content {

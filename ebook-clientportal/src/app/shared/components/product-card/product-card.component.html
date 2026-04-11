@@ -1,7 +1,7 @@
 
 <div data-aos="fade-up" data-aos-duration="200" class="aos-init aos-animate">
   <div class="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
-    <a class="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative" [routerLink]="['/Products', product.productid]">
+    <a class="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative" [routerLink]="['/productview', product.productid]">
       <img alt="" class="w-auto max-w-unset"
           [src]="(product.ishasclude == true) ? product.cludeimage : product.productimage"
           [alt]="product.productname" />
@@ -14,7 +14,7 @@
     </a>
     <div class="product-card__content mt-16" style="width: 100%;">
         <h6 class="title text-sm fw-semibold mt-12 mb-8">
-          <a tabindex="0" class="link text-line-2" [routerLink]="['/Products', product.productid]">
+          <a tabindex="0" class="link text-line-2" [routerLink]="['/productview', product.productid]">
           {{ product.productname }}
           </a>
         </h6>

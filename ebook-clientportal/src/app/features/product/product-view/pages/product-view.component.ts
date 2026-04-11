@@ -1,7 +1,7 @@
 import { Component, HostListener,  OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute } from '@angular/router';
-import { ProductService } from '../services/product.service';
+import { ProductViewService } from '../services/product-view.service';
 import { CategoryService } from '../../../../core/services/category/category.service';
 import { BreadcrumbComponent } from "../../../../shared/components/breadcrumb/breadcrumb.component";
 import { CategoryGroupCarouselComponent } from "../../../../shared/components/categorygroup/categorygroup.component";
@@ -36,10 +36,120 @@ export class ProductViewComponent implements OnInit {
   loading: boolean = false;
   hasMore: boolean = true;
   viewMode = signal<'grid' | 'list'>('grid');
+quantity: number = 1;
+
+ productImageSlider = {
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    asNavFor: '.product-details__thumb-slider',
+    dots: false,
+    arrows: false,
+    focusOnSelect: true
+  };
+
+  thumbsImages = [
+    'assets/images/icon/product-1.png',
+    'assets/images/thumbs/product-details-thumb2.png',
+    'assets/images/thumbs/product-details-thumb3.png',
+    'assets/images/thumbs/product-details-thumb1.png',
+    'assets/images/thumbs/product-details-thumb2.png',
+  ];
+productThumbSlider = {
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    fade: true,
+    asNavFor: '.product-details__images-slider'
+  };
+
+images = [
+    'assets/images/icon/product-1.png',
+    'assets/images/icon/product-1.png',
+    'assets/images/icon/product-1.png',
+    'assets/images/icon/product-1.png',
+    'assets/images/icon/product-1.png',
+  ];
+
+
+arrivalSlider = {
+    slidesToShow: 6,
+    slidesToScroll: 1,
+    autoplay: false,
+    autoplaySpeed: 2000,
+    speed: 1500,
+    dots: false,
+    pauseOnHover: true,
+    arrows: true,
+    draggable: true,
+    infinite: true,
+    nextArrow: '#new-arrival-next',
+    prevArrow: '#new-arrival-prev',
+    responsive: [
+      {
+        breakpoint: 1599,
+        settings: {
+          slidesToShow: 6,
+          arrows: false,
+        }
+      },
+      {
+        breakpoint: 1399,
+        settings: {
+          slidesToShow: 4,
+          arrows: false,
+        }
+      },
+      {
+        breakpoint: 992,
+        settings: {
+          slidesToShow: 3,
+          arrows: false,
+        }
+      },
+      {
+        breakpoint: 575,
+        settings: {
+          slidesToShow: 2,
+          arrows: false,
+        }
+      },
+      {
+        breakpoint: 424,
+        settings: {
+          slidesToShow: 1,
+          arrows: false,
+        }
+      },
+    ]
+  }
+
+  /* =====================================================
+   * QTY CONTROLS
+   * ===================================================== */
+
+  increaseQty(): void {
+    this.quantity++;
+  }
+
+  decreaseQty(): void {
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
+  }
+
+  /* =====================================================
+   * ADD TO CART
+   * ===================================================== */
+
+  addToCart(productId: number): void {
+
+  }
+
+
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService,
+    private ProductViewService: ProductViewService,
     private categoryService: CategoryService
   ) { }
 
@@ -143,7 +253,7 @@ export class ProductViewComponent implements OnInit {
   loadProducts() {
     if (this.loading || !this.hasMore || (this.totalpageSize == this.products.length) || typeof this.categoryId === "undefined") return;
     this.loading = true;
-    this.productService.getProducts(this.categoryId, this.page, this.pageSize)
+    this.ProductViewService.getProducts(this.categoryId, this.page, this.pageSize)
       .subscribe(res => {
         if (res.data.totalRecords != 0) {
           this.totalpageSize = res.data.totalRecords;
