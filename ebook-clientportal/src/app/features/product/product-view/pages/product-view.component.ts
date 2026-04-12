@@ -1,4 +1,4 @@
-import { Component, HostListener,  OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute } from '@angular/router';
 import { ProductViewService } from '../services/product-view.service';
@@ -11,262 +11,140 @@ import { RecommendedProductCardComponent } from "../../../../shared/components/p
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { signal } from '@angular/core';
 import { ShoppingCardComponent } from "../../../../shared/components/shopping-card/shopping-card.component";
+import { CurrencyPipe } from '@angular/common';
+import { CurrencyService } from '../../../../core/services/currency/currency.service';
+import { ViewChild } from '@angular/core';
+import { SlickCarouselComponent } from 'ngx-slick-carousel';
+import { CartFacadeService } from '../../../../core/facades/cart-facade.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-view',
   standalone: true,
   templateUrl: './product-view.component.html',
-  styleUrl : './product-view.component.css',
-  imports: [BreadcrumbComponent, CategoryGroupCarouselComponent, CommonModule, ProductCardComponent, SlickCarouselModule, RecommendedProductCardComponent, ShoppingCardComponent]
+  styleUrl: './product-view.component.css',
+  imports: [BreadcrumbComponent, CommonModule, SlickCarouselModule, FormsModule],
+  providers: [CurrencyPipe]
 })
+
 export class ProductViewComponent implements OnInit {
 
-  groupId!: number;
-  GroupName: string = 'Products Group';
-  categoryId!: number;
-  categoryName: string = '';
-  category: any[] = [];
-  products: ProductModel[] = [];
-  cdr: any;
+  productId!: number;
+  productName: string = '';
+  productDisplaymrpPrice: string = '';
+  productDisplaydealPrice: string = '';
+  product: ProductModel | null = null;
+  quantity: number = 1;
 
-  /* Paggingation */
-  page: number = 1;
-  pageSize: number = 8;
-  totalpageSize: number = 8;
-  loading: boolean = false;
-  hasMore: boolean = true;
-  viewMode = signal<'grid' | 'list'>('grid');
-quantity: number = 1;
+  @ViewChild('mainSlider') mainSlider!: SlickCarouselComponent;
 
- productImageSlider = {
+  mainSliderConfig = {
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    fade: true,
+    infinite: true
+  };
+
+  thumbSliderConfig = {
     slidesToShow: 4,
     slidesToScroll: 1,
-    asNavFor: '.product-details__thumb-slider',
-    dots: false,
     arrows: false,
+    infinite: true,
     focusOnSelect: true
   };
 
-  thumbsImages = [
-    'assets/images/icon/product-1.png',
-    'assets/images/thumbs/product-details-thumb2.png',
-    'assets/images/thumbs/product-details-thumb3.png',
-    'assets/images/thumbs/product-details-thumb1.png',
-    'assets/images/thumbs/product-details-thumb2.png',
-  ];
-productThumbSlider = {
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false,
-    fade: true,
-    asNavFor: '.product-details__images-slider'
-  };
-
-images = [
-    'assets/images/icon/product-1.png',
-    'assets/images/icon/product-1.png',
-    'assets/images/icon/product-1.png',
-    'assets/images/icon/product-1.png',
-    'assets/images/icon/product-1.png',
-  ];
-
-
-arrivalSlider = {
-    slidesToShow: 6,
-    slidesToScroll: 1,
-    autoplay: false,
-    autoplaySpeed: 2000,
-    speed: 1500,
-    dots: false,
-    pauseOnHover: true,
-    arrows: true,
-    draggable: true,
-    infinite: true,
-    nextArrow: '#new-arrival-next',
-    prevArrow: '#new-arrival-prev',
-    responsive: [
-      {
-        breakpoint: 1599,
-        settings: {
-          slidesToShow: 6,
-          arrows: false,
-        }
-      },
-      {
-        breakpoint: 1399,
-        settings: {
-          slidesToShow: 4,
-          arrows: false,
-        }
-      },
-      {
-        breakpoint: 992,
-        settings: {
-          slidesToShow: 3,
-          arrows: false,
-        }
-      },
-      {
-        breakpoint: 575,
-        settings: {
-          slidesToShow: 2,
-          arrows: false,
-        }
-      },
-      {
-        breakpoint: 424,
-        settings: {
-          slidesToShow: 1,
-          arrows: false,
-        }
-      },
-    ]
+  // 👉 Click thumbnail → change main image
+  goToSlide(index: number) {
+    this.mainSlider.slickGoTo(index);
   }
 
-  /* =====================================================
-   * QTY CONTROLS
-   * ===================================================== */
-
-  increaseQty(): void {
-    this.quantity++;
+  // 👉 Image fallback (extra safety)
+  onImgError(img: any) {
+    img.imagepath = `/images/default.jpg`;
   }
-
-  decreaseQty(): void {
-    if (this.quantity > 1) {
-      this.quantity--;
-    }
-  }
-
-  /* =====================================================
-   * ADD TO CART
-   * ===================================================== */
-
-  addToCart(productId: number): void {
-
-  }
-
-
 
   constructor(
     private route: ActivatedRoute,
     private ProductViewService: ProductViewService,
-    private categoryService: CategoryService
+    private currencyService: CurrencyService,
+    private currencyPipe: CurrencyPipe,
+    private cartFacade: CartFacadeService
   ) { }
 
   ngOnInit(): void {
-
     this.route.paramMap.subscribe(params => {
-
-      const groupIdParam = params.get('groupId');
-      this.resetPage();
-      // ==========================================================================
-      // ✅ CASE 1: load that group's categories/products
-      // ==========================================================================
-      if (groupIdParam) {
-        this.groupId = Number(groupIdParam);
-        this.loadCategoriesAndProducts();
-      }
-
-      // ==========================================================================
-      // ❗ CASE 2: Automatically load first available groupId and its data
-      // ==========================================================================
-      else {
-        this.loadFirstGroup();
+      const productIdParam = params.get('productId');
+      /* ========================================================================== */
+      /* ✅ CASE 1: load that product */
+      /* ========================================================================== */
+      this.quantity = 1; // reset quantity on product change
+      if (productIdParam) {
+        this.productId = Number(productIdParam);
+        this.getProduct(this.productId);
       }
     });
-  }
-
-  /* ===================== VIEW MODE ===================== */
-  toggleViewMode(): void {
-    this.viewMode.set(this.viewMode() === 'grid' ? 'list' : 'grid');
-  }
-  setGridView(): void { this.viewMode.set('grid'); }
-  setListView(): void { this.viewMode.set('list'); }
-
-  // ==========================================================================
-  // RESET THE PAGE
-  // ==========================================================================
-  resetPage() {
-    this.products = [];
-    this.page = 1;
-    this.totalpageSize = 1;
-    this.hasMore = true;
-  }
-
-  // ==========================================================================
-  // LOAD FIRST GROUP
-  // ==========================================================================
-  loadFirstGroup() {
-    this.categoryService.getCategoryGroups(7, 1, 100)
-      .subscribe(categories => {
-        this.category = categories;
-        if (categories.length > 0) {
-          this.groupId = categories[0].groupid;
-          this.GroupName = categories[0].groupname;
-          this.categoryId = categories[0].categoryid;
-          this.loadProducts();
-        }
-      });
-  }
-
-  // =====================================================
-  // LOAD CATEGORY + PRODUCTS
-  // =====================================================
-  loadCategoriesAndProducts() {
-    this.categoryService.getCategoryGroups(this.groupId, 1, 100)
-      .subscribe(categories => {
-        this.category = categories;
-        if (categories.length > 0) {
-          // 👉 pick first category in that group
-          this.groupId = categories[0].groupid;
-          this.GroupName = categories[0].groupname;
-          this.categoryId = categories[0].categoryid;
-          this.loadProducts();
-        }
-      });
   }
 
   // =====================================================
   // LOAD PRODUCTS
   // =====================================================
-  // ✅ 👉 WRITE HERE (inside class)
-  @HostListener('window:scroll', [])
-  onScroll(): void {
-    const scrollPosition = window.innerHeight + window.scrollY;
-    // ✅ 80% scroll
-    const threshold = document.body.offsetHeight * 0.5;
-    if (scrollPosition >= threshold ) {
-      this.loadNextPage();
+  getProduct(productId: number) {
+    this.ProductViewService.getProductById(productId).subscribe({
+      next: (product) => {
+        this.product = product;
+        this.productName = product.productname;
+
+        // ✅ Apply currency conversion
+        this.currencyService.currency$.subscribe(currency => {
+
+          const convertedMrp = this.currencyService.convertPrice(
+            product.mrp,
+            currency
+          );
+
+          const convertedDeal = this.currencyService.convertPrice(
+            product.displayprice,
+            currency
+          );
+
+          this.productDisplaymrpPrice = this.currencyPipe.transform(
+            convertedMrp,
+            currency,
+            'symbol',
+            '1.2-2'
+          ) || '';
+
+          this.productDisplaydealPrice = this.currencyPipe.transform(
+            convertedDeal,
+            currency,
+            'symbol',
+            '1.2-2'
+          ) || '';
+        });
+
+      },
+      error: (error) => {
+        console.error('Error fetching product:', error);
+      }
+    });
+  }
+
+  // ➕ Increase
+  increaseQty() {
+    this.quantity++;
+  }
+
+  // ➖ Decrease
+  decreaseQty() {
+    if (this.quantity > 1) {
+      this.quantity--;
     }
   }
 
-  loadNextPage() {
-    if (this.loading || !this.hasMore) return;
-    this.page++;
-    this.loadProducts();
+  // 🛒 Add to Cart
+  addToCart() {
+    this.cartFacade.addToCart(this.productId, this.quantity);
   }
-  onClickCategory(categoryId: number) {
-    this.categoryId = categoryId;
-    this.resetPage();
-    this.loadProducts();
-  }
-  loadProducts() {
-    if (this.loading || !this.hasMore || (this.totalpageSize == this.products.length) || typeof this.categoryId === "undefined") return;
-    this.loading = true;
-    this.ProductViewService.getProducts(this.categoryId, this.page, this.pageSize)
-      .subscribe(res => {
-        if (res.data.totalRecords != 0) {
-          this.totalpageSize = res.data.totalRecords;
-        }
-        const newProducts = res.data || res;
-        if (newProducts.pageSize < this.pageSize) {
-          this.hasMore = false; // no more data
-        }
-        this.products = [...this.products, ...newProducts.data]; // 🔥 append
-        this.loading = false;
-      });
-  }
-
 
 }
-

@@ -17,7 +17,7 @@ import { ShoppingCardComponent } from "../../../../shared/components/shopping-ca
   standalone: true,
   templateUrl: './product-list.component.html',
   styleUrl : './product-list.component.css',
-  imports: [BreadcrumbComponent, CategoryGroupCarouselComponent, CommonModule, ProductCardComponent, SlickCarouselModule, RecommendedProductCardComponent, ShoppingCardComponent]
+  imports: [BreadcrumbComponent, CategoryGroupCarouselComponent, CommonModule, ProductCardComponent, SlickCarouselModule, ShoppingCardComponent]
 })
 export class ProductListComponent implements OnInit {
 
@@ -159,4 +159,3 @@ export class ProductListComponent implements OnInit {
 
 
 }
-

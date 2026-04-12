@@ -13,7 +13,7 @@
 
   <!-- IMAGE -->
   <a
-    [routerLink]="['/Products', product.productid]"
+    [routerLink]="['/productview', product.productid]"
     class="product-card__thumb flex-center overflow-hidden">
     <img
       [src]="(product.ishasclude == true) ? product.cludeimage : product.productimage"
@@ -26,7 +26,7 @@
     <!-- NAME -->
     <h6 class="title text-sm fw-semibold my-12">
       <a
-        [routerLink]="['/Products', product.productid]"
+        [routerLink]="['/productview', product.productid]"
         class="link text-line-2">
         {{ product.productname }}
       </a>

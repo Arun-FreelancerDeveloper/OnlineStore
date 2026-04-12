@@ -41,6 +41,7 @@ exports.getAllProducts = async (req, res, next) => {
 exports.getProductById = async (req, res, next) => {
   try {
     const data = await service.getProductById(req.params.productId);
+    console.log('Product details:', data);
     res.json(
       ApiResponse.success(
         data,
