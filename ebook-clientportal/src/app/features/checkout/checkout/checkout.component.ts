@@ -24,7 +24,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
   styleUrl: './checkout.component.css',
   standalone: true,
   providers: [CurrencyPipe],
-  imports: [CommonModule, FormsModule, ShoppingCardComponent, BreadcrumbComponent ,RouterLink ]
+  imports: [CommonModule, FormsModule, ShoppingCardComponent, BreadcrumbComponent, RouterLink]
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
 
@@ -140,12 +140,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     return this.cartItems.reduce((sum, item) => sum + item.qty * item.convertcurrenyprice, 0);
   }
 
+  getCartTotalTax(): number {
+    return this.cartItems.reduce((sum, item) => sum + (item.qty * item.convertcurrenyprice * (item.taxpercentage || 0) / 100), 0);
+  }
+
+
   getDiscountAmount(): number {
-    return (this.getCartTotal() * (this.currentUserDiscountRule.discount || 0)) / 100;
+    return ((this.getCartTotal() + this.getCartTotalTax()) * (this.currentUserDiscountRule.discount || 0)) / 100;
   }
 
   getPayAmount(): number {
-    return this.getCartTotal() - this.getDiscountAmount();
+    return this.getCartTotal() + this.getCartTotalTax() - this.getDiscountAmount();
   }
 
   formatCurrency(value: number): string {
@@ -215,9 +220,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       const payload: PlaceOrderPayload = {
         userid: user.userid,
         shippingaddressid: this.shippingModel.addressid,
-        totalamount: this.getPayAmount() + this.getDiscountAmount(),
+        totalamount: this.getPayAmount(),
+        totaltaxamount : this.getCartTotalTax(),
         discountamount: this.getDiscountAmount(),
-        payamount: this.getPayAmount() - this.getDiscountAmount(),
+        payamount: (this.getPayAmount() + this.getCartTotalTax()) - this.getDiscountAmount(),
         currency: this.currentCurrency,
         paymentstatus: this.selectedPayment,
         createdby: user.userid,
@@ -226,8 +232,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           productname: x.productname,
           productcode: "-",
           quantity: x.qty,
-          unitprice: x.convertcurrenyprice
-
+          unitprice: x.convertcurrenyprice,
+          taxpercentage: x.taxpercentage,
+          taxamount: x.taxamount,
+          totalpayamount: x.finalamount
         }))
       };
 

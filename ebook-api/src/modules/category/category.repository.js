@@ -58,23 +58,29 @@ exports.getAllCategorys = async (
         g.groupname,
         COALESCE(c.categoryid, 0) AS categoryid,
         COALESCE(c.categoryname, '-') AS categoryname,
+        COALESCE(t.taxid, 0) AS taxid,
+        COALESCE(t.taxname, 'No Tax') AS taxname,
+        COALESCE(t.taxpercentage, 0) AS taxpercentage,
         COALESCE(p.cnt, 0) AS activeproductcount
     FROM tbcategorygroup g
-    LEFT JOIN tbcategory c
-      ON c.groupid = g.groupid
-      AND c.isactive = true
-      AND c.delflag = 0
-    LEFT JOIN (
-        SELECT categoryid, COUNT(*) AS cnt
-        FROM tbproduct
-        WHERE isactive = true
-          AND delflag = false
-        GROUP BY categoryid
-    ) p ON p.categoryid = c.categoryid
+        LEFT JOIN tbcategory c
+            ON c.groupid = g.groupid
+            AND c.isactive = true
+            AND c.delflag = 0
+        LEFT JOIN tbtax t
+            ON t.taxid = c.taxid
+            AND t.isactive = true
+            AND t.delflag = false
+        LEFT JOIN (
+            SELECT categoryid, COUNT(*) AS cnt
+            FROM tbproduct
+            WHERE isactive = true
+              AND delflag = false
+            GROUP BY categoryid
+        ) p ON p.categoryid = c.categoryid
     WHERE g.isactive = true
-      AND g.delflag = false
-      AND g.groupid = $1
-  `;
+        AND g.delflag = false
+        AND g.groupid = $1`;
 
   let countQuery = `
     SELECT COUNT(*) AS total

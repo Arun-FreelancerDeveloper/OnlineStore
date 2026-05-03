@@ -13,6 +13,7 @@ exports.createorder = async (data) => {
     const {
       userid,
       totalamount,
+      totaltaxamount,
       paymentstatus,
       shippingaddressid,
       createdby,
@@ -26,7 +27,7 @@ exports.createorder = async (data) => {
     const orderSql = `
       INSERT INTO tborder (
         userid, orderno, orderdate, orderstatus,
-        totalamount,discountamount,payamount,currency, paymentstatus, shippingaddressid,
+        totalamount, totaltaxamount, discountamount, payamount, currency, paymentstatus, shippingaddressid,
         isactive, createdby, createdon,
         modifiedby, modifiedon,
         delflag, deletedby
@@ -45,6 +46,7 @@ exports.createorder = async (data) => {
       userid,
       orderno,
       totalamount,
+      totaltaxamount,
       discountamount,
       payamount,
       currency,
@@ -59,7 +61,7 @@ exports.createorder = async (data) => {
     const itemSql = `
       INSERT INTO tborderitem (
         orderid, productid, productname, productcode,
-        quantity, unitprice, totalprice,
+        quantity, unitprice, totalprice, taxpercentage, taxamount, totalpayamount,
         createdby, createdon,
         modifiedby, modifiedon,
         delflag, deletedby
@@ -67,8 +69,8 @@ exports.createorder = async (data) => {
       VALUES (
         $1, $2, $3, $4,
         $5, $6, $7,
-        $8, NOW(),
-        $8, NOW(),
+        $8, $9, $10,
+        $11, NOW(),
         0, 0
       );
     `;
@@ -82,6 +84,9 @@ exports.createorder = async (data) => {
         item.quantity,
         item.unitprice,
         item.quantity * item.unitprice,
+        item.taxpercentage,
+        item.taxamount,
+        item.totalpayamount,
         createdby
       ]);
     }

@@ -6,7 +6,7 @@
 
 <!-- ========================= Shopping Cart Start =============================== -->
 <section class="cart py-80">
-   <div class="container container-lg">
+   <div class="container-fluid">
       <div class="row gy-4">
          <div class="col-xl-9 col-lg-8">
             <div class="cart-table border border-gray-100 rounded-8 px-40 py-48">
@@ -19,6 +19,9 @@
                            <th class="h6 mb-0 text-lg fw-bold">Price</th>
                            <th class="h6 mb-0 text-lg fw-bold">Quantity</th>
                            <th class="h6 mb-0 text-lg fw-bold">Subtotal</th>
+                           <th class="h6 mb-0 text-lg fw-bold">Tax%</th>
+                           <!-- <th class="h6 mb-0 text-lg fw-bold">Tax Amount</th> -->
+                           <th class="h6 mb-0 text-lg fw-bold">Final Amount</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -79,6 +82,27 @@
       </span>
     </td>
 
+    <!-- Tax -->
+    <td>
+      <span class="text-lg h6 mb-0 fw-semibold">
+        {{ item.taxpercentage }}%
+      </span>
+    </td>
+
+    <!-- Tax Amount -->
+    <!-- <td>
+      <span class="text-lg h6 mb-0 fw-semibold">
+        {{ item.taxamountdisplay }}
+      </span>
+    </td> -->
+
+    <!-- Final Amount -->
+    <td>
+      <span class="text-lg h6 mb-0 fw-semibold">
+        {{ item.finalamountdisplay }}
+      </span>
+    </td>
+
   </tr>
 </tbody>
                   </table>
@@ -96,8 +120,9 @@
                <h6 class="text-xl mb-32">Cart Totals</h6>
                <div class="bg-color-three rounded-8 p-24">
                   <div class="mb-32 flex-between gap-8"><span class="text-gray-900 font-heading-two">Subtotal</span><span class="text-gray-900 fw-semibold">{{ getFormattedTotal() }}</span></div>
+                  <div *ngIf="this.currentTaxPercentage > 0" class="mb-32 flex-between gap-8"><span class="text-gray-900 font-heading-two">Tax Amount</span><span class="text-gray-900 fw-semibold">{{ getFormattedTotalTax() }}</span></div>
                   <div *ngIf="this.currentUserDiscountRule.discount > 0" class="mb-32 flex-between gap-8"><span class="text-gray-900 font-heading-two">Discount {{this.currentUserDiscountRule.discount}}%</span><span class="text-gray-900 fw-semibold">{{getFormattedTotalDiscount()}}</span></div>
-                  <div *ngIf="this.currentTaxPercentage > 0" class="mb-32 flex-between gap-8"><span class="text-gray-900 font-heading-two">Tax {{this.currentTaxPercentage}}%</span><span class="text-gray-900 fw-semibold">{{ getFormattedTotalTax() }}</span></div>
+
                </div>
                <div class="bg-color-three rounded-8 p-24 mt-24">
                   <div class="flex-between gap-8"><span class="text-gray-900 text-xl fw-semibold">Total</span><span class="text-gray-900 text-xl fw-semibold">{{ getFormattedTotalPay() }}</span></div>

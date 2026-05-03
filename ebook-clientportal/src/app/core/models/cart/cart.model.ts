@@ -16,7 +16,13 @@ export interface CartModel {
     imagepath: string;
     isprimary: boolean;
     productimageid: number;
-  }
+  },
+  taxpercentage: number;
+  taxamount: number;
+  finalamount: number;
+
+  taxamountdisplay: string;
+  finalamountdisplay: string;
 }
 export interface CartUpdateItem {
   cartid: number;

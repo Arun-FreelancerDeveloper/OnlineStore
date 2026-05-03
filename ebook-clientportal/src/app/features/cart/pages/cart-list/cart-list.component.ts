@@ -156,6 +156,7 @@ export class CartListComponent implements OnInit, OnDestroy {
     const marketPrice = this.currencyService.convertPrice(item.marketprice, currency);
     const dealPrice = this.currencyService.convertPrice(item.dealprice, currency);
     const total = dealPrice * item.qty;
+    const taxAmount = ((total * (item.taxpercentage || 0)) / 100);
 
     return {
       ...item,
@@ -163,6 +164,8 @@ export class CartListComponent implements OnInit, OnDestroy {
       /* Raw numeric values */
       convertcurrenyprice: dealPrice,
       saveprice: marketPrice - dealPrice,
+      taxamountdisplay: this.formatCurrency(taxAmount),
+      finalamountdisplay: this.formatCurrency(total + taxAmount),
 
       /* Formatted values */
       displayprice: this.formatCurrency(dealPrice),
@@ -233,9 +236,24 @@ export class CartListComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Calculate the Tax amount
+   */
+getCartTotalTax(): number {
+   return this.cartItems.reduce(
+      (sum, item) => sum + (item.qty * item.convertcurrenyprice) * (item.taxpercentage || 0) / 100,
+      0
+    );
+}
+  getFormattedTotalTax(): string {
+    return this.formatCurrency(this.getCartTotalTax());
+  }
+
+
+
   getDiscountAmount(): number {
     if (!this.currentUserDiscountRule) return 0;
-    const total = this.getCartTotal();
+    const total = this.getCartTotal() + this.getCartTotalTax();
     const discountPercent = this.currentUserDiscountRule.discount || 0;
     return (total * discountPercent) / 100;
   }
@@ -243,22 +261,11 @@ export class CartListComponent implements OnInit, OnDestroy {
     return this.formatCurrency(this.getDiscountAmount());
   }
 
-  getTaxAmount(): number {
-    if (!this.currentTaxPercentage) return 0;
-    const total = this.getCartTotal() - (this. getDiscountAmount() || 0);
-    const taxPercent = this.currentTaxPercentage || 0;
-    return (total * taxPercent) / 100;
-  }
-  getFormattedTotalTax(): string {
-    return this.formatCurrency(this.getTaxAmount());
-  }
-
   getPayAmount(): number {
     if (!this.currentUserDiscountRule) return 0;
-    const total = this.getCartTotal();
+    const total = this.getCartTotal() + this.getCartTotalTax();
     const discountPercent = this.currentUserDiscountRule.discount || 0;
-    const taxPercent = this.currentTaxPercentage || 0;
-    return total - ((total * discountPercent) / 100) + ((total * taxPercent) / 100);
+    return ((total) - ((total * discountPercent) / 100));
   }
   getFormattedTotalPay(): string {
     return this.formatCurrency(this.getPayAmount());
@@ -269,7 +276,11 @@ export class CartListComponent implements OnInit, OnDestroy {
    */
   private updateItemTotal(item: CartModel): void {
     const total = item.qty * item.convertcurrenyprice;
+    const taxAmount = ((total * (item.taxpercentage || 0)) / 100);
+    item.taxamountdisplay = this.formatCurrency(taxAmount);
     item.displayamountprice = this.formatCurrency(total);
+    item.taxamountdisplay = this.formatCurrency(taxAmount);
+    item.finalamountdisplay = this.formatCurrency(total + taxAmount);
   }
 
   /* =====================================================

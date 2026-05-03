@@ -44,6 +44,9 @@ const controller = require('./order.controller');
  *               totalamount:
  *                 type: integer
  *                 example: 100.00
+ *              totaltaxamount:
+ *                type: integer
+ *                example: 10.00
  *               discountamount:
  *                 type: integer
  *                 example: 30.00
@@ -69,6 +72,9 @@ const controller = require('./order.controller');
  *                     - productcode
  *                     - quantity
  *                     - unitprice
+ *                     - taxpercentage
+ *                     - taxamount  
+ *                     - totalpayamount       
  *                   properties:
  *                     productid:
  *                       type: integer
@@ -85,6 +91,15 @@ const controller = require('./order.controller');
  *                     unitprice:
  *                       type: number
  *                       example: 150
+ *                    taxpercentage:
+ *                      type: number
+ *                      example: 10
+ *                    taxamount:
+ *                      type: number
+ *                      example: 10.00
+ *                    totalpayamount:
+ *                      type: number
+ *                      example: 70.00
  *     responses:
  *       200:
  *         description: Order placed successfully

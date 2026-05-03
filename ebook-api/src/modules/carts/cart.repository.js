@@ -59,28 +59,54 @@ const { userid, productid, qty, createdby } = data;
  * ===============================
  */
 exports.getCartByUserId = async (userid) => {
-  const sql = `
-    SELECT
-      c.cartid,
-      c.qty,
-      p.productid,
-      p.productname,
-      COALESCE(pp.mrp, 0) AS marketprice,
-      COALESCE(pp.wholesaleprice, 0) AS dealprice,
-      COALESCE(pp.mrp, 0) - COALESCE(pp.wholesaleprice, 0) AS saveprice,
-      COALESCE(pi.imagepath, '/images/default.jpg') AS image,
-      pi.ishasclude,
-      COALESCE(pi.cludeimagepath, '/images/default.jpg') AS cludeimage,
-      (COALESCE(pp.mrp, 0) * c.qty) AS totalamount
-    FROM tbcart c
-    JOIN tbproduct p 
-      ON p.productid = c.productid
-    LEFT JOIN tbproductprice pp 
-      ON pp.productid = p.productid
-    LEFT JOIN tbproductimage pi
-      ON pi.productid = p.productid AND pi.isprimary = true
-    WHERE c.userid = $1
-      AND c.delflag = 0;
+  const sql = `SELECT
+                  c.cartid,
+                  c.qty,
+                  p.productid,
+                  p.productname,
+                  ROUND(COALESCE(pp.mrp, 0), 2) AS marketprice,
+                  ROUND(COALESCE(pp.wholesaleprice, 0), 2) AS dealprice,
+                  ROUND(COALESCE(pp.mrp, 0) - COALESCE(pp.wholesaleprice, 0), 2) AS saveprice,
+                  COALESCE(pi.imagepath, '/images/default.jpg') AS image,
+                  pi.ishasclude,
+                  COALESCE(pi.cludeimagepath, '/images/default.jpg') AS cludeimage,
+
+                  -- Base amount
+                  ROUND((COALESCE(pp.wholesaleprice, 0) * c.qty), 2) AS totalamount,
+
+                  -- Tax Info
+                  COALESCE(t.taxname, 'No Tax') AS taxname,
+                  ROUND(COALESCE(t.taxpercentage, 0), 2) AS taxpercentage,
+
+                  -- Tax Amount
+                  ROUND(((COALESCE(pp.wholesaleprice, 0) * c.qty) 
+                      * COALESCE(t.taxpercentage, 0) / 100), 2) AS taxamount,
+
+                  -- Final Amount (with tax)
+                  ROUND((
+                      (COALESCE(pp.wholesaleprice, 0) * c.qty) +
+                      ((COALESCE(pp.wholesaleprice, 0) * c.qty) 
+                      * COALESCE(t.taxpercentage, 0) / 100)
+                  ), 2) AS finalamount
+                FROM tbcart c
+                  JOIN tbproduct p 
+                      ON p.productid = c.productid
+                  LEFT JOIN tbproductprice pp 
+                      ON pp.productid = p.productid
+                  LEFT JOIN tbproductimage pi
+                      ON pi.productid = p.productid 
+                      AND pi.isprimary = true
+                  LEFT JOIN tbcategory cat
+                      ON cat.categoryid = p.categoryid
+                      AND cat.isactive = true
+                      AND cat.delflag = 0
+                  LEFT JOIN tbtax t
+                      ON t.taxid = cat.taxid
+                      AND t.isactive = true
+                      AND t.delflag = false
+                  WHERE 
+                      c.userid = $1
+                      AND c.delflag = 0;
   `;
 
   const { rows } = await pool.query(sql, [userid]);

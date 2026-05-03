@@ -183,6 +183,10 @@
                 <span class="text-gray-900 font-heading-two text-xl fw-semibold">Subtotal</span>
                 <span class="text-gray-900 font-heading-two text-md fw-bold">{{ formatCurrency(getCartTotal()) }}</span>
               </div>
+              <div class="mb-32 flex-between gap-8">
+                <span class="text-gray-900 font-heading-two text-xl fw-semibold">Tax</span>
+                <span class="text-gray-900 font-heading-two text-md fw-bold">{{ formatCurrency(getCartTotalTax()) }}</span>
+              </div>
 
               <div class="mb-32 flex-between gap-8" *ngIf="getDiscountAmount() > 0">
                 <span class="text-gray-900 font-heading-two text-xl fw-semibold">Discount</span>
