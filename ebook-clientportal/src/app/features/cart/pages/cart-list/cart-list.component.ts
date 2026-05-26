@@ -10,7 +10,7 @@ import { ConfigService } from '../../../../core/config/config.service';
 import { CartFacadeService } from '../../../../core/facades/cart-facade.service';
 import { AlertService } from '../../../../shared/services/alert/alert.service';
 import { CurrencyService } from '../../../../core/services/currency/currency.service';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { ShoppingCardComponent } from "../../../../shared/components/shopping-card/shopping-card.component";
 
 @Component({
@@ -37,6 +37,7 @@ export class CartListComponent implements OnInit, OnDestroy {
   };
 
   private destroy$ = new Subject<void>();
+  
 
   /* =====================================================
    * CONSTRUCTOR (DEPENDENCY INJECTION)
@@ -47,7 +48,8 @@ export class CartListComponent implements OnInit, OnDestroy {
     private cartFacade: CartFacadeService,
     private alertService: AlertService,
     private currencyService: CurrencyService,
-    private currencyPipe: CurrencyPipe
+    private currencyPipe: CurrencyPipe,
+    private router: Router
   ) { }
 
   /* =====================================================
@@ -63,6 +65,13 @@ export class CartListComponent implements OnInit, OnDestroy {
     this.currentTaxPercentage = this.config.TaxSettings.StandardTax;
     this.loadDiscountRule();
     this.loadCart();
+  }
+
+    /* =====================================================
+   * USER HELPER
+   * ===================================================== */
+  private get user() {
+    return this.authStorage.getUser();
   }
 
   /**
@@ -212,6 +221,17 @@ export class CartListComponent implements OnInit, OnDestroy {
         this.cartFacade.removeFromCart(cartId);
       }
     });
+  }
+
+  proceedToCheckout(): void {  
+    if (!this.user) {
+     this.cartFacade.loginRequired();
+    }
+    else {
+      // Navigate to checkout page
+      this.router.navigate(['/checkout']);
+    }
+
   }
 
   /* =====================================================

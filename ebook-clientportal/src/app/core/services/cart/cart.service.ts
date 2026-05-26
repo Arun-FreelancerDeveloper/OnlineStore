@@ -59,7 +59,7 @@ export class CartService {
   /* =====================================================
    * GET CART ITEMS
    * ===================================================== */
-  getCartItems(userid: number): Observable<ApiResponse<CartModel[]>> {
+  getCartItems(userid: number, guestcartid: number): Observable<ApiResponse<CartModel[]>> {
 
     if (this.cartCache.length > 0) {
       return of({
@@ -69,7 +69,7 @@ export class CartService {
     }
 
     return this.http
-      .get<ApiResponse<CartModel[]>>(`${this.apiUrl}/${userid}`)
+      .get<ApiResponse<CartModel[]>>(`${this.apiUrl}/${userid}/${guestcartid}`)
       .pipe(
         tap(res => {
           if (res?.data) {
@@ -134,9 +134,9 @@ export class CartService {
   /* =====================================================
   * LOAD CART
   * ===================================================== */
-  loadCartCount(userid: number) {
+  loadCartCount(userid: number, guestcartid: number) {
     return this.http
-      .get<any>(`${this.apiUrl}/${userid}`)
+      .get<any>(`${this.apiUrl}/${userid}/${guestcartid}`)
       .pipe(
         tap(res => {
           const count = res?.data?.length || 0;

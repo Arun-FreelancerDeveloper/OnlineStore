@@ -5,8 +5,8 @@ exports.addToCart = async (payload) => {
   return await cartRepo.addToCart(payload);
 };
 
-exports.getCartByUserId = async (userid) => {
-  return await cartRepo.getCartByUserId(userid);
+exports.getCartByUserId = async (userid, guestcartid) => {
+  return await cartRepo.getCartByUserId(userid, guestcartid);
 };
 
 exports.getUserDiscountRule = async (userid) => {

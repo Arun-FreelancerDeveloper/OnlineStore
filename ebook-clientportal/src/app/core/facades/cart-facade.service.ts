@@ -16,7 +16,8 @@ export class CartFacadeService {
   private readonly alertService = inject(AlertService);
   private readonly router = inject(Router);
 
-  // ✅ ADD THIS LINE
+  private readonly GUEST_USER_ID = 0;
+
   cartCount$ = this.cartService.cartCount$;
 
   /* =====================================================
@@ -31,17 +32,16 @@ export class CartFacadeService {
    * ===================================================== */
   addToCart(productId: number, qty: number = 1): void {
 
-    // 🔐 Check login
-    if (!this.user) {
-      this.loginRequired();
-      return;
-    }
+    var userid = this.user?.userid ?? 0;
+    var guestcartid =  this.GUEST_USER_ID ?? 0; // ⚠️ handle guest cart logic in API
+
 
     const payload = {
-      userid: this.user.userid,
+      userid: userid,
+      guestcartid: guestcartid, // ⚠️ handle guest cart logic in API
       productid: productId,
       qty,
-      createdby: this.user.userid
+      createdby: userid
     };
 
     this.cartService.addToCart(payload).subscribe({
@@ -95,8 +95,7 @@ export class CartFacadeService {
    * LOAD CART COUNT (ON APP START)
    * ===================================================== */
   loadCartCount(): void {
-    if (!this.user) return;
-    this.cartService.loadCartCount(this.user.userid).subscribe({
+    this.cartService.loadCartCount(this.user.userid, this.GUEST_USER_ID).subscribe({
       next: (res) => {
         console.log('CART API RESPONSE:', res); // 👈 check this
       },
@@ -108,11 +107,7 @@ export class CartFacadeService {
  * LOAD CART (ON APP START)
  * ===================================================== */
   getCartItems() {
-    if (!this.user) {
-      this.loginRequired();
-      return null; // ⚠️ handle in component
-    }
-    return this.cartService.getCartItems(this.user.userid);
+    return this.cartService.getCartItems(this.user?.userid ?? 0, this.GUEST_USER_ID);
   }
 
 
@@ -120,9 +115,7 @@ export class CartFacadeService {
    * REFRESH CART COUNT
    * ===================================================== */
   private refreshCartCount(): void {
-
-    if (!this.user) return;
-    this.cartService.loadCartCount(this.user.userid).subscribe({
+    this.cartService.loadCartCount(this.user?.userid ?? 0, this.GUEST_USER_ID).subscribe({
       next: () => { },
       error: () => this.cartService.setCartCount(0)
     });
@@ -131,7 +124,7 @@ export class CartFacadeService {
   /* =====================================================
    * LOGIN REQUIRED POPUP
    * ===================================================== */
-  private loginRequired(): void {
+  public loginRequired(): void {
     this.alertService.customConfirm({
       title: 'Login Required!',
       message: 'Please login to add items to your cart.',
@@ -150,7 +143,7 @@ export class CartFacadeService {
  * ===================================================== */
   getDiscountRule() {
     if (!this.user) {
-      this.loginRequired();
+     // this.loginRequired();
       return null; // ⚠️ handle in component
     }
     return this.cartService.getDiscountRule(this.user.userid);

@@ -14,7 +14,7 @@ exports.addToCart = async (req, res, next) => {
 
 exports.getCartByUserId = async (req, res, next) => {
   try {
-    const data = await service.getCartByUserId(req.params.userid);
+    const data = await service.getCartByUserId(req.params.userid, req.params.guestcartid);
     res.json(ApiResponse.success(data));
   } catch (err) {
     next(err);

@@ -127,7 +127,7 @@
                <div class="bg-color-three rounded-8 p-24 mt-24">
                   <div class="flex-between gap-8"><span class="text-gray-900 text-xl fw-semibold">Total</span><span class="text-gray-900 text-xl fw-semibold">{{ getFormattedTotalPay() }}</span></div>
                </div>
-               <a class="btn btn-main mt-40 py-18 w-100 rounded-8" [routerLink]="['/checkout']">Proceed to checkout</a>
+               <button type="button" class="btn btn-main mt-40 py-18 w-100 rounded-8" (click)="proceedToCheckout()">Proceed to checkout</button>
             </div>
          </div>
       </div>

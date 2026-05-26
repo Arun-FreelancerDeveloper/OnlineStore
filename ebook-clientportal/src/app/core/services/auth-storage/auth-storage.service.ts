@@ -3,7 +3,8 @@ import { StorageService } from '../../../shared/services/storage/storage.service
 import { BehaviorSubject } from 'rxjs';
 export type UserType = 'Customer' | 'Vendor';
 const KEYS = {
-  AUTH: 'auth_user'
+  AUTH: 'auth_user',
+  GUEST_CART_ID: 'guest_cart_id'
 };
 
 @Injectable({
@@ -55,5 +56,31 @@ export class AuthStorageService {
 
   isCustomer(): boolean {
     return this.getCurrentUserType() === 'Customer';
+  }
+
+  // ================= GUEST CART ID =================
+  saveGuestCartId(id: number): void {
+    this.storage.set(KEYS.GUEST_CART_ID, id);
+  }
+
+  getGuestCartId(): number | null {
+    return this.storage.get<number>(KEYS.GUEST_CART_ID);
+  }
+
+  ensureGuestCartId(): number {
+    let guestCartId = this.getGuestCartId();
+    if (!guestCartId) {
+      guestCartId = this.generateGuestCartId();
+      this.saveGuestCartId(guestCartId);
+    }
+    return guestCartId;
+  }
+
+  clearGuestCartId(): void {
+    this.storage.remove(KEYS.GUEST_CART_ID);
+  }
+
+  private generateGuestCartId(): number {
+    return Math.floor(Math.random() * 900_000_000) + 100_000_000;
   }
 }

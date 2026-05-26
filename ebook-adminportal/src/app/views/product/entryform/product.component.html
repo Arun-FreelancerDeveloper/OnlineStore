@@ -1,0 +1,100 @@
+<div class="row justify-content-center">
+  <div class="col-md-2 col-lg-2"></div>
+  <div class="col-md-8 col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <h4 class="card-title">Add/Edit Product</h4>
+            </div>
+            <!--end col-->
+          </div>
+          <!--end row-->
+        </div>
+        <!--end card-header-->
+        <div class="card-body pt-0">
+          <form>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label" for="exampleFormControlInput1">Group Name</label>
+                          <select class="form-select" aria-label="Default select example">
+                            @for (data of lstProductGroup; track $index) {
+                            <option value="{{data.id}}">{{data.groupname}}</option>
+                            }
+                          </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                        <label class="form-label" for="exampleFormControlInput1">Category</label>
+                          <select class="form-select" aria-label="Default select example">
+                            @for (data of lstProductCategory; track $index) {
+                            <option value="{{data.id}}">{{data.categoryname}}</option>
+                            }
+                          </select>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="exampleFormControlInput1"
+                >Product Code</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="exampleFormControlInput1"
+                placeholder="Ex : Book"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="exampleFormControlInput1"
+                >Product Name</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="exampleFormControlInput1"
+                placeholder="Ex : Book"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="exampleFormControlInput1"
+                >Description</label
+              >
+              <quill-editor
+                #quillEditor
+                [(ngModel)]="content"
+                theme="snow"
+                [modules]="editorConfig"
+                style="height: 300px; display: contents"
+                class="w-100 mb-n1"
+              ></quill-editor>
+            </div>
+
+             <div class="mb-3">
+              <label class="form-label" for="exampleFormControlInput1"
+                >Upload Product Images</label
+              >
+              <div id="drag-drop-area"></div>
+            </div>
+
+
+            <div class="mb-3 text-end">
+              <a class="btn btn-primary btn-md">
+                <i class="las la-save me-2"></i>Save
+              </a>
+              <a routerLink="/product/details" class="btn btn-secondary btn-md ms-2">
+                <i class="las la-times me-2"></i>Cancel
+              </a>
+              </div>  
+          </form>
+        </div>
+        <!--end card-body-->
+      </div>
+
+  </div>
+  <div class="col-md-2 col-lg-2"></div>
+</div>
+

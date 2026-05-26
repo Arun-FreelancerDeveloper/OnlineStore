@@ -23,11 +23,15 @@ const cartService = require('./cart.service');
  *             type: object
  *             required:
  *               - userid
+ *               - guestcartid 
  *               - productid
  *               - qty
  *               - createdby
  *             properties:
  *               userid:
+ *                 type: integer
+ *                 example: 1
+ *               guestcartid:
  *                 type: integer
  *                 example: 1
  *               productid:
@@ -64,13 +68,18 @@ router.post('/', async (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *       - in: path
+ *         name: guestcartid
+ *         required: true
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
  *         description: User cart fetched
  */
-router.get('/:userid', async (req, res) => {
+router.get('/:userid/:guestcartid', async (req, res) => {
   try {
-    const data = await cartService.getCartByUserId(req.params.userid);
+    const data = await cartService.getCartByUserId(req.params.userid, req.params.guestcartid);
     res.json({ success: true, data });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

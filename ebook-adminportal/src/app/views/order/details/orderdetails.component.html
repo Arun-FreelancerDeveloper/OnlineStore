@@ -1,0 +1,63 @@
+<div class="row justify-content-center">
+
+  <div class="col-md-12 col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="row align-items-center">
+          <div class="col">
+            <h4 class="card-title">Order History</h4>
+          </div>
+        </div>
+        <!--end row-->
+      </div>
+      <!--end card-header-->
+      <div class="card-body pt-0">
+        <div class="col-md-6">
+              <div class="mb-3">
+                  <label class="form-label" for="exampleFormControlInput1">Find</label>
+                   <div class="input-group">
+                     <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Ex : Find Product">
+                      <button type="submit" class="btn btn-primary">Search</button>
+                   </div>
+                 
+              </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-bordered mb-0 table-centered">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Order#</th>
+                <th>Order Date</th>
+                <th>Order By</th>
+                <!-- <th class="text-center">Total Items</th> -->
+                <th class="text-end">Total Amount</th>
+                <th class="text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (data of lstOrder; track $index) {
+              <tr (click)="viewOrderDetails(data.id)" style="cursor: pointer;">
+                <td>{{ data.sno }}</td>
+                <td>{{ data.orderno }}</td>
+                <td>{{ data.orderdate }}</td>
+                <td>{{ data.orderby }}</td>
+                <!-- <td class="text-center">{{ data.totalitems }}</td> -->
+                <td class="text-end">{{ data.totalamount }}</td>
+                <td class="text-center">{{ data.orderstatus }}</td>
+                
+              </tr>
+            }
+            </tbody>
+          </table>
+          <!--end /table-->
+        </div>
+        <!--end /tableresponsive-->
+      </div>
+      <!--end card-body-->
+    </div>
+    <!--end card-->
+  </div>
+  <!--end col-->
+</div>
+<!--end row-->

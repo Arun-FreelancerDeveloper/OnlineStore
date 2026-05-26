@@ -101,7 +101,7 @@ exports.getAllCategorys = async (
 
   // 📊 Pagination
   dataQuery += `
-    GROUP BY g.groupid, g.groupname, c.categoryid, c.categoryname, p.cnt
+    GROUP BY g.groupid, g.groupname, c.categoryid, c.categoryname, p.cnt, t.taxid, t.taxname, t.taxpercentage
     ORDER BY g.groupname
     LIMIT $${params.length + 1}
     OFFSET $${params.length + 2}

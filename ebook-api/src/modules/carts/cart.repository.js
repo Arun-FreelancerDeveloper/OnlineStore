@@ -6,17 +6,18 @@ const { pool } = require('../../config/database');
  * ===============================
  */
 exports.addToCart = async (data) => {
-const { userid, productid, qty, createdby } = data;
+const { userid, guestcartid, productid, qty, createdby } = data;
 
   const checkSql = `
     SELECT cartid, qty
     FROM tbcart
-    WHERE userid = $1
-      AND productid = $2
+    WHERE (userid = $1
+      OR guestcartid = $2)
+      AND productid = $3
       AND delflag = 0
   `;
 
-  const { rows } = await pool.query(checkSql, [userid, productid]);
+  const { rows } = await pool.query(checkSql, [userid, guestcartid, productid]);
 
   if (rows.length > 0) {
     const updateSql = `
@@ -37,14 +38,15 @@ const { userid, productid, qty, createdby } = data;
 
   const insertSql = `
     INSERT INTO tbcart
-      (userid, productid, qty, createdby, createdon, delflag, modifiedby, deletedby)
+      (userid, guestcartid, productid, qty, createdby, createdon, delflag, modifiedby, deletedby)
     VALUES
-      ($1, $2, $3, $4, NOW(), 0, 0, 0)
+      ($1, $2, $3, $4, $5, NOW(), 0, 0, 0)
     RETURNING *
   `;
 
   const result = await pool.query(insertSql, [
     userid,
+    guestcartid,
     productid,
     qty,
     createdby
@@ -58,7 +60,7 @@ const { userid, productid, qty, createdby } = data;
  * GET CART BY USER
  * ===============================
  */
-exports.getCartByUserId = async (userid) => {
+exports.getCartByUserId = async (userid, guestcartid) => {
   const sql = `SELECT
                   c.cartid,
                   c.qty,
@@ -105,11 +107,12 @@ exports.getCartByUserId = async (userid) => {
                       AND t.isactive = true
                       AND t.delflag = false
                   WHERE 
-                      c.userid = $1
+                      (c.userid = $1
+                      OR c.guestcartid = $2)
                       AND c.delflag = 0;
   `;
 
-  const { rows } = await pool.query(sql, [userid]);
+  const { rows } = await pool.query(sql, [userid, guestcartid]);
   return rows;
 };
 

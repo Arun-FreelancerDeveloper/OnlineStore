@@ -1,0 +1,115 @@
+<div class="row justify-content-center">
+
+  <div class="col-md-12 col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="row align-items-center">
+          <div class="col">
+            <h4 class="card-title">Customer Details</h4>
+          </div>
+          <div class="col text-end">
+            <a routerLink="/customers/add" class="btn btn-primary btn-md">
+              <i class="las la-plus me-2"></i>Add New Customers
+            </a>
+          </div>
+          <!--end col-->
+        </div>
+        <!--end row-->
+      </div>
+      <!--end card-header-->
+      <div class="card-body pt-0">
+        <div class="row">
+            <div class="col-md-4">
+              <div class="mb-3">
+                  <label class="form-label" for="exampleFormControlInput1">Search</label>
+                   <div class="input-group">
+                     <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Ex : Find Customer">
+                      <button type="submit" class="btn btn-primary">Search</button>
+                   </div>
+                 
+              </div>
+            </div>
+            <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">Filter by User Type</label>
+                    <div class="d-flex gap-4">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="userType"
+                        value="All"
+                        checked
+                        (change)="filterByUserType('All')"
+                      />
+                      <label class="form-check-label">All</label>
+                    </div>
+
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="userType"
+                        value="Customer"
+                        (change)="filterByUserType('Customer')"
+                      />
+                      <label class="form-check-label">Customer</label>
+                    </div>
+
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="userType"
+                        value="Vendor"
+                        (change)="filterByUserType('Vendor')"
+                      />
+                      <label class="form-check-label">Vendor</label>
+                    </div>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-bordered mb-0 table-centered">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Customer Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th class="text-end"></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (data of filteredCustomers; track $index) {
+              <tr>
+                <td>{{ data.sno }}</td>
+                <td>{{ data.customername }}</td>
+                <td>{{ data.email }}</td>
+                <td>{{ data.phone }}</td>
+                <td>{{ data.address }}</td>
+                <td class="text-center">
+                  <a class="btn btn-sm btn-primary me-2">
+                    <i class="las la-edit"></i>
+                  </a>
+                  <a class="btn btn-sm btn-danger me-2">
+                    <i class="las la-trash"></i>
+                  </a>
+                </td>
+              </tr>
+            }
+            </tbody>
+          </table>
+          <!--end /table-->
+        </div>
+        <!--end /tableresponsive-->
+      </div>
+      <!--end card-body-->
+    </div>
+    <!--end card-->
+  </div>
+  <!--end col-->
+</div>
+<!--end row-->

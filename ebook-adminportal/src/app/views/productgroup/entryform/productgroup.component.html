@@ -1,0 +1,79 @@
+<div class="row justify-content-center">
+  <div class="col-md-2 col-lg-2"></div>
+
+  <div class="col-md-6 col-lg-6">
+    <div class="card">
+
+      <div class="card-header">
+        <div class="row align-items-center">
+          <div class="col">
+            <h4 class="card-title">
+              {{ isEditMode ? 'Edit Product Group' : 'Add Product Group' }}
+            </h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body pt-0">
+        <form
+          [formGroup]="productGroupForm"
+          (ngSubmit)="saveCategoryGroup()"
+        >
+
+          <div class="mb-3">
+            <label class="form-label">Group Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="groupName"
+              placeholder="Ex : General Books"
+            />
+
+            <!-- Validation message -->
+            <small
+              class="text-danger"
+              *ngIf="
+                productGroupForm.get('groupName')?.touched &&
+                productGroupForm.get('groupName')?.invalid
+              "
+            >
+              Group name is required
+            </small>
+          </div>
+
+          <div class="mb-3 text-end">
+           <button
+                type="submit"
+                class="btn btn-primary btn-md"
+                [disabled]="loading">
+                <span *ngIf="!loading">
+                  <i class="las la-save me-2"></i>Save
+                </span>
+
+                <span *ngIf="loading">
+                  <span
+                    class="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Saving...
+                </span>
+              </button>
+
+            <button
+              [routerLink]="['/productgroup/list']"
+              class="btn btn-secondary btn-md ms-2"
+            >
+              <i class="las la-times me-2"></i>
+              Cancel
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-md-2 col-lg-2"></div>
+</div>
