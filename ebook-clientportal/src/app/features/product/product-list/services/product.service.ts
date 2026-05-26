@@ -1,10 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map, shareReplay } from 'rxjs/operators';
 import { ConfigService } from '../../../../core/config/config.service';
 import { ProductModel } from '../../../../core/models/product/product.model';
 import { ApiPaginationResponse } from '../../../../core/models/api-response/api-response.model';
+
+export interface ProductSearchSuggestion {
+  productid: number;
+  productname: string;
+  categoryid?: number;
+  subcategoryid?: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -30,17 +37,29 @@ export class ProductService {
    * GET PRODUCTS (WITH CATEGORY + PAGINATION)
    * ===================================================== */
   getProducts(
-    categoryId: number,
+    categoryId: number | null = 0,
     page: number = 1,
-    pageSize: number = 10
+    pageSize: number = 10,
+    findWhat: string = ''
   ): Observable<ApiPaginationResponse<ProductModel>> {
-    const key = `${categoryId}-${page}-${pageSize}`;
+    const key = `${categoryId || 0}-${page}-${pageSize}-${findWhat}`;
     if (!this.cache.has(key)) {
 
+      const params = [
+        `page=${page}`,
+        `pageSize=${pageSize}`
+      ];
+
+      if (categoryId && categoryId > 0) {
+        params.push(`categoryId=${categoryId}`);
+      }
+
+      if (findWhat.trim()) {
+        params.push(`findWhat=${encodeURIComponent(findWhat.trim())}`);
+      }
+
       const request$ = this.http
-        .get<ApiPaginationResponse<ApiPaginationResponse<ProductModel>>>(
-          `${this.apiUrl}?categoryId=${categoryId}&page=${page}&pageSize=${pageSize}`
-        )
+        .get<ApiPaginationResponse<any>>(`${this.apiUrl}?${params.join('&')}`)
         .pipe(
           map(res => ({
             success: res.success,
@@ -60,6 +79,33 @@ export class ProductService {
     }
 
     return this.cache.get(key)!;
+  }
+
+  searchSuggestions(
+    term: string,
+    categoryId?: number
+  ): Observable<ProductSearchSuggestion[]> {
+    const params = [
+      `page=1`,
+      `pageSize=8`,
+      `findWhat=${encodeURIComponent(term.trim())}`
+    ];
+
+    if (categoryId && categoryId > 0) {
+      params.push(`categoryId=${categoryId}`);
+    }
+
+    return this.http
+      .get<ApiPaginationResponse<any>>(`${this.apiUrl}?${params.join('&')}`)
+      .pipe(
+        map(res => res.data.data.map((item: any) => ({
+          productid: item.productid,
+          productname: item.productname,
+          categoryid: item.categoryid,
+          subcategoryid: item.subcategoryid
+        }))),
+        catchError(() => of([]))
+      );
   }
 
   /* =====================================================

@@ -116,7 +116,17 @@
                     <div class="search-form__wrapper position-relative border-half-start flex-grow-1">
                         <input type="text" name="searchTerm"
                             class="common-input border-neutral-40 py-18 ps-16 pe-76 rounded-0 rounded-end pe-44 placeholder-italic placeholder-text-sm border-start-0"
-                            placeholder="Search for products, categories or brands..." [(ngModel)]="searchTerm" />
+                            placeholder="Search for products, categories or brands..."
+                            [(ngModel)]="searchTerm"
+                            (ngModelChange)="onSearchTermChange($event)"
+                            (focus)="showSuggestions = suggestions.length > 0" (keyup.enter)="onSearch()"/>
+
+                        <div class="search-suggestions" *ngIf="showSuggestions && suggestions.length">
+                            <button type="button" class="search-suggestions__item" *ngFor="let item of suggestions"
+                                (click)="selectSuggestion(item)">
+                                {{ item.productname }}
+                            </button>
+                        </div>
 
                         <!-- Search Button -->
                         <button type="button" (click)="onSearch()"

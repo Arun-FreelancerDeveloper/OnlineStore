@@ -13,7 +13,7 @@
 <section class="shop py-80">
    <div class="container container-lg">
       <div class="row">
-         <div class="col-lg-3">
+         <div class="col-lg-3" *ngIf="!isSearchMode">
             <div class="shop-sidebar">
                <button type="button" class="shop-sidebar__close d-lg-none d-flex w-32 h-32 flex-center border border-gray-100 rounded-circle hover-bg-main-600 position-absolute inset-inline-end-0 me-10 mt-8 hover-text-white hover-border-main-600"><i class="ph ph-x"></i></button>
                <div class="shop-sidebar__box border border-gray-100 rounded-8 p-32 mb-32">
@@ -32,7 +32,7 @@
 
             </div>
          </div>
-         <div class="col-lg-9">
+         <div [ngClass]="{'col-lg-9': !isSearchMode, 'col-lg-12': isSearchMode}">
             <div class="flex-between gap-16 flex-wrap mb-40">
                <span class="text-gray-900">Showing {{this.products.length}} of {{this.totalpageSize}} result</span>
                <div class="position-relative flex-align gap-16 flex-wrap">

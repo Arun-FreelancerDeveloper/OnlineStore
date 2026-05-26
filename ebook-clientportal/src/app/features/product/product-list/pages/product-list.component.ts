@@ -1,6 +1,7 @@
 import { Component, HostListener,  OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute } from '@angular/router';
+import { combineLatest } from 'rxjs';
 import { ProductService } from '../services/product.service';
 import { CategoryService } from '../../../../core/services/category/category.service';
 import { BreadcrumbComponent } from "../../../../shared/components/breadcrumb/breadcrumb.component";
@@ -27,6 +28,8 @@ export class ProductListComponent implements OnInit {
   categoryName: string = '';
   category: any[] = [];
   products: ProductModel[] = [];
+  searchQuery = '';
+  isSearchMode = false;
   cdr: any;
 
   /* Paggingation */
@@ -44,26 +47,20 @@ export class ProductListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    combineLatest([this.route.paramMap, this.route.queryParamMap])
+      .subscribe(([params, query]) => {
+        const groupIdParam = params.get('groupId');
+        this.searchQuery = query.get('search')?.trim() ?? '';
+        this.isSearchMode = this.searchQuery.length > 0;
+        this.resetPage();
 
-    this.route.paramMap.subscribe(params => {
-
-      const groupIdParam = params.get('groupId');
-      this.resetPage();
-      // ==========================================================================
-      // ✅ CASE 1: load that group's categories/products
-      // ==========================================================================
-      if (groupIdParam) {
-        this.groupId = Number(groupIdParam);
-        this.loadCategoriesAndProducts();
-      }
-
-      // ==========================================================================
-      // ❗ CASE 2: Automatically load first available groupId and its data
-      // ==========================================================================
-      else {
-        this.loadFirstGroup();
-      }
-    });
+        if (groupIdParam) {
+          this.groupId = Number(groupIdParam);
+          this.loadCategoriesAndProducts();
+        } else {
+          this.loadFirstGroup();
+        }
+      });
   }
 
   /* ===================== VIEW MODE ===================== */
@@ -143,18 +140,21 @@ export class ProductListComponent implements OnInit {
   loadProducts() {
     if (this.loading || !this.hasMore || (this.totalpageSize == this.products.length) || typeof this.categoryId === "undefined") return;
     this.loading = true;
-    this.productService.getProducts(this.categoryId, this.page, this.pageSize)
-      .subscribe(res => {
-        if (res.data.totalRecords != 0) {
-          this.totalpageSize = res.data.totalRecords;
-        }
-        const newProducts = res.data || res;
-        if (newProducts.pageSize < this.pageSize) {
-          this.hasMore = false; // no more data
-        }
-        this.products = [...this.products, ...newProducts.data]; // 🔥 append
-        this.loading = false;
-      });
+    const request$ = this.isSearchMode
+      ? this.productService.getProducts(0, this.page, this.pageSize, this.searchQuery)
+      : this.productService.getProducts(this.categoryId, this.page, this.pageSize);
+
+    request$.subscribe(res => {
+      if (res.data.totalRecords != 0) {
+        this.totalpageSize = res.data.totalRecords;
+      }
+      const newProducts = res.data || res;
+      if (newProducts.pageSize < this.pageSize) {
+        this.hasMore = false; // no more data
+      }
+      this.products = [...this.products, ...newProducts.data]; // 🔥 append
+      this.loading = false;
+    });
   }
 
 

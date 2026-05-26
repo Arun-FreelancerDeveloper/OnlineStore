@@ -11,11 +11,13 @@ import {
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subject, of } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { AlertService } from '../../shared/services/alert/alert.service';
 import { AuthStorageService } from '../../core/services/auth-storage/auth-storage.service';
 import { CartService } from '../../features/cart/services/cart.service';
 import { ConfigService } from '../../core/config/config.service';
-import { Observable } from 'rxjs';
+import { ProductService } from '../../features/product/product-list/services/product.service';
 import { CartFacadeService } from '../../core/facades/cart-facade.service';
 
 @Component({
@@ -43,14 +45,16 @@ export class HeaderComponent implements OnInit {
 
   // ===== DATA =====
   searchTerm = '';
+  suggestions: Array<{ productid: number; productname: string; categoryid?: number; subcategoryid?: number }> = [];
+  showSuggestions = false;
   selectedCategory = '';
   userName = '';
 
+  private readonly searchTerm$ = new Subject<string>();
 
   // ===== OBSERVABLE =====
   user$ = this.authStorage.user$;
-  cartCount$ = this.cartFacade.cartCount$
-  cdr: any;
+  cartCount$ = this.cartFacade.cartCount$;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
@@ -59,6 +63,8 @@ export class HeaderComponent implements OnInit {
     private authStorage: AuthStorageService,
     private cartService: CartService,
     private configService: ConfigService,
+    private productService: ProductService,
+    private cdRef: ChangeDetectorRef,
     private cartFacade: CartFacadeService
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -81,8 +87,22 @@ export class HeaderComponent implements OnInit {
 
     // 🔥 Force UI update after data change
     this.cartCount$.subscribe(() => {
-      this.cdr.markForCheck();
+      this.cdRef.markForCheck();
     });
+
+    // 🔥 Autosuggest from backend
+    this.searchTerm$
+      .pipe(
+        debounceTime(250),
+        distinctUntilChanged(),
+        switchMap(term => term.trim().length >= 2 ? this.productService.searchSuggestions(term.trim()) : of([])),
+        catchError(() => of([]))
+      )
+      .subscribe((suggestions) => {
+        this.suggestions = suggestions;
+        this.showSuggestions = suggestions.length > 0;
+        this.cdRef.markForCheck();
+      });
   }
 
   // ================= AUTH =================
@@ -104,12 +124,41 @@ export class HeaderComponent implements OnInit {
   }
 
   // ================= SEARCH =================
-  onSearch() {
-    if (!this.searchTerm.trim()) return;
+  onSearch(): void {
+
+  const search = this.searchTerm.trim();
+
+  this.clearSuggestions();
+
+  if (search) {
 
     this.router.navigate(['/products'], {
-      queryParams: { search: this.searchTerm }
+      queryParams: { search }
     });
+
+  } else {
+    // Load all products
+    this.router.navigate(['/products']);
+  }
+}
+  onSearchTermChange(value: string): void {
+    this.searchTerm = value;
+    if (value.trim().length >= 2) {
+      this.searchTerm$.next(value);
+    } else {
+      this.clearSuggestions();
+    }
+  }
+
+  selectSuggestion(item: { productid: number; productname: string }): void {
+    this.clearSuggestions();
+    this.searchTerm = item.productname;
+    this.router.navigate(['/productview', item.productid]);
+  }
+
+  clearSuggestions(): void {
+    this.showSuggestions = false;
+    this.suggestions = [];
   }
 
   // ================= MOBILE =================
@@ -139,6 +188,9 @@ export class HeaderComponent implements OnInit {
     const target = event.target as HTMLElement;
     if (!target.closest('.category-dropdown-wrapper')) {
       this.categoryDropdownVisible = false;
+    }
+    if (!target.closest('.search-form__wrapper')) {
+      this.clearSuggestions();
     }
   }
 

@@ -87,10 +87,29 @@ exports.getAllProducts = async (categoryId, page = 1, pageSize = 10, findWhat = 
   }
 
   // Search filter
-  if (findWhat) {
-    params.push(`%${findWhat}%`);
-    whereClause += ` AND p.productname ILIKE $${params.length}`;
-  }
+  if (findWhat?.trim()) {
+
+  params.push(`%${findWhat.trim()}%`);
+
+  const searchIndex = params.length;
+
+  whereClause += `
+    AND (
+      CONCAT_WS(
+        ' ',
+        p.productname,
+        p.productcode,
+        p.shortdescription,
+        c.categoryname,
+        cg.groupname,
+        s.subcategoryname,
+        d.deptname,
+        st.storename
+      )
+      ILIKE $${searchIndex}
+    )
+  `;
+}
 
   const dataQuery = `
     WITH today_orders AS (
