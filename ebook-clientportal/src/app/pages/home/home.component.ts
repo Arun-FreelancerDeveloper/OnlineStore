@@ -1,3 +1,7 @@
+/**
+ * HomeComponent renders the storefront landing page.
+ * It aggregates hero content, popular categories, featured products, and promotional cards.
+ */
 import { Component } from '@angular/core';
 import { BreadcrumbComponent } from "../../shared/components/breadcrumb/breadcrumb.component";
 import { CategoryGroupCarouselComponent } from "../../shared/components/categorygroup/categorygroup.component";

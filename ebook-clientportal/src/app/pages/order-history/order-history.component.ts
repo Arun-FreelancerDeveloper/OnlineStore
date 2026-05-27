@@ -4,6 +4,11 @@ import { BreadcrumbComponent } from "../../shared/components/breadcrumb/breadcru
 import { ConfigService } from '../../core/config/config.service';
 import { AppConfig } from '../../core/config/config.types';
 
+/**
+ * OrderHistoryComponent displays the logged-in user's order history.
+ * It loads orders, supports detail view toggling, and formats currency values.
+ */
+
 import { OrderService } from '../../core/services/order/order.service';
 import { AuthStorageService } from '../../core/services/auth-storage/auth-storage.service';
 import { CurrencyService } from '../../core/services/currency/currency.service';
@@ -13,7 +18,7 @@ import { CurrencyService } from '../../core/services/currency/currency.service';
   standalone: true,
   imports: [CommonModule, BreadcrumbComponent],
   templateUrl: './order-history.component.html',
-  styleUrls: ['./order-history.component.scss'],
+  styleUrls: ['./order-history.component.css'],
   providers: [CurrencyPipe]  // <<<<< Add this
 })
 export class OrderHistoryComponent {

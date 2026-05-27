@@ -17,7 +17,7 @@ interface FooterSection {
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+  styleUrls: ['./footer.component.css']
 })
 export class FooterComponent {
 

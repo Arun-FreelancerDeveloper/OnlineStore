@@ -1,3 +1,7 @@
+/**
+ * ProductViewComponent renders the product detail page.
+ * It handles product lookup, quantity selection, currency formatting, and add-to-cart actions.
+ */
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute } from '@angular/router';

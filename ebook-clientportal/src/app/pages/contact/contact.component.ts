@@ -4,6 +4,10 @@ import { ConfigService } from '../../core/config/config.service';
 import { AppConfig } from '../../core/config/config.types';
 import { ShoppingCardComponent } from "../../shared/components/shopping-card/shopping-card.component";
 
+/**
+ * ContactComponent renders contact information and support details.
+ * It reads company metadata from runtime configuration.
+ */
 @Component({
   selector: 'app-contact',
   standalone: true,

@@ -3,6 +3,10 @@ import { BreadcrumbComponent } from "../../shared/components/breadcrumb/breadcru
 import { ConfigService } from '../../core/config/config.service';
 import { AppConfig } from '../../core/config/config.types';
 
+/**
+ * RefundComponent displays the refund policy content for customers.
+ * It also includes config-driven company metadata for branding.
+ */
 @Component({
   selector: 'app-contact',
   standalone: true,

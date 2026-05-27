@@ -15,6 +15,10 @@ import { CommonModule } from '@angular/common';
 /* =====================================================
  * 2. COMPONENT DECORATOR
  * ===================================================== */
+/**
+ * LoginComponent handles user authentication.
+ * It validates credentials, saves the authenticated user, and navigates to the storefront.
+ */
 @Component({
   selector: 'app-login',
   standalone: true,

@@ -15,6 +15,10 @@ import { ForgotPasswordRequest, UserCreationModel } from '../../../../core/model
 /* =====================================================
  * 2. COMPONENT DECORATOR
  * ===================================================== */
+/**
+ * ForgotPasswordComponent handles password reset requests.
+ * It sends the reset email callback URL to the authentication API.
+ */
 @Component({
   selector: 'app-forgot-password',
   standalone: true,

@@ -17,6 +17,10 @@ import { CheckoutComponent } from './features/checkout/checkout/checkout.compone
 import { OrderHistoryComponent } from './pages/order-history/order-history.component';
 import { ProductViewComponent } from './features/product/product-view/pages/product-view.component';
 
+/**
+ * Application routes for the ebook client portal.
+ * Each route is mapped to a standalone page component.
+ */
 export const routes: Routes = [
   {
     path: '',

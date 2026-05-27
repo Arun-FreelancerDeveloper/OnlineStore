@@ -15,6 +15,10 @@ import { UserCreationModel } from '../../../../core/models/useraccount/useraccou
 /* =====================================================
  * 2. COMPONENT DECORATOR
  * ===================================================== */
+/**
+ * RegistrationComponent manages user registration.
+ * It validates inputs, sends create user requests, and stores login state.
+ */
 @Component({
   selector: 'app-registration',
   standalone: true,

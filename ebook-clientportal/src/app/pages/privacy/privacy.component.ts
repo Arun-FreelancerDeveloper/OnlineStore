@@ -3,6 +3,10 @@ import { BreadcrumbComponent } from "../../shared/components/breadcrumb/breadcru
 import { ConfigService } from '../../core/config/config.service';
 import { AppConfig } from '../../core/config/config.types';
 
+/**
+ * PrivacyComponent renders privacy policy content.
+ * It pulls company metadata from runtime configuration for footer display.
+ */
 @Component({
   selector: 'app-contact',
   standalone: true,

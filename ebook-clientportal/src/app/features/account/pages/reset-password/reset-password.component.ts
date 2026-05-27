@@ -14,6 +14,10 @@ import { ResetPasswordRequest } from '../../../../core/models/useraccount/userac
 /* =====================================================
  * 2. COMPONENT DECORATOR
  * ===================================================== */
+/**
+ * ResetPasswordComponent allows users to create a new password using a token.
+ * It validates password match and sends the change request to the auth service.
+ */
 @Component({
   selector: 'app-reset-password',
   standalone: true,

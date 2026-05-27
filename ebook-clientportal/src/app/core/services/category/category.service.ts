@@ -8,6 +8,11 @@ import { ApiPaginationResponse } from '../../models/api-response/api-response.mo
 import { CategoryModel } from '../../models/category/category.model';
 import { ConfigService } from '../../config/config.service';
 
+/**
+ * CategoryService provides category and category group data used by navigation
+ * and product listing pages. It caches requests by query key to reduce
+ * duplicate network calls.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -30,6 +35,13 @@ export class CategoryService {
   // =====================================================
   // GET CATEGORY GROUPS
   // =====================================================
+  /**
+   * Load categories for a specific group.
+   *
+   * @param groupId Category group identifier.
+   * @param page Pagination page.
+   * @param limit Number of categories per page.
+   */
   getCategoryGroups(
     groupId: number,
     page: number = 1,

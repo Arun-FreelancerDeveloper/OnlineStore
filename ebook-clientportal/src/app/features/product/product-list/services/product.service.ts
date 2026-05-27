@@ -13,6 +13,11 @@ export interface ProductSearchSuggestion {
   subcategoryid?: number;
 }
 
+/**
+ * ProductService handles all remote product operations for the client portal.
+ * It is responsible for fetching paginated product lists, search suggestions,
+ * and normalizing API responses into the app's `ProductModel` contract.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -29,13 +34,21 @@ export class ProductService {
   private cache = new Map<string, Observable<ApiPaginationResponse<ProductModel>>>();
 
   constructor() {
-    // ✅ Correct way to access config
+    // Set the base product endpoint from config once during construction.
     this.apiUrl = `${this.config.api.baseUrl}/product`;
   }
 
   /* =====================================================
    * GET PRODUCTS (WITH CATEGORY + PAGINATION)
    * ===================================================== */
+  /**
+   * Fetch paginated products.
+   *
+   * @param categoryId Optional category filter. Use 0 or null to ignore.
+   * @param page Page number for pagination.
+   * @param pageSize Number of items per page.
+   * @param findWhat Optional search query to filter products.
+   */
   getProducts(
     categoryId: number | null = 0,
     page: number = 1,
@@ -81,6 +94,10 @@ export class ProductService {
     return this.cache.get(key)!;
   }
 
+  /**
+   * Fetch product search suggestions.
+   * This is used for autocomplete or quick-search UI components.
+   */
   searchSuggestions(
     term: string,
     categoryId?: number
@@ -111,6 +128,9 @@ export class ProductService {
   /* =====================================================
    * MAP FUNCTION (ADJUSTED TO YOUR API)
    * ===================================================== */
+  /**
+   * Normalize raw API product payload into the application data model.
+   */
   private mapProduct(item: any): ProductModel {
     return {
       productid: item.productid,

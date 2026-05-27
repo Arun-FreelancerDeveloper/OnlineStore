@@ -4,6 +4,10 @@ import { BreadcrumbComponent } from "../../shared/components/breadcrumb/breadcru
 import { ConfigService } from '../../core/config/config.service';
 import { AppConfig } from '../../core/config/config.types';
 
+/**
+ * TermsconditionsComponent renders the application's terms and conditions.
+ * It uses configured company metadata for legal and branding footers.
+ */
 @Component({
   selector: 'app-contact',
   standalone: true,

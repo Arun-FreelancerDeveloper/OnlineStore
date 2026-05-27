@@ -1,3 +1,7 @@
+/**
+ * CheckoutComponent manages the checkout flow.
+ * It gathers shipping and payment data, calculates totals, and places orders.
+ */
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Subject, combineLatest } from 'rxjs';
