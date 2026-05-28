@@ -6,9 +6,8 @@
     "debug": true
   },
   "api": {
-   
-    "baseUrl": "http://localhost:3001/api",
-    "imageUrl": "http://localhost:3001",
+    "baseUrl": "https://api.jaysltd.mtgapps.in/api",
+    "imageUrl": "https://api.jaysltd.mtgapps.in",
     "timeout": 10000,
     "retryAttempts": 3,
     "defaultImage": "/core/assets/images/bg/1-general-books.png"
