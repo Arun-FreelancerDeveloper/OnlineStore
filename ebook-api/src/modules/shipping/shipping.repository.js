@@ -8,11 +8,11 @@ const { pool } = require('../../config/database');
  */
 
 /**
- * Create Shipping Address
- *
- * - Inserts a new shipping address for a user
- * - @param {Object} data - { userid, fullname, phone, addressline1, city }
- * @returns {Object} Created address
+ * <summary>
+ * Insert a new shipping address for a user.
+ * </summary>
+ * <param name="data">Payload containing userid, fullname, phone, address lines, city, state, postalcode, country, and isdefault.</param>
+ * <returns>Promise resolving to the created address record.</returns>
  */
 exports.createAddress = async (data) => {
   const sql = `
@@ -67,11 +67,11 @@ exports.createAddress = async (data) => {
 
 
 /**
- * Get Addresses By User
- *
- * - Fetches all active shipping addresses for a user
- * - @param {number} userid - User ID
- * @returns {Array} List of addresses
+ * <summary>
+ * Fetch all active shipping addresses for a user.
+ * </summary>
+ * <param name="userid">User identifier.</param>
+ * <returns>Promise resolving to an array of active address records.</returns>
  */
 exports.getAddressByUser = async (userid) => {
   const { rows } = await pool.query(
@@ -95,12 +95,12 @@ exports.getAddressByUser = async (userid) => {
 };
 
 /**
- * Update Shipping Address
- *
- * - Updates address details by address ID
- * - @param {number} id - Address ID
- * - @param {Object} data - { fullname, phone, addressline1, city }
- * @returns {Object} Updated address
+ * <summary>
+ * Update a shipping address by ID.
+ * </summary>
+ * <param name="id">Address identifier.</param>
+ * <param name="data">Update payload containing fullname, phone, address details, and isdefault.</param>
+ * <returns>Promise resolving to the updated address record.</returns>
  */
 exports.updateAddress = async (id, data) => {
   const sql = `
@@ -141,10 +141,11 @@ exports.updateAddress = async (id, data) => {
 };
 
 /**
- * Delete Shipping Address (Soft Delete)
- *
- * - Marks address as deleted (delflag = 1)
- * - @param {number} id - Address ID
+ * <summary>
+ * Soft delete a shipping address record.
+ * </summary>
+ * <param name="id">Address identifier.</param>
+ * <returns>Promise resolving once the record is marked deleted.</returns>
  */
 exports.deleteAddress = async (id) => {
   await pool.query(

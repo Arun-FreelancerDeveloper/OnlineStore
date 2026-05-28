@@ -1,10 +1,14 @@
 const { pool } = require('../../../config/database');
 
 /**
- * Get Recommended Products (High Performance)
- */
-/**
- * Get Recommended Products (Score आधारित)
+ * <summary>
+ * Retrieve recommended product records for the insights dashboard.
+ * </summary>
+ * <param name="page">Page number.</param>
+ * <param name="pageSize">Number of records per page.</param>
+ * <param name="categoryId">Optional category filter.</param>
+ * <param name="productId">Optional current product ID to exclude from recommendations.</param>
+ * <returns>Promise resolving to paginated recommended product data.</returns>
  */
 exports.getRecommendedProducts = async (page = 1, pageSize = 10, categoryId = null, productId = null) => {
   try {

@@ -2,9 +2,15 @@ const service = require('./flashsalestoday.service');
 const ApiResponse = require('../../../utils/apiResponse');
 
 /**
- * GET /api/products/flash-sale
+ * <summary>
+ * Retrieve flash sale products with pagination.
+ * </summary>
+ * <param name="req">Express request object containing pagination query params.</param>
+ * <param name="res">Express response object returning flash sale products.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with paginated flash sale products.</returns>
  */
-exports.getFlashSaleProducts = async (req, res) => {
+exports.getFlashSaleProducts = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
@@ -16,10 +22,6 @@ exports.getFlashSaleProducts = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Controller Error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal Server Error'
-    });
+    next(error);
   }
 };

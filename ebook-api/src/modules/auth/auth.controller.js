@@ -4,11 +4,23 @@ const { sendWelcomeEmail } = require('../../services/email.service');
 const { json } = require('express');
 
 /**
+ * <summary>
  * Authentication Controller
- *
- * - Handles user login requests
- * - Delegates business logic to authService
- * - Returns standardized API response
+ * </summary>
+ * <remarks>
+ * Exposes authentication endpoints and delegates to `auth.service`.
+ * Controllers should remain thin and forward unexpected errors via `next(err)`.
+ * </remarks>
+ */
+
+/**
+ * <summary>
+ * Login endpoint.
+ * </summary>
+ * <param name="req">Express request with body { email, password }.</param>
+ * <param name="res">Express response returns ApiResponse on success.</param>
+ * <param name="next">Express next for forwarding errors.</param>
+ * <returns>ApiResponse with token and user metadata.</returns>
  */
 exports.login = async (req, res, next) => {
   try {
@@ -20,10 +32,14 @@ exports.login = async (req, res, next) => {
 };
 
 /**
- * Change Password
- * - Reads new password from request body
- * - Gets userId from JWT (req.user)
- * - Calls service to change password
+ * <summary>
+ * Change Password endpoint.
+ * </summary>
+ * <remarks>Accepts a `token` and a `newpassword` in the request body. The service verifies the token and updates the password.</remarks>
+ * <param name="req">Express request. Body: { token, newpassword }.</param>
+ * <param name="res">Express response. Returns success message on completion.</param>
+ * <param name="next">Express next for error forwarding.</param>
+ * <returns>JSON success object.</returns>
  */
 
 exports.changePassword = async (req, res, next) => {
@@ -40,10 +56,14 @@ exports.changePassword = async (req, res, next) => {
 };
 
 /**
- * Forgot Password
- * - Reads new password from request body
- * - Gets userId from JWT (req.user)
- * - Calls service to change password
+ * <summary>
+ * Forgot Password endpoint.
+ * </summary>
+ * <remarks>Generates a short-lived reset token and emails a reset link to the user.</remarks>
+ * <param name="req">Express request. Body: { email, callbackurl }.</param>
+ * <param name="res">Express response. Returns ApiResponse on success.</param>
+ * <param name="next">Express next for error forwarding.</param>
+ * <returns>ApiResponse acknowledging the sent email.</returns>
  */
 
 exports.forgotPassword = async (req, res, next) => {

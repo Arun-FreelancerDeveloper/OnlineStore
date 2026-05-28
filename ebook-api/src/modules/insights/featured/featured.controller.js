@@ -2,9 +2,15 @@ const service = require('./featured.service');
 const ApiResponse = require('../../../utils/apiResponse');
 
 /**
- * GET /api/products/flash-sale
+ * <summary>
+ * Retrieve featured products with pagination.
+ * </summary>
+ * <param name="req">Express request object containing pagination query params.</param>
+ * <param name="res">Express response object returning featured products.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with paginated featured products.</returns>
  */
-exports.getFeaturedProducts = async (req, res) => {
+exports.getFeaturedProducts = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
@@ -16,10 +22,6 @@ exports.getFeaturedProducts = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Controller Error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal Server Error'
-    });
+    next(error);
   }
 };

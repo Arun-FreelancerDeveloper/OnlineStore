@@ -164,7 +164,10 @@ const getUserEmail = async (client, userid) => {
 
 
 /**
- * GET ALL ORDERS
+ * <summary>
+ * Retrieve all orders for administrative reporting.
+ * </summary>
+ * <returns>Promise resolving to an array of order header records.</returns>
  */
 exports.getAllOrders = async () => {
   const sql = `
@@ -189,7 +192,11 @@ exports.getAllOrders = async () => {
 
 
 /**
- * GET ORDERS BY USER ID
+ * <summary>
+ * Retrieve order summaries for a single user.
+ * </summary>
+ * <param name="userid">User identifier.</param>
+ * <returns>Promise resolving to an array of orders.</returns>
  */
 exports.getOrdersByUserId = async (userid) => {
   const sql = `
@@ -199,9 +206,9 @@ exports.getOrdersByUserId = async (userid) => {
       orderdate,
       orderstatus,
       totalamount,
-	  discountamount,
-	  payamount,
-	  currency
+      discountamount,
+      payamount,
+      currency,
       paymentstatus
     FROM tborder
     WHERE userid = $1
@@ -214,7 +221,11 @@ exports.getOrdersByUserId = async (userid) => {
 };
 
 /**
- * GET ORDER DETAILS BY ORDER ID
+ * <summary>
+ * Retrieve a single order with shipping address and item details by order ID.
+ * </summary>
+ * <param name="orderid">Order identifier.</param>
+ * <returns>Promise resolving to the order detail object.</returns>
  */
 exports.getOrderById = async (orderid) => {
   const sql = `
@@ -275,7 +286,11 @@ GROUP BY
 };
 
 /**
- * GET ORDER DETAILS BY ORDER NUMBER
+ * <summary>
+ * Retrieve a single order by its external order number.
+ * </summary>
+ * <param name="orderno">External order number.</param>
+ * <returns>Promise resolving to the order detail object.</returns>
  */
 exports.getOrderByInvoiceNo = async (orderno) => {
   const sql = `
@@ -336,7 +351,11 @@ GROUP BY
 };
 
 /**
- * GET ORDER STATUS HISTORY BY ORDER ID
+ * <summary>
+ * Retrieve the status change history for an order.
+ * </summary>
+ * <param name="orderid">Order identifier.</param>
+ * <returns>Promise resolving to an ordered array of status history records.</returns>
  */
 exports.getOrderStatusHistory = async (orderid) => {
   const sql = `
@@ -357,7 +376,14 @@ exports.getOrderStatusHistory = async (orderid) => {
 
 
 /**
- * UPDATE ORDER STATUS
+ * <summary>
+ * Persist a new status for an order and append a history record.
+ * </summary>
+ * <param name="orderid">Order identifier.</param>
+ * <param name="status">New status value.</param>
+ * <param name="remarks">Optional remark text.</param>
+ * <param name="modifiedby">User ID making the status update.</param>
+ * <returns>Promise resolving to the updated order summary.</returns>
  */
 exports.updateOrderStatus = async (orderid, status, remarks, modifiedby) => {
   const client = await pool.connect();
@@ -412,7 +438,12 @@ exports.updateOrderStatus = async (orderid, status, remarks, modifiedby) => {
 };
 
 /**
- * SOFT DELETE ORDER
+ * <summary>
+ * Soft delete an order by setting delflag and archive fields.
+ * </summary>
+ * <param name="orderid">Order identifier.</param>
+ * <param name="deletedby">User ID performing deletion.</param>
+ * <returns>Promise resolving once the order is marked deleted.</returns>
  */
 exports.deleteOrder = async (orderid, deletedby) => {
   await pool.query(

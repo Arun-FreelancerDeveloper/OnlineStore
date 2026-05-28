@@ -3,7 +3,13 @@ const ApiResponse = require('../../utils/apiResponse');
 const logger = require('../../utils/logger');
 
 /**
- * CREATE ORDER (Order + Items + Status)
+ * <summary>
+ * Create a new order, including items, initial status, and email notification.
+ * </summary>
+ * <param name="req">Express request object containing order payload in body.</param>
+ * <param name="res">Express response object for sending JSON responses.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with the created order and success message.</returns>
  */
 exports.createorder = async (req, res, next) => {
   try {
@@ -17,7 +23,13 @@ exports.createorder = async (req, res, next) => {
 };
 
 /**
- * GET ALL ORDERS (ADMIN)
+ * <summary>
+ * Retrieve all orders for admin view.
+ * </summary>
+ * <param name="req">Express request object.</param>
+ * <param name="res">Express response object returning order list.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with all orders.</returns>
  */
 exports.getAllorders = async (req, res, next) => {
   try {
@@ -29,7 +41,13 @@ exports.getAllorders = async (req, res, next) => {
 };
 
 /**
- * GET ORDER BY ID
+ * <summary>
+ * Retrieve a single order by its database ID.
+ * </summary>
+ * <param name="req">Express request object containing order ID in params.</param>
+ * <param name="res">Express response object returning order details.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with order details.</returns>
  */
 exports.getorder = async (req, res, next) => {
   try {
@@ -43,7 +61,13 @@ exports.getorder = async (req, res, next) => {
 };
 
 /**
- * GET ORDER BY ORDER NO
+ * <summary>
+ * Retrieve a single order by its order number.
+ * </summary>
+ * <param name="req">Express request object containing order number in params.</param>
+ * <param name="res">Express response object returning order details.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with order details.</returns>
  */
 exports.getorderinvoice = async (req, res, next) => {
   try {
@@ -58,7 +82,13 @@ exports.getorderinvoice = async (req, res, next) => {
 };
 
 /**
- * GET ORDERS BY USER ID
+ * <summary>
+ * Retrieve orders for a specific user.
+ * </summary>
+ * <param name="req">Express request object containing userid in params.</param>
+ * <param name="res">Express response object returning user orders.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with the user's orders.</returns>
  */
 exports.getOrdersByUser = async (req, res, next) => {
   try {
@@ -70,7 +100,13 @@ exports.getOrdersByUser = async (req, res, next) => {
 };
 
 /**
- * UPDATE ORDER STATUS
+ * <summary>
+ * Update the status of an existing order and record status history.
+ * </summary>
+ * <param name="req">Express request object containing order ID in params and status payload in body.</param>
+ * <param name="res">Express response object returning updated order state.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with the updated status.</returns>
  */
 exports.updateOrderStatus = async (req, res, next) => {
   try {
@@ -92,7 +128,13 @@ exports.updateOrderStatus = async (req, res, next) => {
 };
 
 /**
- * DELETE ORDER (SOFT DELETE)
+ * <summary>
+ * Soft delete an order by ID.
+ * </summary>
+ * <param name="req">Express request object containing order ID in params and deletedby in body.</param>
+ * <param name="res">Express response object returning success.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON success response with no payload.</returns>
  */
 exports.deleteorder = async (req, res, next) => {
   try {
@@ -110,7 +152,13 @@ exports.deleteorder = async (req, res, next) => {
 };
 
 /**
- * GET ORDER STATUS HISTORY
+ * <summary>
+ * Retrieve history records for a specific order.
+ * </summary>
+ * <param name="req">Express request object containing order ID in params.</param>
+ * <param name="res">Express response object returning status history.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with order history array.</returns>
  */
 exports.getOrderStatusHistory = async (req, res, next) => {
   try {

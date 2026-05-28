@@ -1,9 +1,11 @@
 const { pool } = require('../../config/database');
 
 /**
- * ===============================
- * ADD TO CART (UPSERT)
- * ===============================
+ * <summary>
+ * Add or update a cart item. If the product already exists in the cart, increment its quantity.
+ * </summary>
+ * <param name="data">Cart payload containing userid, guestcartid, productid, qty, and createdby.</param>
+ * <returns>Promise resolving to the inserted or updated cart row.</returns>
  */
 exports.addToCart = async (data) => {
 const { userid, guestcartid, productid, qty, createdby } = data;
@@ -56,9 +58,12 @@ const { userid, guestcartid, productid, qty, createdby } = data;
 };
 
 /**
- * ===============================
- * GET CART BY USER
- * ===============================
+ * <summary>
+ * Retrieve the current cart items for a user or guest session.
+ * </summary>
+ * <param name="userid">User identifier.</param>
+ * <param name="guestcartid">Optional guest cart identifier.</param>
+ * <returns>Promise resolving to the cart item list.</returns>
  */
 exports.getCartByUserId = async (userid, guestcartid) => {
   const sql = `SELECT
@@ -118,9 +123,11 @@ exports.getCartByUserId = async (userid, guestcartid) => {
 
 
 /**
- * ===============================
- * GET THE USER DISCOUNT BASED RULES
- * ===============================
+ * <summary>
+ * Calculate the applicable discount rule for a user based on completed orders.
+ * </summary>
+ * <param name="userid">User identifier.</param>
+ * <returns>Promise resolving to order count, rule type, and discount percentage.</returns>
  */
 exports.getUserDiscountRule = async (userid) => {
 
@@ -194,38 +201,46 @@ exports.getUserDiscountRule = async (userid) => {
 };
 
 /**
- * ===============================
- * UPDATE CART QTY
- * ===============================
+ * <summary>
+ * Update the quantity of an existing cart item.
+ * </summary>
+ * <param name="cartid">Cart item identifier.</param>
+ * <param name="qty">New quantity value.</param>
+ * <param name="modifiedby">User ID updating the cart item.</param>
+ * <returns>Promise resolving to the updated cart row.</returns>
  */
-exports.updateCartQty = async (cartid, qty, userid) => {
+exports.updateCartQty = async (cartid, qty, modifiedby) => {
   if (qty <= 0) throw new Error('Invalid quantity');
 
   const sql = `
     UPDATE tbcart
     SET qty = $1,
+        modifiedby = $2,
         modifiedon = NOW()
-    WHERE cartid = $2
-      AND userid = $3
+    WHERE cartid = $3
       AND delflag = 0
     RETURNING *;
   `;
 
   const { rows } = await pool.query(sql, [
     qty,
-    cartid,
-    userid
+    modifiedby,
+    cartid
   ]);
 
   return rows[0];
 };
 
 /**
- * ===============================
- * BULK UPDATE CART
- * ===============================
+ * <summary>
+ * Bulk update quantities for multiple cart items.
+ * </summary>
+ * <param name="items">Array of {cartid, qty} objects.
+ * </param>
+ * <param name="modifiedby">User ID performing the bulk update.</param>
+ * <returns>Promise resolving to true once updates are committed.</returns>
  */
-exports.updateCartBulk = async (items, userid) => {
+exports.updateCartBulk = async (items, modifiedby) => {
   const client = await pool.connect();
 
   try {
@@ -237,13 +252,13 @@ exports.updateCartBulk = async (items, userid) => {
       const sql = `
         UPDATE tbcart
         SET qty = $1,
+            modifiedby = $2,
             modifiedon = NOW()
-        WHERE cartid = $2
-          AND userid = $3
+        WHERE cartid = $3
           AND delflag = 0;
       `;
 
-      await client.query(sql, [item.qty, item.cartid, userid]);
+      await client.query(sql, [item.qty, modifiedby, item.cartid]);
     }
 
     await client.query('COMMIT');
@@ -259,22 +274,25 @@ exports.updateCartBulk = async (items, userid) => {
 };
 
 /**
- * ===============================
- * DELETE CART ITEM
- * ===============================
+ * <summary>
+ * Soft delete a single cart item.
+ * </summary>
+ * <param name="cartid">Cart item identifier.</param>
+ * <param name="deletedby">User ID performing the deletion.</param>
+ * <returns>Promise resolving to true if the item was deleted.</returns>
  */
-exports.deleteCartItem = async (cartid, userid) => {
+exports.deleteCartItem = async (cartid, deletedby) => {
   const sql = `
     UPDATE tbcart
     SET delflag = 1,
+        deletedby = $2,
         deletedon = NOW()
     WHERE cartid = $1
-      AND userid = $2
       AND delflag = 0
     RETURNING cartid;
   `;
 
-  const { rows } = await pool.query(sql, [cartid, userid]);
+  const { rows } = await pool.query(sql, [cartid, deletedby]);
 
   return rows.length > 0;
 };

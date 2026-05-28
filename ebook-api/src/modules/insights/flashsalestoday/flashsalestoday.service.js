@@ -1,10 +1,12 @@
 const repo = require('./flashsalestoday.repository');
+
 /**
- * Get All Products (Pagination + Search)
- * - Supports filtering by category
- * - Supports search by product name
- * - @param {number} page
- * - @param {number} pageSize
+ * <summary>
+ * Retrieve flash sale products via the repository layer.
+ * </summary>
+ * <param name="page">Page number.</param>
+ * <param name="pageSize">Number of records per page.</param>
+ * <returns>Promise resolving to paginated flash sale product results.</returns>
  */
 exports.getFlashSaleProducts = async (
   page = 1,

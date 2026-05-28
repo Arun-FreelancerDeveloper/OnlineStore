@@ -8,14 +8,11 @@ const { pool } = require('../../config/database');
  */
 
 /**
- * Create a new Category Group
- *
- * @param {Object} data
- * @param {string} data.groupname
- * @param {string} [data.imagepath]
- * @param {number} data.createdby
- * @param {number} data.modifiedby
- * @returns {Promise<Object>} Newly created category group
+ * <summary>
+ * Create a new category group record.
+ * </summary>
+ * <param name="data">Payload containing groupname, imagepath, and createdby.</param>
+ * <returns>Promise resolving to the newly created category group.</returns>
  */
 exports.createCategoryGroup = async (data) => {
   const imagepath =
@@ -53,11 +50,13 @@ exports.createCategoryGroup = async (data) => {
 
 
 /**
- * Get all active Category Groups with Pagination
- *
- * @param {number} page
- * @param {number} limit
- * @returns {Promise<Object>}
+ * <summary>
+ * Retrieve active category groups with pagination and optional search.
+ * </summary>
+ * <param name="page">Page number.</param>
+ * <param name="pageSize">Items per page.</param>
+ * <param name="findWhat">Optional search text.</param>
+ * <returns>Promise resolving to a paginated result object.</returns>
  */
 exports.getAllCategoryGroups = async (page = 1, pageSize = 10, findWhat = '') => {
   const offset = (page - 1) * pageSize; 
@@ -118,10 +117,11 @@ exports.getAllCategoryGroups = async (page = 1, pageSize = 10, findWhat = '') =>
 };
 
 /**
- * Get Category Group by ID
- *
- * @param {number} groupId
- * @returns {Promise<Object>} Category group details
+ * <summary>
+ * Retrieve a category group by ID.
+ * </summary>
+ * <param name="groupId">Group identifier.</param>
+ * <returns>Promise resolving to the category group details.</returns>
  */
 exports.getCategoryGroupById = async (groupId) => {
   const sql = `
@@ -147,14 +147,12 @@ exports.getCategoryGroupById = async (groupId) => {
 };
 
 /**
- * Update Category Group
- *
- * @param {number} groupId
- * @param {Object} data
- * @param {string} data.groupname
- * @param {string} data.imagepath
- * @param {number} data.modifiedby
- * @returns {Promise<Object>} Updated category group
+ * <summary>
+ * Update a category group record.
+ * </summary>
+ * <param name="groupId">Group identifier.</param>
+ * <param name="data">Payload containing updated groupname, imagepath, and modifiedby.</param>
+ * <returns>Promise resolving to the updated category group.</returns>
  */
 exports.updateCategoryGroup = async (groupId, data) => {
   const sql = `
@@ -178,11 +176,12 @@ exports.updateCategoryGroup = async (groupId, data) => {
 };
 
 /**
- * Soft delete Category Group
- *
- * @param {number} groupId
- * @param {number} deletedBy
- * @returns {Promise<void>}
+ * <summary>
+ * Soft delete a category group record.
+ * </summary>
+ * <param name="groupId">Group identifier.</param>
+ * <param name="deletedBy">User ID performing deletion.</param>
+ * <returns>Promise resolving once deletion is complete.</returns>
  */
 exports.deleteCategoryGroup = async (groupId, deletedBy) => {
   const sql = `

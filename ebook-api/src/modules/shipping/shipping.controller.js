@@ -2,16 +2,13 @@ const service = require('./shipping.service');
 const ApiResponse = require('../../utils/apiResponse');
 
 /**
- * Shipping Address Controller
- *
- * - Handles HTTP requests for shipping addresses
- * - Returns user-friendly API messages
- */
-
-/**
- * Create Address
- *
- * @route POST /api/address
+ * <summary>
+ * Create a new shipping address for the authenticated user.
+ * </summary>
+ * <param name="req">Express request object with shipping address payload in body.</param>
+ * <param name="res">Express response object returning the created address.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response containing the created shipping address.</returns>
  */
 exports.createAddress = async (req, res, next) => {
   try {
@@ -23,9 +20,13 @@ exports.createAddress = async (req, res, next) => {
 };
 
 /**
- * Get Addresses By User
- *
- * @route GET /api/address/:userid
+ * <summary>
+ * Retrieve all shipping addresses for a user.
+ * </summary>
+ * <param name="req">Express request object with userid parameter.</param>
+ * <param name="res">Express response object returning user addresses.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with address list.</returns>
  */
 exports.getAddressByUser = async (req, res, next) => {
   try {
@@ -37,9 +38,13 @@ exports.getAddressByUser = async (req, res, next) => {
 };
 
 /**
- * Update Address
- *
- * @route PUT /api/address/:id
+ * <summary>
+ * Update an existing shipping address by ID.
+ * </summary>
+ * <param name="req">Express request object with address ID in params and update payload in body.</param>
+ * <param name="res">Express response object returning the updated address.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response containing the updated address.</returns>
  */
 exports.updateAddress = async (req, res, next) => {
   try {
@@ -51,9 +56,13 @@ exports.updateAddress = async (req, res, next) => {
 };
 
 /**
- * Delete Address
- *
- * @route DELETE /api/address/:id
+ * <summary>
+ * Soft delete a shipping address.
+ * </summary>
+ * <param name="req">Express request object with address ID in params.</param>
+ * <param name="res">Express response object returning success.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response confirming removal.</returns>
  */
 exports.deleteAddress = async (req, res, next) => {
   try {

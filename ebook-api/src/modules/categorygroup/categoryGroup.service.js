@@ -1,31 +1,23 @@
 const repo = require('./categoryGroup.repository');
 
 /**
- * Create a new Category Group
- *
- * - Calls repository to insert a new category group
- * - @param {Object} data - { groupname, imagepath, createdBy }
- * @returns {Promise<Object>} The created category group record
+ * <summary>
+ * Create a new category group.
+ * </summary>
+ * <param name="data">Payload containing groupname, imagepath, and createdby.</param>
+ * <returns>Promise resolving to the created category group.</returns>
  */
 exports.createCategoryGroup = async (data) =>
   await repo.createCategoryGroup(data);
 
 /**
- * Get all Category Groups with pagination and optional search
- *
- * - Calls repository to fetch active category groups
- * - Supports pagination and search by group name
- * - @param {number} page - Current page number (default 1)
- * - @param {number} pageSize - Number of records per page (default 10)
- * - @param {string} [findWhat] - Optional search term for groupname
- * @returns {Promise<Object>} Paginated result:
- * {
- *   currentPage: number,
- *   pageSize: number,
- *   totalPages: number,
- *   totalRecords: number,
- *   data: Array of category groups
- * }
+ * <summary>
+ * Retrieve category groups with pagination and optional search.
+ * </summary>
+ * <param name="page">Current page number.</param>
+ * <param name="pageSize">Number of groups per page.</param>
+ * <param name="findWhat">Optional group name filter.</param>
+ * <returns>Promise resolving to a paginated category group list.</returns>
  */
 exports.getAllCategoryGroups = async (page = 1, pageSize = 10, findWhat = '') => {
   const result = await repo.getAllCategoryGroups(page, pageSize, findWhat);
@@ -33,33 +25,33 @@ exports.getAllCategoryGroups = async (page = 1, pageSize = 10, findWhat = '') =>
 };
 
 /**
- * Get Category Group by ID
- *
- * - Fetches a single category group by groupId
- * - @param {number} groupId
- * @returns {Promise<Object|null>} Category group record or null if not found
+ * <summary>
+ * Retrieve a category group by its identifier.
+ * </summary>
+ * <param name="groupId">Group identifier.</param>
+ * <returns>Promise resolving to the category group or null.</returns>
  */
 exports.getCategoryGroupById = async (groupId) =>
   await repo.getCategoryGroupById(groupId);
 
 /**
- * Update a Category Group
- *
- * - Calls repository to update group details
- * - @param {number} groupId
- * - @param {Object} data - { groupname, imagepath, modifiedBy }
- * @returns {Promise<Object>} Updated category group record
+ * <summary>
+ * Update an existing category group.
+ * </summary>
+ * <param name="groupId">Group identifier.</param>
+ * <param name="data">Payload containing updated groupname, imagepath, and modifiedby.</param>
+ * <returns>Promise resolving to the updated category group.</returns>
  */
 exports.updateCategoryGroup = async (groupId, data) =>
   await repo.updateCategoryGroup(groupId, data);
 
 /**
- * Delete a Category Group (Soft Delete)
- *
- * - Marks the category group as deleted
- * - @param {number} groupId
- * - @param {number} deletedBy - User ID performing the deletion
- * @returns {Promise<void>}
+ * <summary>
+ * Soft delete a category group.
+ * </summary>
+ * <param name="groupId">Group identifier.</param>
+ * <param name="deletedBy">User ID performing the deletion.</param>
+ * <returns>Promise resolving once deletion is complete.</returns>
  */
 exports.deleteCategoryGroup = async (groupId, deletedBy) =>
   await repo.deleteCategoryGroup(groupId, deletedBy);

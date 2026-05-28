@@ -12,14 +12,19 @@ const { sendWelcomeEmail } = require('../../services/email.service');
  */
 
 /**
- * Create User
- *
- * - Reads user data from request body
- * - Calls service to create user
- * - Sends success response with created user
- * - @route POST /api/user
- * - @param {Object} req.body - { fullname, email, passwordhash }
- * - @returns {Object} ApiResponse with created user
+ * <summary>
+ * Create a new user account.
+ * </summary>
+ * <remarks>
+ * Reads payload from `req.body`, ensures the email is unique by calling
+ * the service layer, creates the user, issues a JWT token and returns
+ * a standardized `ApiResponse`.
+ * The welcome email is dispatched asynchronously and does not block the response.
+ * </remarks>
+ * <param name="req">Express request object. Expects JSON body with `fullname`, `email`, `password`.</param>
+ * <param name="res">Express response object. Returns JSON ApiResponse.</param>
+ * <param name="next">Express next function for error forwarding.</param>
+ * <returns>JSON ApiResponse containing token and user metadata.</returns>
  */
 exports.createUser = async (req, res, next) => {
   try {
@@ -78,13 +83,13 @@ exports.createUser = async (req, res, next) => {
 };
 
 /**
- * Get All Users
- *
- * - Fetches all active users
- * - Calls service layer
- * - Returns success response with user list
- * - @route GET /api/user
- * - @returns {Array} ApiResponse with list of users
+ * <summary>
+ * Get a paginated list of users.
+ * </summary>
+ * <param name="req">Express request. Supports query params: `page`, `pageSize`, `findWhat`.</param>
+ * <param name="res">Express response. Returns ApiResponse with pagination metadata and `users` array.</param>
+ * <param name="next">Express next for error forwarding.</param>
+ * <returns>ApiResponse with pagination and user list.</returns>
  */
 exports.getUsers = async (req, res, next) => {
   try {
@@ -99,16 +104,13 @@ exports.getUsers = async (req, res, next) => {
 };
 
 /**
- * Update User
- *
- * - Updates user details by user ID
- * - Reads user ID from request params
- * - Calls service to update
- * - Returns success response with updated user
- * - @route PUT /api/user/:id
- * - @param {string} req.params.id - User ID
- * - @param {Object} req.body - { fullname, email }
- * - @returns {Object} ApiResponse with updated user
+ * <summary>
+ * Update user details.
+ * </summary>
+ * <param name="req">Express request. Path param `id` identifies the user. Body contains fields to update.</param>
+ * <param name="res">Express response. Returns ApiResponse with updated user object.</param>
+ * <param name="next">Express next for error forwarding.</param>
+ * <returns>ApiResponse with the updated user.</returns>
  */
 exports.updateUser = async (req, res, next) => {
   try {
@@ -120,15 +122,13 @@ exports.updateUser = async (req, res, next) => {
 };
 
 /**
- * Delete User (Soft Delete)
- *
- * - Marks user as deleted
- * - Reads user ID from request params
- * - Calls service to perform soft delete
- * - Returns success response
- * - @route DELETE /api/user/:id
- * - @param {string} req.params.id - User ID
- * - @returns {Object} ApiResponse with deletion status
+ * <summary>
+ * Soft-delete a user (set delflag).
+ * </summary>
+ * <param name="req">Express request. Path param `id` is required.</param>
+ * <param name="res">Express response. Returns success ApiResponse on completion.</param>
+ * <param name="next">Express next for error forwarding.</param>
+ * <returns>ApiResponse with deletion status.</returns>
  */
 exports.deleteUser = async (req, res, next) => {
   try {
@@ -141,16 +141,17 @@ exports.deleteUser = async (req, res, next) => {
 
 
 /**
- * Login User
-  *
-  * - Validates user credentials
-  * - Reads email and password from request body
-  * - Calls service to perform login
-  * - Returns success response with auth data
-  * - @route POST /api/user/login
-  * - @param {string} req.body.email - User email
-  * - @param {string} req.body.password - User password
-  * - @returns {Object} ApiResponse with auth data
+ * <summary>
+ * Authenticate a user and return authentication payload.
+ * </summary>
+ * <remarks>
+ * Calls `user.service.login` which will throw a 401 error for invalid credentials.
+ * On success returns `ApiResponse.success(data)` where `data` typically includes user info and/or tokens.
+ * </remarks>
+ * <param name="req">Express request. Expects `email` and `password` in body.</param>
+ * <param name="res">Express response. Returns ApiResponse on success or forwards error to next.</param>
+ * <param name="next">Express next for error forwarding.</param>
+ * <returns>ApiResponse with authentication result.</returns>
  */
 exports.login = async (req, res, next) => {
   try {

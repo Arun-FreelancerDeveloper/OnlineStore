@@ -12,11 +12,16 @@ const { connectDB } = require('./src/config/database');
 const logger = require('./src/utils/logger'); // import logger
 
 (async () => {
-  // Connect to PostgreSQL database
-  await connectDB();
+  try {
+    // Connect to PostgreSQL database
+    await connectDB();
 
-  // Start Express server
-  app.listen(process.env.PORT, () => {
-    logger.info(`🚀 ${process.env.NODE_ENV} server running on ${process.env.PORT}`);
-  });
+    // Start Express server
+    app.listen(process.env.PORT, () => {
+      logger.info(`🚀 ${process.env.NODE_ENV} server running on ${process.env.PORT}`);
+    });
+  } catch (err) {
+    logger.error('Failed to start server', { message: err.message, stack: err.stack });
+    process.exit(1);
+  }
 })();

@@ -1,7 +1,12 @@
 const { pool } = require('../../../config/database');
 
 /**
- * Get Flash Sale Products (High Performance)
+ * <summary>
+ * Retrieve featured product records for the insights dashboard.
+ * </summary>
+ * <param name="page">Page number.</param>
+ * <param name="pageSize">Number of records per page.</param>
+ * <returns>Promise resolving to paginated featured product data.</returns>
  */
 exports.getFeaturedProducts = async (page = 1, pageSize = 10) => {
   try {

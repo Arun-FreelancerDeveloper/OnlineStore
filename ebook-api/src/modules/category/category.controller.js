@@ -1,7 +1,15 @@
 const service = require('./category.service');
 const ApiResponse = require('../../utils/apiResponse');
 
-// ================= CREATE =================
+/**
+ * <summary>
+ * Create a new category record.
+ * </summary>
+ * <param name="req">Express request object with category payload and optional file upload.</param>
+ * <param name="res">Express response object returning the created category.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response containing the created category.</returns>
+ */
 exports.createCategory = async (req, res, next) => {
   try {
     const data = await service.createCategory(req.body, req.file);
@@ -13,7 +21,15 @@ exports.createCategory = async (req, res, next) => {
   }
 };
 
-// ================= GET ALL =================
+/**
+ * <summary>
+ * Retrieve categories with pagination and optional search.
+ * </summary>
+ * <param name="req">Express request object containing groupId, page, pageSize, and findWhat query params.</param>
+ * <param name="res">Express response object returning paginated category results.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with category list and paging metadata.</returns>
+ */
 exports.getAllCategorys = async (req, res, next) => {
   try {
     const groupid = parseInt(req.query.groupId) || 0;
@@ -35,7 +51,15 @@ exports.getAllCategorys = async (req, res, next) => {
   }
 };
 
-// ================= GET BY ID =================
+/**
+ * <summary>
+ * Retrieve a category by its ID.
+ * </summary>
+ * <param name="req">Express request object containing category ID in params.</param>
+ * <param name="res">Express response object returning category details.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with category details.</returns>
+ */
 exports.getCategoryById = async (req, res, next) => {
   try {
     const data = await service.getCategoryById(req.params.id);
@@ -50,7 +74,15 @@ exports.getCategoryById = async (req, res, next) => {
   }
 };
 
-// ================= UPDATE =================
+/**
+ * <summary>
+ * Update an existing category record.
+ * </summary>
+ * <param name="req">Express request object containing category ID in params and update payload in body.</param>
+ * <param name="res">Express response object returning the updated category.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with updated category data.</returns>
+ */
 exports.updateCategory = async (req, res, next) => {
   try {
     const data = await service.updateCategory(
@@ -67,7 +99,15 @@ exports.updateCategory = async (req, res, next) => {
   }
 };
 
-// ================= DELETE =================
+/**
+ * <summary>
+ * Soft delete a category by marking it removed.
+ * </summary>
+ * <param name="req">Express request object containing category ID in params and deletedBy in body.</param>
+ * <param name="res">Express response object returning success.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response confirming deletion.</returns>
+ */
 exports.deleteCategory = async (req, res, next) => {
   try {
     const { id } = req.params;

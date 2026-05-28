@@ -1,6 +1,15 @@
 const service = require('./categoryGroup.service');
 const ApiResponse = require('../../utils/apiResponse');
 
+/**
+ * <summary>
+ * Create a new category group.
+ * </summary>
+ * <param name="req">Express request object containing category group payload.</param>
+ * <param name="res">Express response object returning the created group.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with the created category group.</returns>
+ */
 exports.createCategoryGroup = async (req, res, next) => {
   try {
     const data = await service.createCategoryGroup(req.body);
@@ -12,7 +21,16 @@ exports.createCategoryGroup = async (req, res, next) => {
   }
 };
 
-exports.getAllCategoryGroups = async (req, res) => {
+/**
+ * <summary>
+ * Retrieve paginated category groups with optional search.
+ * </summary>
+ * <param name="req">Express request object containing page, pageSize, and findWhat query params.</param>
+ * <param name="res">Express response object returning paginated groups.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with category group list.</returns>
+ */
+exports.getAllCategoryGroups = async (req, res, next) => {
  try {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
@@ -24,6 +42,15 @@ exports.getAllCategoryGroups = async (req, res) => {
   }
 };
 
+/**
+ * <summary>
+ * Retrieve a category group by ID.
+ * </summary>
+ * <param name="req">Express request object containing group ID in params.</param>
+ * <param name="res">Express response object returning the group details.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with category group details.</returns>
+ */
 exports.getCategoryGroupById = async (req, res, next) => {
   try {
     const data = await service.getCategoryGroupById(req.params.id);
@@ -35,6 +62,15 @@ exports.getCategoryGroupById = async (req, res, next) => {
   }
 };
 
+/**
+ * <summary>
+ * Update an existing category group.
+ * </summary>
+ * <param name="req">Express request object containing group ID in params and update payload in body.</param>
+ * <param name="res">Express response object returning the updated group.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response with updated category group.</returns>
+ */
 exports.updateCategoryGroup = async (req, res, next) => {
   try {
     const data = await service.updateCategoryGroup(
@@ -49,6 +85,15 @@ exports.updateCategoryGroup = async (req, res, next) => {
   }
 };
 
+/**
+ * <summary>
+ * Soft delete a category group by ID.
+ * </summary>
+ * <param name="req">Express request object containing group ID in params and deletedBy in body.</param>
+ * <param name="res">Express response object returning success.</param>
+ * <param name="next">Express next middleware callback for error handling.</param>
+ * <returns>JSON response confirming deletion.</returns>
+ */
 exports.deleteCategoryGroup = async (req, res, next) => {
   try {
     const { id } = req.params;

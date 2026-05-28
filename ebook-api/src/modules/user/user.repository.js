@@ -10,10 +10,11 @@ const bcrypt = require('bcryptjs');
  */
 
 /**
- * Check if email exists
- *
- * @param {string} email - Email to check
- * @returns {boolean} True if email exists, false otherwise
+ * <summary>
+ * Check whether an active user exists for the provided email.
+ * </summary>
+ * <param name="email">Email address to check.</param>
+ * <returns>Boolean indicating whether the email exists.</returns>
  */
 exports.isEmailExists = async (email) => {
   const sql = `
@@ -30,12 +31,12 @@ exports.isEmailExists = async (email) => {
 
 
 /**
- * Create User
- *
- * - Inserts a new user into tbuser table
- * - Returns the created user (userid, fullname, email)
- * - @param {Object} user - { fullname, email, password }
- * - @returns {Object} Created user
+ * <summary>
+ * Create a new user record in `tbuser`.
+ * </summary>
+ * <param name="user">User payload. Required fields: `fullname`, `email`, `password`.
+ * Optional: `userType`, `vendorNumber`.</param>
+ * <returns>The created user row (userid, fullname, email, usertype).</returns>
  */
 exports.createUser = async (user) => {
 
@@ -68,10 +69,11 @@ exports.createUser = async (user) => {
 };
 
 /**
- * Get user by email (Login)
- *
- * - Fetches active user by email
- * - Returns passwordhash for validation
+ * <summary>
+ * Fetch a user row by email for login/validation.
+ * </summary>
+ * <param name="email">Email address to lookup.</param>
+ * <returns>Row with userid, fullname, email, userType, passwordhash or undefined.</returns>
  */
 exports.getUserByEmail = async (email) => {
   const sql = `
@@ -87,14 +89,12 @@ exports.getUserByEmail = async (email) => {
 };
 
 /**
- * 🔐 Update User Password
- * ------------------------------------------------------------
- * - Hashes new password
- * - Updates passwordhash in DB
- *
- * @param {number} userId
- * @param {string} newPassword
- * @returns {Promise<boolean>}
+ * <summary>
+ * Update a user's password (hashing internally).
+ * </summary>
+ * <param name="userId">Target user id.</param>
+ * <param name="newPassword">Plaintext new password.</param>
+ * <returns>Boolean indicating whether the update affected a row.</returns>
  */
 exports.updatePassword = async (userId, newPassword) => {
 
@@ -115,21 +115,25 @@ exports.updatePassword = async (userId, newPassword) => {
 
 
 /**
- * Get user by email (Login)
- *
- * - Compares plain password with hashed password
- * - Returns boolean indicating if passwords match
+ * <summary>
+ * Compare a plaintext password against a bcrypt hash.
+ * </summary>
+ * <param name="plainPassword">Plaintext password.</param>
+ * <param name="hashedPassword">Bcrypt hashed password from DB.</param>
+ * <returns>Boolean whether the passwords match.</returns>
  */
 exports.comparePassword = async (plainPassword, hashedPassword) => {
   return await bcrypt.compare(plainPassword, hashedPassword);
 };
 
 /**
- * Get All Users
- *
- * - Fetches all active users
- * - Ignores soft-deleted records
- * - @returns {Array} List of users
+ * <summary>
+ * Get users list with pagination and optional search term.
+ * </summary>
+ * <param name="page">Page number (1-based).</param>
+ * <param name="pageSize">Records per page.</param>
+ * <param name="findWhat">Optional search string applied to fullname and email.</param>
+ * <returns>{ rows: Array, totalRecords: number }</returns>
  */
 exports.getUsers = async (page, pageSize, findWhat) => {
   const offset = (page - 1) * pageSize;
@@ -161,12 +165,11 @@ exports.getUsers = async (page, pageSize, findWhat) => {
 };
 
 /**
- * Get User By ID
- *
- * - Fetches a user by their ID
- * - Ignores soft-deleted records
- * - @param {number} id - User ID
- * - @returns {Object} User record or null
+ * <summary>
+ * Fetch a user by id (ignores soft-deleted rows).
+ * </summary>
+ * <param name="id">User id</param>
+ * <returns>User record or undefined.</returns>
  */
 exports.getUserById = async (id) => {
   const { rows } = await pool.query(
@@ -179,14 +182,12 @@ exports.getUserById = async (id) => {
 };
 
 /**
- * Update User
- *
- * - Updates fullname and email by userid
- * - Updates modifiedon timestamp automatically
- * - Returns updated user record
- * - @param {number} id - User ID
- * - @param {Object} user - { fullname, email }
- * - @returns {Object} Updated user
+ * <summary>
+ * Update a user's fullname and email.
+ * </summary>
+ * <param name="id">User id</param>
+ * <param name="user">Object containing `fullname` and `email`.</param>
+ * <returns>Updated user row or undefined.</returns>
  */
 exports.updateUser = async (id, user) => {
   const sql = `
@@ -206,11 +207,10 @@ exports.updateUser = async (id, user) => {
 };
 
 /**
- * Delete User (Soft Delete)
- *
- * - Marks user as deleted (delflag = 1)
- * - Data remains in DB for auditing purposes
- * - @param {number} id - User ID
+ * <summary>
+ * Soft delete a user by setting `delflag = 1`.
+ * </summary>
+ * <param name="id">User id</param>
  */
 exports.deleteUser = async (id) => {
   await pool.query(

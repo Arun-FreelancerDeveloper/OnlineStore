@@ -491,3 +491,78 @@ PascalCase   → classes, constructors
 UPPER_CASE   → constants / env values
 kebab-case   → file names (sometimes)
 snake_case   → NOT common in JS
+ 
+---
+
+## Module Overview (Pages)
+
+This section explains each major module/page in the `ebook-api` service so developers can quickly understand responsibilities and where to find code.
+
+- **`auth`**: Authentication flows and password management.
+  - Files: `src/modules/auth/auth.controller.js`, `auth.service.js`, `auth.repository.js`, `auth.routes.js`, `auth.validation.js`
+  - Responsibilities: Login, logout, change password, forgot password, token handling, JWT generation/validation.
+
+- **`user`**: User management APIs.
+  - Files: `src/modules/user/user.controller.js`, `user.service.js`, `user.repository.js`, `user.routes.js`, `user.validation.js`
+  - Responsibilities: Create user (with password hashing), login (password comparison), pagination for users, update and soft-delete. Sensitive fields (`passwordhash`) are removed before returning user objects.
+
+- **`products`**: Product CRUD and listing.
+  - Files: `src/modules/products/*` (controller, service, repository, routes, validation)
+  - Responsibilities: Create/update/delete products, upload images, list products with pagination and search.
+
+- **`orders`**: Order management and status updates.
+  - Files: `src/modules/orders/*`
+  - Responsibilities: Create orders, fetch orders (by id/user/invoice), update order status, order history retrieval.
+
+- **`carts`**: Shopping cart operations.
+  - Files: `src/modules/carts/*`
+  - Responsibilities: Add to cart, update quantities, bulk updates, delete cart items, get user cart.
+
+- **`categorygroup` / `category`**: Category and category group management.
+  - Files: `src/modules/categorygroup/*`, `src/modules/category/*`
+  - Responsibilities: CRUD operations for category groups and categories, list with pagination and search.
+
+- **`shipping`**: User shipping addresses.
+  - Files: `src/modules/shipping/*`
+  - Responsibilities: Create, update, delete, and list addresses by user.
+
+- **`insights`**: Small read-only endpoints for featured/recommended/flash-sale products.
+  - Files: `src/modules/insights/*` (featured, recommended, flashsalestoday)
+  - Responsibilities: Return curated product lists for home screens.
+
+- **`services`**: Utilities that provide cross-cutting features.
+  - Files: `src/services/email.service.js`, `file-upload.service.js`, `payment-gateway.service.js`, `sms.service.js`
+  - Responsibilities: Send emails (welcome/order/reset), manage file uploads, interact with payment gateway and SMS provider. These are asynchronous and return Promises; controllers call them without blocking responses when appropriate.
+
+- **`utils`**: Helper utilities used across the app.
+  - Files: `src/utils/logger.js`, `mailer.js`, `apiResponse.js`, `validation.util.js`
+  - Responsibilities: Centralized logging, wrapper around mailing library, standardized API response format (see `ApiResponse.success|failure|error`) and validation helpers.
+
+- **`middlewares`**: Express middleware.
+  - Files: `src/middlewares/auth.middleware.js`, `error.middleware.js`, `upload.middleware.js`
+  - Responsibilities: Request authentication/authorization, global error handling, file upload parsing. Controllers must forward errors to the global handler via `next(err)`.
+
+- **`config`**: Environment and external service configuration.
+  - Files: `src/config/database.js`, `mail.config.js`, `payment.config.js`, `sms.config.js`, `swagger.js`
+  - Responsibilities: DB connection pooling (`pg` Pool), mail/ payment/ SMS credentials, Swagger/OpenAPI settings.
+
+## Coding Conventions & Error Handling
+
+- Controllers: Keep controllers thin. They should do: parse/validate request, call service, return ApiResponse, and forward unexpected errors to `next(err)`.
+- Services: Implement business logic and call repositories. Throw errors (with `err.statusCode` when appropriate) to be handled by the global error middleware.
+- Repositories: Interact with the database, return raw rows/objects. Avoid throwing custom HTTP errors here; let the service layer decide.
+- Error middleware: `src/middlewares/error.middleware.js` now respects `err.statusCode` and returns a consistent JSON payload. Stack traces are included only in non-production.
+- Responses: Use `ApiResponse.success(data, message)`, `ApiResponse.failure(message)`, or `ApiResponse.error(message, code)` for error-style JSON responses.
+
+## Recent Fixes Applied
+
+- Login flow: `user.service.js` now correctly `await`s DB lookup, compares hashed passwords using bcrypt, and strips `passwordhash` from returned user.
+- Global error handler: improved logging and status code handling.
+- Controllers: several controllers updated to forward errors using `next(error)`.
+- API response helper: `ApiResponse.error` added.
+
+If you'd like, I can now:
+- Generate per-module README files under `src/modules/<module>/README.md` (complete page-by-page docs), or
+- Continue and add JSDoc headers/comments to every controller/service/repository file (I can do this in batches and run quick checks).
+
+Tell me which of the two you prefer and I'll continue accordingly.

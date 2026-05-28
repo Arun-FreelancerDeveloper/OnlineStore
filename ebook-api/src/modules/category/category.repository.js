@@ -7,7 +7,11 @@ const { pool } = require('../../config/database');
  */
 
 /**
- * Create Category
+ * <summary>
+ * Insert a new category into the database.
+ * </summary>
+ * <param name="data">Payload containing groupId, categoryName, imagepath, and createdby.</param>
+ * <returns>Promise resolving to the inserted category record.</returns>
  */
 exports.createCategory = async (data) => {
   const imagepath =
@@ -42,7 +46,14 @@ exports.createCategory = async (data) => {
 };
 
 /**
- * Get All Categories with Group + Product Count
+ * <summary>
+ * Retrieve categories for a group with product count, pagination, and search support.
+ * </summary>
+ * <param name="groupid">Group identifier to filter categories.</param>
+ * <param name="page">Page number.</param>
+ * <param name="pageSize">Number of records per page.</param>
+ * <param name="findWhat">Optional category name search term.</param>
+ * <returns>Promise resolving to a paginated category result object.</returns>
  */
 exports.getAllCategorys = async (
   groupid,
@@ -127,7 +138,11 @@ exports.getAllCategorys = async (
 };
 
 /**
- * Get Category By ID
+ * <summary>
+ * Retrieve a category by its identifier.
+ * </summary>
+ * <param name="categoryid">Category identifier.</param>
+ * <returns>Promise resolving to the category details.</returns>
  */
 exports.getCategoryById = async (categoryid) => {
   const sql = `
@@ -151,7 +166,12 @@ exports.getCategoryById = async (categoryid) => {
 };
 
 /**
- * Update Category
+ * <summary>
+ * Update an existing category record.
+ * </summary>
+ * <param name="categoryId">Category identifier.</param>
+ * <param name="data">Payload containing categoryName, imagepath, and modifiedby.</param>
+ * <returns>Promise resolving to the updated category record.</returns>
  */
 exports.updateCategory = async (categoryId, data) => {
   const sql = `
@@ -179,7 +199,12 @@ exports.updateCategory = async (categoryId, data) => {
 };
 
 /**
- * Soft Delete Category
+ * <summary>
+ * Soft delete a category by setting delflag and deactivating the record.
+ * </summary>
+ * <param name="categoryId">Category identifier.</param>
+ * <param name="deletedBy">User ID performing the deletion.</param>
+ * <returns>Promise resolving once the deletion is complete.</returns>
  */
 exports.deleteCategory = async (categoryId, deletedBy) => {
   const sql = `

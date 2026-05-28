@@ -2,6 +2,15 @@ const service = require('./product.service');
 const ApiResponse = require('../../utils/apiResponse');
 
 // ================= CREATE =================
+/**
+ * <summary>
+ * Create a new product.
+ * </summary>
+ * <param name="req">Express request. Body contains product fields; `req.files` may contain uploaded images.</param>
+ * <param name="res">Express response. Returns ApiResponse with created product.</param>
+ * <param name="next">Express next for error forwarding.</param>
+ * <returns>ApiResponse with created product object.</returns>
+ */
 exports.createProduct = async (req, res, next) => {
   try {
     const data = await service.createProduct(req.body, req.files);
@@ -15,6 +24,15 @@ exports.createProduct = async (req, res, next) => {
 };
 
 // ================= GET ALL =================
+/**
+ * <summary>
+ * Get paginated list of products with optional category filter and search.
+ * </summary>
+ * <param name="req">Query params: `categoryId`, `page`, `pageSize`, `findWhat`.</param>
+ * <param name="res">Returns ApiResponse with pagination metadata and `products` array.</param>
+ * <param name="next">Express next for errors.</param>
+ * <returns>ApiResponse with paginated products.</returns>
+ */
 exports.getAllProducts = async (req, res, next) => {
   try {
     const categoryId = parseInt(req.query.categoryId) || 0;
@@ -38,6 +56,15 @@ exports.getAllProducts = async (req, res, next) => {
 };
 
 // ================= GET BY ID =================
+/**
+ * <summary>
+ * Get single product details by id.
+ * </summary>
+ * <param name="req">Path param `productId`.</param>
+ * <param name="res">Returns ApiResponse containing product details.</param>
+ * <param name="next">Express next for errors.</param>
+ * <returns>ApiResponse with product details.</returns>
+ */
 exports.getProductById = async (req, res, next) => {
   try {
     const data = await service.getProductById(req.params.productId);
@@ -54,6 +81,15 @@ exports.getProductById = async (req, res, next) => {
 };
 
 // ================= UPDATE =================
+/**
+ * <summary>
+ * Update an existing product. Supports updating images via `req.files`.
+ * </summary>
+ * <param name="req">Path param `productId`, body with updated fields, optional `req.files`.</param>
+ * <param name="res">Returns ApiResponse with updated product.</param>
+ * <param name="next">Express next for errors.</param>
+ * <returns>ApiResponse with updated product.</returns>
+ */
 exports.updateProduct = async (req, res, next) => {
   try {
     const data = await service.updateProduct(
@@ -71,6 +107,15 @@ exports.updateProduct = async (req, res, next) => {
 };
 
 // ================= DELETE =================
+/**
+ * <summary>
+ * Soft-delete a product. Requires `deletedBy` in request body.
+ * </summary>
+ * <param name="req">Path param `productId`. Body: { deletedBy }.</param>
+ * <param name="res">Returns ApiResponse on success or ApiResponse.error on validation failure.</param>
+ * <param name="next">Express next for errors.</param>
+ * <returns>ApiResponse acknowledging deletion.</returns>
+ */
 exports.deleteProduct = async (req, res, next) => {
   try {
     const { productId } = req.params;
@@ -94,6 +139,15 @@ exports.deleteProduct = async (req, res, next) => {
 
 
 // ================= UPDATE PRODUCT IMAGES =================
+/**
+ * <summary>
+ * Update images for a product. Requires `userId` either from token (`req.user`) or body.
+ * </summary>
+ * <param name="req">Path param `productId`. `req.files` must include uploaded images. User id via token or `req.body.userId`.</param>
+ * <param name="res">Returns ApiResponse with updated image metadata.</param>
+ * <param name="next">Express next for errors.</param>
+ * <returns>ApiResponse with image update results.</returns>
+ */
 exports.updateProductImages = async (req, res, next) => {
   try {
     const { productId } = req.params;

@@ -1,10 +1,12 @@
 const repo = require('./recommended.repository');
+
 /**
- * Get All Products (Pagination + Search)
- * - Supports filtering by category
- * - Supports search by product name
- * - @param {number} page
- * - @param {number} pageSize
+ * <summary>
+ * Retrieve recommended products via the repository layer.
+ * </summary>
+ * <param name="page">Page number.</param>
+ * <param name="pageSize">Number of records per page.</param>
+ * <returns>Promise resolving to paginated recommended product results.</returns>
  */
 exports.getRecommendedProducts = async (
   page = 1,

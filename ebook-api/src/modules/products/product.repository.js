@@ -17,6 +17,13 @@ const { pool } = require('../../config/database');
 /**
  * ================= CREATE PRODUCT =================
  */
+/**
+ * <summary>
+ * Insert a new product and associated images in a single transaction.
+ * </summary>
+ * <param name="data">Product payload. Expected fields: productcode, productname, shortdescription, categoryid, subcategoryid, deptid, storeid, images (array of image paths).</param>
+ * <returns>Object with `productId`.</returns>
+ */
 exports.createProduct = async (data) => {
   const client = await pool.connect();
 
@@ -70,6 +77,16 @@ exports.createProduct = async (data) => {
 /**
  * ================= GET ALL PRODUCTS =================
  * - Supports pagination + search + category filter
+ */
+/**
+ * <summary>
+ * Retrieve paginated product records with optional category filter and search.
+ * </summary>
+ * <param name="categoryId">Category id to filter (0 = all).</param>
+ * <param name="page">Page number (1-based).</param>
+ * <param name="pageSize">Records per page.</param>
+ * <param name="findWhat">Optional search term applied across product fields.</param>
+ * <returns>Paginated object with `data` array and pagination metadata.</returns>
  */
 exports.getAllProducts = async (categoryId, page = 1, pageSize = 10, findWhat = '') => {
   const offset = (page - 1) * pageSize;
@@ -246,6 +263,13 @@ exports.getAllProducts = async (categoryId, page = 1, pageSize = 10, findWhat = 
 /**
  * ================= GET PRODUCT BY ID =================
  */
+/**
+ * <summary>
+ * Get detailed product information for a single product id, including images and aggregated stats.
+ * </summary>
+ * <param name="productId">Product id to fetch.</param>
+ * <returns>Product object with attached `images` array or null if not found.</returns>
+ */
 exports.getProductById = async (productId) => {
   if (!productId || isNaN(productId)) {
     throw new Error('Invalid Product ID');
@@ -383,6 +407,14 @@ exports.getProductById = async (productId) => {
 /**
  * ================= UPDATE PRODUCT =================
  */
+/**
+ * <summary>
+ * Update product metadata and optionally replace product images in a transaction.
+ * </summary>
+ * <param name="productId">Product id to update.</param>
+ * <param name="data">Product data object. If `data.images` is provided it will replace existing images.</param>
+ * <returns>Updated product row.</returns>
+ */
 exports.updateProduct = async (productId, data) => {
   const client = await pool.connect();
 
@@ -452,6 +484,13 @@ exports.updateProduct = async (productId, data) => {
 
 /**
  * ================= DELETE PRODUCT (SOFT DELETE) =================
+ */
+/**
+ * <summary>
+ * Soft-delete a product by setting `delflag` and `isactive=false` and recording `deletedBy`.
+ * </summary>
+ * <param name="productId">Product id</param>
+ * <param name="deletedBy">User id who performed deletion</param>
  */
 exports.deleteProduct = async (productId, deletedBy) => {
   await pool.query(

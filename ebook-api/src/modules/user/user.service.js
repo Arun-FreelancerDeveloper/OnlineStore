@@ -1,40 +1,42 @@
-const { json } = require('express');
 const repo = require('./user.repository');
 
-
 /**
- * User Service
- *
- * - Contains business logic for users
- * - Delegates database operations to repository layer
- * - Keeps controllers clean and focused on HTTP handling
+ * <summary>
+ * User Service — business logic layer for users.
+ * </summary>
+ * <remarks>
+ * This module orchestrates repository calls and enforces business rules
+ * such as password hashing, uniqueness checks and removing sensitive data
+ * before returning user objects to controllers.
+ * </remarks>
  */
 
 /**
- * Create User
- *
- * - Calls repository to insert a new user
- * - @param {Object} data - { fullname, email, password }
- * @returns {Object} Created user
+ * <summary>
+ * Create a new user.
+ * </summary>
+ * <param name="data">User payload: { fullname, email, password, userType, vendorNumber }</param>
+ * <returns>Created user object (userid, fullname, email, usertype).</returns>
  */
 exports.createUser = (data) => repo.createUser(data);
 
 /**
- * Check if email exists
- *
- * - Calls repository to check if email exists
- * - @param {string} email - Email to check
- * @returns {boolean} True if email exists, false otherwise
+ * <summary>
+ * Check whether an email already exists.
+ * </summary>
+ * <param name="email">Email address to check.</param>
+ * <returns>Boolean indicating existence.</returns>
  */
 exports.isEmailExists = (email) => repo.isEmailExists(email);
 
-
-/** * Get All Users with Pagination
- * - Calls repository to fetch paginated users and total count
- * - @param {number} page - Page number
- * - @param {number} pageSize - Number of records per page
- * - @findWhat - Search term for filtering users (optional)
- * @returns {Object} { currentPage, pageSize, totalPages, totalRecords, users }
+/**
+ * <summary>
+ * Get all users with pagination and optional search.
+ * </summary>
+ * <param name="page">Page number (1-based).</param>
+ * <param name="pageSize">Records per page.</param>
+ * <param name="findWhat">Optional search term for fullname/email.</param>
+ * <returns>Paginated object: { currentPage, pageSize, totalPages, totalRecords, users }.</returns>
  */
 exports.getUsers = async (page = 1, pageSize = 10, findWhat = '') => {
   page = parseInt(page);
@@ -49,66 +51,68 @@ exports.getUsers = async (page = 1, pageSize = 10, findWhat = '') => {
     users: rows
   };
 };
+
 /**
- * Update User
- *
- * - Calls repository to update a user by ID
- * - @param {number} id - User ID
- * - @param {Object} data - { fullname, email }
- * @returns {Object} Updated user
+ * <summary>
+ * Update a user by id.
+ * </summary>
+ * <param name="id">User id</param>
+ * <param name="data">Partial user data to update</param>
+ * <returns>Updated user object or null.</returns>
  */
 exports.updateUser = (id, data) => repo.updateUser(id, data);
 
 /**
- * Delete User (Soft Delete)
- *
- * - Calls repository to mark user as deleted
- * - @param {number} id - User ID
+ * <summary>
+ * Soft delete a user by id.
+ * </summary>
+ * <param name="id">User id</param>
+ * <returns>Promise resolved when deletion flag is set.</returns>
  */
 exports.deleteUser = (id) => repo.deleteUser(id);
 
 /**
- * Get User By ID
- *
- * - Calls repository to fetch a single user
- * - @param {number} id - User ID
- * @returns {Object} User details
+ * <summary>
+ * Get single user by id.
+ * </summary>
+ * <param name="id">User id</param>
+ * <returns>User object or undefined if not found.</returns>
  */
 exports.getUserById = (id) => repo.getUserById(id);
 
-
-/*
-* User Login
-*
-* - Validates user credentials
-* - Returns user data if valid
-* - @param {Object} param0 - { email, password }
-* - @returns {Object} User details
-*/
+/**
+ * <summary>
+ * Authenticate a user by email and password.
+ * </summary>
+ * <remarks>
+ * Steps:
+ * 1. Fetch user row by email.
+ * 2. If not found, throw 401.
+ * 3. Compare provided password with stored passwordhash using bcrypt.
+ * 4. If mismatch, throw 401. Otherwise remove `passwordhash` and return user.
+ * </remarks>
+ * <param name="param0">Object with `email` and `password`.</param>
+ * <returns>Safe user object (without `passwordhash`).</returns>
+ */
 exports.login = async ({ email, password }) => {
-
-  // 1. Check user exists
-  const user = repo.getUserByEmail(email, password);
+  // 1. Fetch user by email
+  const user = await repo.getUserByEmail(email);
   if (!user) {
-    if (!user) {
     const err = new Error('Invalid email or password');
     err.statusCode = 401;
-    throw err; // ✅ throw
+    throw err;
   }
-  }
-  // 2. Compare password
-//   const isMatch = password === user.passwordhash;
-//   if (!isMatch) {
-//      throw new Error('Invalid email or password');
-//   }
- 
-//   // 2. Compare password
-//   const isMatch = await bcrypt.compare(password, user.passwordhash);
-//   if (!isMatch) {
-//     throw new Error('Invalid email or password');
-//   }
 
-//   // 3. Remove sensitive data
-//   delete user.passwordhash;
-  return user;
+  // 2. Compare password
+  const isMatch = await repo.comparePassword(password, user.passwordhash);
+  if (!isMatch) {
+    const err = new Error('Invalid email or password');
+    err.statusCode = 401;
+    throw err;
+  }
+
+  // 3. Remove sensitive data before returning
+  const safeUser = { ...user };
+  delete safeUser.passwordhash;
+  return safeUser;
 };
