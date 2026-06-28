@@ -6,6 +6,8 @@ export interface Product {
   productimage: string;
   categoryid: number;
   categoryname: string;
+  groupid?: number;
+  groupname?: string;
 
   subcategoryid: number;
   subcategoryname: string;
@@ -18,4 +20,5 @@ export interface Product {
 
   mrp: number;
   wholesaleprice: number;
+  images?: any[];
 }

@@ -40,28 +40,26 @@
               </tr>
             </thead>
             <tbody>
-  @for (data of lstProductGroup; track $index) {
-    <tr>
-      <td>{{ data.sno }}</td>
-      <td>{{ data.groupname }}</td>
-      <td class="text-center">
-        <button
-          class="btn btn-sm btn-primary me-2"
-          (click)="editGroup(data.groupid)"
-        >
-          <i class="las la-edit"></i>
-        </button>
+              <tr *ngFor="let data of lstProductGroup; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ data.groupname }}</td>
+                <td class="text-center">
+                  <button
+                    class="btn btn-sm btn-primary me-2"
+                    (click)="editGroup(data.groupid)"
+                  >
+                    <i class="las la-edit"></i>
+                  </button>
 
-        <button
-          class="btn btn-sm btn-danger"
-          (click)="deleteGroup(data.groupid)"
-        >
-          <i class="las la-trash"></i>
-        </button>
-      </td>
-    </tr>
-  }
-</tbody>
+                  <button
+                    class="btn btn-sm btn-danger"
+                    (click)="deleteGroup(data.groupid)"
+                  >
+                    <i class="las la-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
           </table>
           <!--end /table-->
         </div>

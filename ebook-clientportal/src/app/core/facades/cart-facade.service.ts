@@ -70,7 +70,7 @@ export class CartFacadeService {
 
     if (!this.user) return;
 
-    this.cartService.removeItem(cartid, this.user.userid).subscribe({
+    this.cartService.removeItem(cartid, this.user?.userid ?? 0).subscribe({
       next: () => {
 
         this.alertService.success('Item removed from cart');
@@ -95,7 +95,7 @@ export class CartFacadeService {
    * LOAD CART COUNT (ON APP START)
    * ===================================================== */
   loadCartCount(): void {
-    this.cartService.loadCartCount(this.user.userid, this.GUEST_USER_ID).subscribe({
+    this.cartService.loadCartCount(this.user?.userid ?? 0, this.GUEST_USER_ID).subscribe({
       next: (res) => {
         console.log('CART API RESPONSE:', res); // 👈 check this
       },
@@ -146,7 +146,7 @@ export class CartFacadeService {
      // this.loginRequired();
       return null; // ⚠️ handle in component
     }
-    return this.cartService.getDiscountRule(this.user.userid);
+    return this.cartService.getDiscountRule(this.user?.userid ?? 0);
   }
 
   clearCartCache(): void {

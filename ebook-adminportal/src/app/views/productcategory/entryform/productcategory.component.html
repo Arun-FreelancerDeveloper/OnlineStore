@@ -1,53 +1,79 @@
 <div class="row justify-content-center">
   <div class="col-md-2 col-lg-2"></div>
   <div class="col-md-6 col-lg-6">
-      <div class="card">
-        <div class="card-header">
-          <div class="row align-items-center">
-            <div class="col">
-              <h4 class="card-title">Add/Edit Product Group</h4>
-            </div>
-            <!--end col-->
+    <div class="card">
+      <div class="card-header">
+        <div class="row align-items-center">
+          <div class="col">
+            <h4 class="card-title">Add Product Category</h4>
           </div>
-          <!--end row-->
         </div>
-        <!--end card-header-->
-        <div class="card-body pt-0">
-          <form>
-            <div class="mb-3">
-              <label class="form-label" for="exampleFormControlInput1"
-                >Group Name</label
-              >
-            <select class="form-select" aria-label="Default select example">
-                 @for (data of lstProductGroup; track $index) {
-                <option value="{{data.id}}">{{data.groupname}}</option>
-                }
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="exampleFormControlInput1"
-                >Category Name</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="exampleFormControlInput1"
-                placeholder="Ex : Book"
-              />
-            </div>
-            <div class="mb-3 text-end">
-              <a class="btn btn-primary btn-md">
-                <i class="las la-save me-2"></i>Save
-              </a>
-              <a routerLink="/productcategory/details" class="btn btn-secondary btn-md ms-2">
-                <i class="las la-times me-2"></i>Cancel
-              </a>
-              </div>  
-          </form>
-        </div>
-        <!--end card-body-->
       </div>
-
+      <div class="card-body pt-0">
+        <form [formGroup]="productCategoryForm" (ngSubmit)="saveCategory()">
+          <div class="mb-3">
+            <label class="form-label" for="groupId">Product Group</label>
+            <select
+              id="groupId"
+              class="form-select"
+              formControlName="groupId"
+            >
+              <option value="" disabled selected>Select group</option>
+              <option
+                *ngFor="let group of lstProductGroup"
+                [value]="group.groupid"
+              >
+                {{ group.groupname }}
+              </option>
+            </select>
+            <small
+              class="text-danger"
+              *ngIf="productCategoryForm.get('groupId')?.touched && productCategoryForm.get('groupId')?.invalid"
+            >
+              Please select a product group.
+            </small>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="categoryName">Category Name</label>
+            <input
+              id="categoryName"
+              type="text"
+              class="form-control"
+              formControlName="categoryName"
+              placeholder="Ex : Fiction"
+            />
+            <small
+              class="text-danger"
+              *ngIf="productCategoryForm.get('categoryName')?.touched && productCategoryForm.get('categoryName')?.invalid"
+            >
+              Category name is required.
+            </small>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="categoryImage">Category Image</label>
+            <input
+              id="categoryImage"
+              type="file"
+              class="form-control"
+              (change)="onFileChange($event)"
+            />
+          </div>
+          <div class="mb-3 text-end">
+            <button
+              type="submit"
+              class="btn btn-primary btn-md"
+              [disabled]="loading"
+            >
+              <i class="las la-save me-2"></i>
+              {{ loading ? 'Saving...' : 'Save' }}
+            </button>
+            <a routerLink="/productcategory/details" class="btn btn-secondary btn-md ms-2">
+              <i class="las la-times me-2"></i>Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
   <div class="col-md-2 col-lg-2"></div>
 </div>

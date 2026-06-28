@@ -14,8 +14,7 @@
           <!--end tr-->
         </thead>
         <tbody>
-          @for (product of ProductList; track $index) {
-            <tr>
+          <tr *ngFor="let product of ProductList; let i = index">
               <td>
                 <div class="d-flex align-items-center">
                   <img
@@ -64,7 +63,6 @@
               </td>
             </tr>
             <!--end tr-->
-          }
         </tbody>
       </table>
       <!--end table-->

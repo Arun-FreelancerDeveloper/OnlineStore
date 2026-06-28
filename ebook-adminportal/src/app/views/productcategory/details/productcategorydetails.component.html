@@ -23,17 +23,17 @@
                 <div class="mb-3">
                     <label class="form-label" for="exampleFormControlInput1">Group Name</label>
                      <select
-  class="form-select"
-  aria-label="Default select example"
-  (change)="loadProductCategoriesByGroupID($any($event.target).value)"
->
-  @for (data of lstProductGroup; track $index) {
-    <option [value]="data.groupid">
-      {{ data.groupname }}
-    </option>
-  }
-</select>
-
+                        class="form-select"
+                        aria-label="Default select example"
+                        (change)="loadProductCategoriesByGroupID($any($event.target).value)"
+                      >
+                        <option
+                          *ngFor="let data of lstProductGroup"
+                          [value]="data.groupid"
+                        >
+                          {{ data.groupname }}
+                        </option>
+                      </select>
                 </div>
           </div>
           <div class="col-md-6">
@@ -57,20 +57,21 @@
               </tr>
             </thead>
             <tbody>
-              @for (data of lstProductCategory; track $index) {
-              <tr>
+              <tr *ngFor="let data of lstProductCategory">
                 <td>{{ data.sno }}</td>
                 <td>{{ data.categoryname }}</td>
                 <td class="text-center">
-                  <a class="btn btn-sm btn-primary me-2">
+                  <button class="btn btn-sm btn-primary me-2" disabled>
                     <i class="las la-edit"></i>
-                  </a>
-                  <a class="btn btn-sm btn-danger me-2">
+                  </button>
+                  <button
+                    class="btn btn-sm btn-danger me-2"
+                    (click)="deleteCategory(data.categoryid)"
+                  >
                     <i class="las la-trash"></i>
-                  </a>
+                  </button>
                 </td>
               </tr>
-            }
             </tbody>
           </table>
           <!--end /table-->

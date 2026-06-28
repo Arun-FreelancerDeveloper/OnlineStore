@@ -1,0 +1,380 @@
+﻿npx : [1m[33m
+At line:1 char:63
++ ... minportal'; npx ng build --configuration development --no-progress 2> ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([1m[33m:String) [], RemoteExcep 
+   tion
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 6, column 8 of file:///E:/LatestSource/OnlineStore/
+ebook-adminportal/public/assets/scss/icons.scss:6:8:
+Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+6 | @import "plugins/iconoir";
+
+
+public\assets\scss\icons.scss 7:9  @import
+src\styles.scss 23:9               root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 7, column 8 of file:///E:/LatestSource/OnlineStore/
+ebook-adminportal/public/assets/scss/icons.scss:7:8:
+Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+7 | @import "plugins/icofont";
+
+
+public\assets\scss\icons.scss 8:9  @import
+src\styles.scss 23:9               root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 10, column 29 of file:///E:/LatestSource/OnlineStor
+e/ebook-adminportal/node_modules/bootstrap/scss/_functions.scss:10:29:
+Global built-in functions are deprecated and will be removed in Dart Sass 
+3.0.0.
+Use math.unit instead.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+10 |     @if $prev-num == null or unit($num) == "%" or unit($prev-num) == "%" {
+
+
+node_modules\bootstrap\scss\_functions.scss 11:30  -assert-ascending()
+node_modules\bootstrap\scss\_variables.scss 494:1  @import
+public\assets\scss\bootstrap.scss 7:9              @import
+src\styles.scss 25:9                               root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 10, column 50 of file:///E:/LatestSource/OnlineStor
+e/ebook-adminportal/node_modules/bootstrap/scss/_functions.scss:10:50:
+Global built-in functions are deprecated and will be removed in Dart Sass 
+3.0.0.
+Use math.unit instead.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+10 |     @if $prev-num == null or unit($num) == "%" or unit($prev-num) == "%" {
+
+
+node_modules\bootstrap\scss\_functions.scss 11:51  -assert-ascending()
+node_modules\bootstrap\scss\_variables.scss 494:1  @import
+public\assets\scss\bootstrap.scss 7:9              @import
+src\styles.scss 25:9                               root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 22, column 8 of 
+file:///E:/LatestSource/OnlineStore/ebook-adminportal/src/styles.scss:22:8:
+Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+22 | @import "../public/assets/scss/icons.scss";
+
+
+src\styles.scss 23:9  root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 24, column 8 of 
+file:///E:/LatestSource/OnlineStore/ebook-adminportal/src/styles.scss:24:8:
+Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+24 | @import "../public/assets/scss/bootstrap.scss";
+
+
+src\styles.scss 25:9  root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 26, column 8 of 
+file:///E:/LatestSource/OnlineStore/ebook-adminportal/src/styles.scss:26:8:
+Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+26 | @import "../public/assets/scss/app.scss";
+
+
+src\styles.scss 27:9  root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 36, column 10 of file:///E:/LatestSource/OnlineStor
+e/ebook-adminportal/node_modules/bootstrap/scss/_functions.scss:36:10:
+red() is deprecated. Suggestion:
+
+color.channel($color, "red", $space: rgb)
+
+More info: https://sass-lang.com/d/color-functions
+
+36 |   @return red($value), green($value), blue($value);
+
+
+node_modules\bootstrap\scss\_functions.scss 37:11   to-rgb()
+node_modules\bootstrap\scss\_variables.scss 846:31  @import
+public\assets\scss\bootstrap.scss 7:9               @import
+src\styles.scss 25:9                                root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 36, column 23 of file:///E:/LatestSource/OnlineStor
+e/ebook-adminportal/node_modules/bootstrap/scss/_functions.scss:36:23:
+green() is deprecated. Suggestion:
+
+color.channel($color, "green", $space: rgb)
+
+More info: https://sass-lang.com/d/color-functions
+
+36 |   @return red($value), green($value), blue($value);
+
+
+node_modules\bootstrap\scss\_functions.scss 37:24   to-rgb()
+node_modules\bootstrap\scss\_variables.scss 846:31  @import
+public\assets\scss\bootstrap.scss 7:9               @import
+src\styles.scss 25:9                                root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 184, column 9 of file:///E:/LatestSource/OnlineStor
+e/ebook-adminportal/node_modules/bootstrap/scss/_functions.scss:184:9:
+red() is deprecated. Suggestion:
+
+color.channel($color, "red", $space: rgb)
+
+More info: https://sass-lang.com/d/color-functions
+
+184 |     "r": red($color),
+
+
+node_modules\bootstrap\scss\_functions.scss 185:10  luminance()
+node_modules\bootstrap\scss\_functions.scss 174:8   contrast-ratio()
+node_modules\bootstrap\scss\_functions.scss 159:22  color-contrast()
+node_modules\bootstrap\scss\_variables.scss 846:42  @import
+public\assets\scss\bootstrap.scss 7:9               @import
+src\styles.scss 25:9                                root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 185, column 9 of file:///E:/LatestSource/OnlineStor
+e/ebook-adminportal/node_modules/bootstrap/scss/_functions.scss:185:9:
+green() is deprecated. Suggestion:
+
+color.channel($color, "green", $space: rgb)
+
+More info: https://sass-lang.com/d/color-functions
+
+185 |     "g": green($color),
+
+
+node_modules\bootstrap\scss\_functions.scss 186:10  luminance()
+node_modules\bootstrap\scss\_functions.scss 174:8   contrast-ratio()
+node_modules\bootstrap\scss\_functions.scss 159:22  color-contrast()
+node_modules\bootstrap\scss\_variables.scss 846:42  @import
+public\assets\scss\bootstrap.scss 7:9               @import
+src\styles.scss 25:9                                root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 186, column 9 of file:///E:/LatestSource/OnlineStor
+e/ebook-adminportal/node_modules/bootstrap/scss/_functions.scss:186:9:
+blue() is deprecated. Suggestion:
+
+color.channel($color, "blue", $space: rgb)
+
+More info: https://sass-lang.com/d/color-functions
+
+186 |     "b": blue($color)
+
+
+node_modules\bootstrap\scss\_functions.scss 187:10  luminance()
+node_modules\bootstrap\scss\_functions.scss 174:8   contrast-ratio()
+node_modules\bootstrap\scss\_functions.scss 159:22  color-contrast()
+node_modules\bootstrap\scss\_variables.scss 846:42  @import
+public\assets\scss\bootstrap.scss 7:9               @import
+src\styles.scss 25:9                                root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 206, column 10 of file:///E:/LatestSource/OnlineSto
+re/ebook-adminportal/node_modules/bootstrap/scss/_functions.scss:206:10:
+Global built-in functions are deprecated and will be removed in Dart Sass 
+3.0.0.
+Use color.mix instead.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+206 |   @return mix(white, $color, $weight);
+
+
+node_modules\bootstrap\scss\_functions.scss 207:11  tint-color()
+node_modules\bootstrap\scss\_variables.scss 79:12   @import
+public\assets\scss\bootstrap.scss 7:9               @import
+src\styles.scss 25:9                                root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 211, column 10 of file:///E:/LatestSource/OnlineSto
+re/ebook-adminportal/node_modules/bootstrap/scss/_functions.scss:211:10:
+Global built-in functions are deprecated and will be removed in Dart Sass 
+3.0.0.
+Use color.mix instead.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+211 |   @return mix(black, $color, $weight);
+
+
+node_modules\bootstrap\scss\_functions.scss 212:11  shade-color()
+node_modules\bootstrap\scss\_variables.scss 84:12   @import
+public\assets\scss\bootstrap.scss 7:9               @import
+src\styles.scss 25:9                                root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+Deprecation Warning on line 341, column 26 of file:///E:/LatestSource/OnlineSto
+re/ebook-adminportal/node_modules/bootstrap/scss/_variables.scss:341:26:
+Global built-in functions are deprecated and will be removed in Dart Sass 
+3.0.0.
+Use color.mix instead.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+341 | $light-bg-subtle:         mix($gray-100, $white) !default;
+
+
+node_modules\bootstrap\scss\_variables.scss 342:27  @import
+public\assets\scss\bootstrap.scss 7:9               @import
+src\styles.scss 25:9                                root stylesheet
+
+
+./src/styles.scss - Warning: Module Warning (from 
+./node_modules/sass-loader/dist/cjs.js):
+331 repetitive deprecation warnings omitted.
+Run in verbose mode to see all warnings.
+
+Warning: [96msrc/app/views/dashboards/analytics/analytics.component.ts[0m:[9
+3m16[0m:[93m9[0m - [93mwarning[0m[90m NG8113: [0mVisitorsComponent is 
+not used within the template of AnalyticsComponent
+
+[7m16[0m         VisitorsComponent,
+[7m  [0m [93m        ~~~~~~~~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/dashboards/analytics/analytics.component.ts[0m:[9
+3m17[0m:[93m9[0m - [93mwarning[0m[90m NG8113: [0mBrowserComponent is 
+not used within the template of AnalyticsComponent
+
+[7m17[0m         BrowserComponent,
+[7m  [0m [93m        ~~~~~~~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/dashboards/analytics/analytics.component.ts[0m:[9
+3m18[0m:[93m9[0m - [93mwarning[0m[90m NG8113: [0mTotalVisitsComponent 
+is not used within the template of AnalyticsComponent
+
+[7m18[0m         TotalVisitsComponent,
+[7m  [0m [93m        ~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/dashboards/analytics/analytics.component.ts[0m:[9
+3m19[0m:[93m9[0m - [93mwarning[0m[90m NG8113: [0mTrafficSourceComponent 
+is not used within the template of AnalyticsComponent
+
+[7m19[0m         TrafficSourceComponent,
+[7m  [0m [93m        ~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/dashboards/analytics/analytics.component.ts[0m:[9
+3m20[0m:[93m9[0m - [93mwarning[0m[90m NG8113: 
+[0mOrganicTrafficComponent is not used within the template of 
+AnalyticsComponent
+
+[7m20[0m         OrganicTrafficComponent,
+[7m  [0m [93m        ~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/order/details/orderdetails.component.ts[0m:[93m11
+[0m:[93m13[0m - [93mwarning[0m[90m NG8113: [0mRouterLink is not used 
+within the template of OrderDetailsComponent
+
+[7m11[0m   imports: [RouterLink, FormsModule, ReactiveFormsModule, 
+CommonModule],
+[7m  [0m [93m            ~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/product/entryform/product.component.ts[0m:[93m23
+[0m:[93m13[0m - [93mwarning[0m[90m NG8113: [0mQuillEditorComponent is 
+not used within the template of ProductComponent
+
+[7m23[0m   imports: [QuillEditorComponent, RouterLink, FormsModule, 
+ReactiveFormsModule, CommonModule],
+[7m  [0m [93m            ~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/productprice/productprice.component.ts[0m:[93m19
+[0m:[93m15[0m - [93mwarning[0m[90m NG8113: [0mRouterLink is not used 
+within the template of ProductPriceComponent
+
+[7m19[0m     imports: [RouterLink, FormsModule, ReactiveFormsModule, 
+CommonModule],
+[7m  [0m [93m              ~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/productstock/productstock.component.ts[0m:[93m19
+[0m:[93m15[0m - [93mwarning[0m[90m NG8113: [0mRouterLink is not used 
+within the template of ProductStockComponent
+
+[7m19[0m     imports: [RouterLink, FormsModule, ReactiveFormsModule, 
+CommonModule],
+[7m  [0m [93m              ~~~~~~~~~~[0m
+
+
+[39m[22m
+[1m[31m
+Error: [96msrc/app/views/product/details/productdetails.component.ts[0m:[93m
+68[0m:[93m41[0m - [91merror[0m[90m TS2345: [0mArgument of type 'number 
+| null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+
+[7m68[0m           this.loadProductsByCategoryID(this.selectedCategoryId);
+[7m  [0m [91m                                        
+~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Error: [96msrc/app/views/productcategory/details/productcategorydetails.compon
+ent.ts[0m:[93m39[0m:[93m47[0m - [91merror[0m[90m TS2345: [0mArgument 
+of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+
+[7m39[0m           this.loadProductCategoriesByGroupID(this.selectedGroupId);
+[7m  [0m [91m                                              
+~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[39m[22m

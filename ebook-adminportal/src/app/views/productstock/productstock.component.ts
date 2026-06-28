@@ -57,10 +57,10 @@ export class ProductStockComponent {
       loadProductCategoriesByGroupID(groupID: number) {
         this.lstProductCategory = [];
         this.lstProduct = [];
-        this.categoryService.getCategory(groupID).subscribe({
-          next: (CatResponse) => {
+        this.categoryService.getCategories(groupID).subscribe({
+          next: (categories) => {
             var Sno = 1;
-            for (let cat of CatResponse) {
+            for (let cat of categories) {
               this.lstProductCategory.push({ sno: Sno++, categoryid: cat.categoryid, categoryname: cat.categoryname });
               
             }
@@ -69,7 +69,7 @@ export class ProductStockComponent {
               this.loadProductsByCategoryID(this.lstProductCategory[0].categoryid);
             }
           },
-          error: (err) => {
+          error: (err: any) => {
             console.error(err);
           }
         });
@@ -84,7 +84,7 @@ export class ProductStockComponent {
               this.lstProduct.push({ sno: Sno++, productid: prod.productid, productcode: prod.productcode, productname: prod.productname });
             }
           },
-          error: (err) => {
+          error: (err: any) => {
             console.error(err);
           }
         });

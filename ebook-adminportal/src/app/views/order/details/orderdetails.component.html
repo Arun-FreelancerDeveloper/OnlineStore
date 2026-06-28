@@ -36,18 +36,15 @@
               </tr>
             </thead>
             <tbody>
-              @for (data of lstOrder; track $index) {
-              <tr (click)="viewOrderDetails(data.id)" style="cursor: pointer;">
-                <td>{{ data.sno }}</td>
+              <tr *ngFor="let data of lstOrder; let i = index" (click)="viewOrderDetails(data.id)" style="cursor: pointer;">
+                <td>{{ i + 1 }}</td>
                 <td>{{ data.orderno }}</td>
                 <td>{{ data.orderdate }}</td>
                 <td>{{ data.orderby }}</td>
                 <!-- <td class="text-center">{{ data.totalitems }}</td> -->
                 <td class="text-end">{{ data.totalamount }}</td>
                 <td class="text-center">{{ data.orderstatus }}</td>
-                
               </tr>
-            }
             </tbody>
           </table>
           <!--end /table-->

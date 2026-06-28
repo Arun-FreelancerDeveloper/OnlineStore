@@ -4,8 +4,7 @@
     <div class="table-responsive">
       <table class="table mb-0">
         <tbody>
-          @for (item of sellingList; track $index) {
-            <tr class="">
+          <tr *ngFor="let item of sellingList; let i = index" class="">
               <td class="px-0">
                 <div class="d-flex align-items-center">
                   <img
@@ -37,7 +36,6 @@
               </td>
             </tr>
             <!--end tr-->
-          }
         </tbody>
       </table>
       <!--end table-->

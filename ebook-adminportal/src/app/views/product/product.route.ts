@@ -6,12 +6,17 @@ import { ProductComponent } from './entryform/product.component'
 export const PRODUCT_ROUTES: Route[] = [
   {
     path: 'details',
-    component:  ProductDetailsComponent,
-    data: { title: 'Details' },
+    component: ProductDetailsComponent,
+    data: { title: 'Details' }
   },
   {
-     path: 'add',
+    path: 'add',
     component: ProductComponent,
-    data: { title: 'Add' },
+    data: { title: 'Add' }
+  },
+  {
+    path: 'edit/:id',
+    component: ProductComponent,
+    data: { title: 'Edit' }
   }
-]
+];

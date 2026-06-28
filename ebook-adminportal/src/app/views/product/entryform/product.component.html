@@ -1,99 +1,127 @@
 <div class="row justify-content-center">
   <div class="col-md-2 col-lg-2"></div>
   <div class="col-md-8 col-lg-8">
-      <div class="card">
-        <div class="card-header">
-          <div class="row align-items-center">
-            <div class="col">
-              <h4 class="card-title">Add/Edit Product</h4>
-            </div>
-            <!--end col-->
+    <div class="card">
+      <div class="card-header">
+        <div class="row align-items-center">
+          <div class="col">
+            <h4 class="card-title">
+              {{ isEditMode ? 'Edit Product' : 'Add Product' }}
+            </h4>
           </div>
-          <!--end row-->
         </div>
-        <!--end card-header-->
-        <div class="card-body pt-0">
-          <form>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label" for="exampleFormControlInput1">Group Name</label>
-                          <select class="form-select" aria-label="Default select example">
-                            @for (data of lstProductGroup; track $index) {
-                            <option value="{{data.id}}">{{data.groupname}}</option>
-                            }
-                          </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="mb-3">
-                        <label class="form-label" for="exampleFormControlInput1">Category</label>
-                          <select class="form-select" aria-label="Default select example">
-                            @for (data of lstProductCategory; track $index) {
-                            <option value="{{data.id}}">{{data.categoryname}}</option>
-                            }
-                          </select>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="exampleFormControlInput1"
-                >Product Code</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="exampleFormControlInput1"
-                placeholder="Ex : Book"
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="exampleFormControlInput1"
-                >Product Name</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="exampleFormControlInput1"
-                placeholder="Ex : Book"
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="exampleFormControlInput1"
-                >Description</label
-              >
-              <quill-editor
-                #quillEditor
-                [(ngModel)]="content"
-                theme="snow"
-                [modules]="editorConfig"
-                style="height: 300px; display: contents"
-                class="w-100 mb-n1"
-              ></quill-editor>
-            </div>
-
-             <div class="mb-3">
-              <label class="form-label" for="exampleFormControlInput1"
-                >Upload Product Images</label
-              >
-              <div id="drag-drop-area"></div>
-            </div>
-
-
-            <div class="mb-3 text-end">
-              <a class="btn btn-primary btn-md">
-                <i class="las la-save me-2"></i>Save
-              </a>
-              <a routerLink="/product/details" class="btn btn-secondary btn-md ms-2">
-                <i class="las la-times me-2"></i>Cancel
-              </a>
-              </div>  
-          </form>
-        </div>
-        <!--end card-body-->
       </div>
+      <div class="card-body pt-0">
+        <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label" for="groupId">Product Group</label>
+                <select
+                  id="groupId"
+                  class="form-select"
+                  formControlName="groupId"
+                  (change)="loadProductCategoriesByGroupID($any($event.target).value)"
+                >
+                  <option value="" disabled>Select group</option>
+                  <option
+                    *ngFor="let group of lstProductGroup"
+                    [value]="group.groupid"
+                  >
+                    {{ group.groupname }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label" for="categoryId">Category</label>
+                <select
+                  id="categoryId"
+                  class="form-select"
+                  formControlName="categoryId"
+                >
+                  <option value="" disabled>Select category</option>
+                  <option
+                    *ngFor="let category of lstProductCategory"
+                    [value]="category.categoryid"
+                  >
+                    {{ category.categoryname }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
 
+          <div class="mb-3">
+            <label class="form-label" for="productCode">Product Code</label>
+            <input
+              id="productCode"
+              type="text"
+              class="form-control"
+              formControlName="productCode"
+              placeholder="Ex : BK-001"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="productName">Product Name</label>
+            <input
+              id="productName"
+              type="text"
+              class="form-control"
+              formControlName="productName"
+              placeholder="Ex : Art of War"
+            />
+            <small
+              class="text-danger"
+              *ngIf="productForm.get('productName')?.touched && productForm.get('productName')?.invalid"
+            >
+              Product name is required.
+            </small>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="shortDescription">Description</label>
+            <textarea
+              id="shortDescription"
+              class="form-control"
+              formControlName="shortDescription"
+              rows="5"
+              placeholder="Enter a short product description"
+            ></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="productImages">Upload Product Images</label>
+            <input
+              id="productImages"
+              type="file"
+              class="form-control"
+              (change)="onFileChange($event)"
+              multiple
+            />
+            <div class="mt-2" *ngIf="imageUrl">
+              <img [src]="imageUrl" alt="product preview" class="img-fluid" />
+            </div>
+          </div>
+
+          <div class="mb-3 text-end">
+            <button
+              type="submit"
+              class="btn btn-primary btn-md"
+              [disabled]="loading"
+            >
+              <i class="las la-save me-2"></i>
+              {{ loading ? 'Saving...' : 'Save' }}
+            </button>
+            <a routerLink="/product/details" class="btn btn-secondary btn-md ms-2">
+              <i class="las la-times me-2"></i>Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
   <div class="col-md-2 col-lg-2"></div>
 </div>

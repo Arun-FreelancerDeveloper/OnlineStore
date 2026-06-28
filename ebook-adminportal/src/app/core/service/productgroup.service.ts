@@ -19,10 +19,10 @@ export class ProductGroupService {
    * ---------------------------------- */
   getCategoryGroups(): Observable<CategoryGroup[]> {
     return this.http
-      .get<ApiResponse<any[]>>(this.apiUrl)
+      .get<ApiResponse<{ data: any[] }>>(this.apiUrl)
       .pipe(
         map(res =>
-          res.data.map(item => ({
+          (res.data?.data || []).map(item => ({
             groupid: item.groupid,
             groupname: item.groupname,
             imagepath: item.imagepath

@@ -22,8 +22,7 @@
           <!--end tr-->
         </thead>
         <tbody>
-          @for (data of visits; track $index) {
-            <tr>
+          <tr *ngFor="let data of visits; let i = index">
               <td>
                 <a href class="text-primary">{{ data.channel }}</a>
               </td>
@@ -49,7 +48,7 @@
                 ></i>
               </td>
             </tr>
-          }
+          
         </tbody>
       </table>
       <!--end table-->

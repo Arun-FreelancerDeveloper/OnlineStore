@@ -20,8 +20,7 @@
           <!--end tr-->
         </thead>
         <tbody>
-          @for (data of BrowserData; track $index) {
-            <tr>
+          <tr *ngFor="let data of BrowserData; let i = index">
               <td>
                 <img [src]="data.image" alt height="24" class="me-2" />{{
                   data.browser
@@ -41,7 +40,7 @@
                 }}</small>
               </td>
             </tr>
-          }
+          
         </tbody>
       </table>
       <!--end table-->

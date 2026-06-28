@@ -1,60 +1,53 @@
-import { CommonModule } from '@angular/common'
-import { Component, inject } from '@angular/core'
-import { QuillEditorComponent } from 'ngx-quill'
-import Editor from 'quill/core/editor'
-import { UppyService } from '@/app/core/service/uppy.service'
-import Uppy from '@uppy/core'
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { QuillEditorComponent } from 'ngx-quill';
+import Editor from 'quill/core/editor';
+import { UppyService } from '@/app/core/service/uppy.service';
+import Uppy from '@uppy/core';
 import {
-  AbstractControl,
   FormsModule,
   ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
-} from '@angular/forms'
-import { RouterLink } from '@angular/router'
+} from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ProductService } from '@/app/core/service/product.service';
+import { ProductGroupService } from '@/app/core/service/productgroup.service';
+import { CategoryService } from '@/app/core/service/category.service';
+import { SweetAlertService } from '@/app/core/service/sweet-alert.service';
 
 @Component({
-    selector: 'app-product',
-    standalone: true,
-    imports: [QuillEditorComponent, RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
-    templateUrl: './product.component.html',
-    styles: ``
+  selector: 'app-product',
+  standalone: true,
+  imports: [QuillEditorComponent, RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+  templateUrl: './product.component.html',
+  styles: ``
 })
-export class ProductComponent {
+export class ProductComponent implements OnInit, OnDestroy {
 
-  lstProductGroup: any = [
-      { id: 1, sno : 1, groupname: 'General Books' },
-      { id: 2, sno : 2, groupname: 'Text Books' },
-      { id: 3, sno : 3, groupname: 'Stationary' },
-      { id: 4, sno : 4, groupname: 'Furniture' },
-      { id: 5, sno : 5, groupname: 'E-Books' },
-      { id: 6, sno : 6, groupname: 'Toys' },
-      { id: 7, sno : 7, groupname: 'Arts & Crafts' },
-      { id: 8, sno : 8, groupname: 'Clothing' },
-      { id: 9, sno : 9, groupname: 'Electronics' },
-      { id: 10, sno : 10, groupname: 'Digital Gift Cards' }
-    ];
+  private uppyService = inject(UppyService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private productService = inject(ProductService);
+  private groupService = inject(ProductGroupService);
+  private categoryService = inject(CategoryService);
+  private alert = inject(SweetAlertService);
+  private fb = inject(UntypedFormBuilder);
 
-    lstProductCategory: any = [
-      { id: 1, sno : 1, categoryname: 'General Books' },
-      { id: 2, sno : 2, categoryname: 'Text Books' },
-      { id: 3, sno : 3, categoryname: 'Stationary' },
-      { id: 4, sno : 4, categoryname: 'Furniture' },
-      { id: 5, sno : 5, categoryname: 'E-Books' },
-      { id: 6, sno : 6, categoryname: 'Toys' },
-      { id: 7, sno : 7, categoryname: 'Arts & Crafts' },
-      { id: 8, sno : 8, categoryname: 'Clothing' },
-      { id: 9, sno : 9, categoryname: 'Electronics' },
-      { id: 10, sno : 10, categoryname: 'Digital Gift Cards' }
-    ];
+  productForm: UntypedFormGroup;
+  lstProductGroup: any[] = [];
+  lstProductCategory: any[] = [];
+  selectedFiles: File[] = [];
+  loading = false;
+  isEditMode = false;
+  productId?: number;
 
-editor!: Editor
-  content: string = ` <div id="editor">
-                </div>`
+  editor!: Editor;
+  content: string = '<div id="editor"></div>';
   public model = {
     editorData: this.content,
-  }
+  };
 
   editorConfig = {
     toolbar: [
@@ -63,23 +56,40 @@ editor!: Editor
       [{ list: 'ordered' }, { list: 'bullet' }],
       ['clean'],
     ],
-  }
+  };
 
   editorConfigBubble = {
     toolbar: [
       ['bold', 'italic', 'link', 'blockquote'],
       [{ header: 1 }, { header: 2 }],
     ],
+  };
+
+  private uppyInstance!: Uppy;
+  imageUrl: string | ArrayBuffer | null = null;
+  private uuid = 'unique-id';
+
+  constructor() {
+    this.productForm = this.fb.group({
+      groupId: [null, Validators.required],
+      categoryId: [null, Validators.required],
+      productCode: [''],
+      productName: ['', Validators.required],
+      shortDescription: [''],
+      images: [null]
+    });
   }
 
-  private uppyInstance!: Uppy
-  imageUrl: string | ArrayBuffer | null = null
+  ngOnInit(): void {
+    this.loadProductGroups();
 
-  private uuid: string = 'unique-id'
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (id) {
+      this.isEditMode = true;
+      this.productId = id;
+      this.loadProductDetails(id);
+    }
 
-  constructor(private uppyService: UppyService) {}
-
-ngOnInit(): void {
     const pluginConfig: [string, any][] = [
       [
         'Dashboard',
@@ -89,35 +99,116 @@ ngOnInit(): void {
         },
       ],
       ['Tus', { endpoint: 'https://tusd.tusdemo.net/files/' }],
-    ]
+    ];
 
-    this.uppyInstance = this.uppyService.configure(pluginConfig, this.uuid)
+    this.uppyInstance = this.uppyService.configure(pluginConfig, this.uuid);
   }
 
   ngOnDestroy(): void {
     if (this.uppyInstance) {
-      this.uppyInstance.close()
+      this.uppyInstance.close();
     }
   }
 
-  handleChange(event: Event): void {
-    const inputElement = event.target as HTMLInputElement
-    if (inputElement.files && inputElement.files.length > 0) {
-      const uploadedFile = inputElement.files[0]
-      this.readFile(uploadedFile)
+  loadProductGroups(): void {
+    this.groupService.getCategoryGroups().subscribe({
+      next: (groups) => {
+        this.lstProductGroup = groups;
+        if (groups.length > 0 && !this.productForm.value.groupId) {
+          this.productForm.patchValue({ groupId: groups[0].groupid });
+          this.loadProductCategoriesByGroupID(groups[0].groupid);
+        }
+      },
+      error: () => {
+        this.alert.error('Unable to load groups', 'Please try again later.');
+      }
+    });
+  }
+
+  loadProductCategoriesByGroupID(groupId: number): void {
+    if (!groupId) {
+      return;
+    }
+
+    this.lstProductCategory = [];
+    this.categoryService.getCategories(groupId).subscribe({
+      next: (categories) => {
+        this.lstProductCategory = categories;
+      },
+      error: () => {
+        this.alert.error('Unable to load categories', 'Please try again later.');
+      }
+    });
+  }
+
+  loadProductDetails(productId: number): void {
+    this.productService.getProductById(productId).subscribe({
+      next: (product) => {
+        this.productForm.patchValue({
+          groupId: product.groupid,
+          categoryId: product.categoryid,
+          productCode: product.productcode,
+          productName: product.productname,
+          shortDescription: product.shortdescription
+        });
+
+        if (product.groupid) {
+          this.loadProductCategoriesByGroupID(product.groupid);
+        }
+      },
+      error: () => {
+        this.alert.error('Unable to load product', 'Please try again later.');
+      }
+    });
+  }
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFiles = Array.from(input.files);
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imageUrl = reader.result as string;
+      };
+      reader.readAsDataURL(this.selectedFiles[0]);
     }
   }
 
-  private readFile(file: File): void {
-    const reader = new FileReader()
-    reader.onload = () => {
-      // Set the preview image src
-      this.imageUrl = reader.result as string
+  saveProduct(): void {
+    if (this.productForm.invalid) {
+      this.alert.warning('Please fill required fields before saving.');
+      return;
     }
 
-    reader.readAsDataURL(file) // Read file as base64
+    this.loading = true;
+
+    const payload = {
+      productcode: this.productForm.value.productCode?.trim(),
+      productname: this.productForm.value.productName.trim(),
+      shortdescription: this.productForm.value.shortDescription?.trim() || '',
+      categoryid: Number(this.productForm.value.categoryId),
+      subcategoryid: null,
+      deptid: null,
+      storeid: null,
+      createdby: 1,
+      modifiedby: 1,
+      images: this.selectedFiles
+    };
+
+    const action$ = this.isEditMode && this.productId
+      ? this.productService.updateProduct(this.productId, payload)
+      : this.productService.createProduct(payload);
+
+    action$.subscribe({
+      next: () => {
+        this.alert.success('Product saved', 'Product information was saved successfully.');
+        this.loading = false;
+        this.router.navigate(['/product/details']);
+      },
+      error: () => {
+        this.loading = false;
+        this.alert.error('Save failed', 'Unable to save the product.');
+      }
+    });
   }
-
-    
-
 }

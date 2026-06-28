@@ -15,6 +15,7 @@ const {
   createCategorySchema,
   updateCategorySchema,
   deleteCategorySchema,
+  getCategoryByIdSchema,
   getCategorysSchema
 } = require('./category.validation');
 
@@ -117,7 +118,7 @@ router.get(
  */
 router.get(
   '/:id',
-  validateParams(getCategorysSchema),
+  validateParams(getCategoryByIdSchema),
   controller.getCategoryById
 );
 

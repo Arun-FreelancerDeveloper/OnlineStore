@@ -1,70 +1,84 @@
 import { CategoryService } from '@/app/core/service/category.service';
 import { ProductGroupService } from '@/app/core/service/productgroup.service';
-import { CommonModule } from '@angular/common'
-import { Component, inject } from '@angular/core'
-import {
-  AbstractControl,
-  FormsModule,
-  ReactiveFormsModule,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms'
-import { RouterLink } from '@angular/router'
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { SweetAlertService } from '@/app/core/service/sweet-alert.service';
 
 @Component({
-    selector: 'app-productcategorydetails',
-    standalone: true,
-    imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
-    templateUrl: './productcategorydetails.component.html',
-    styles: ``
+  selector: 'app-productcategorydetails',
+  standalone: true,
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+  templateUrl: './productcategorydetails.component.html',
+  styles: ``
 })
-export class ProductCategoryDetailsComponent {
+export class ProductCategoryDetailsComponent implements OnInit {
 
-   /* Inject Services */
-    categoryGroupService = inject(ProductGroupService);
-    categoryService = inject(CategoryService);
-  
-    constructor() {
-      this.loadProductCategoryGroup();
-    }
-  
-    /* Get Categories */
-    lstProductGroup: any = [];
-    loadProductCategoryGroup() {
-      this.categoryGroupService.getCategoryGroups().subscribe({
-        next: (CatResponse) => {
-          var Sno = 1;
-          for (let cat of CatResponse) {
-            this.lstProductGroup.push({ sno: Sno++, groupid: cat.groupid, groupname: cat.groupname, imagepath: cat.imagepath });
-          }
+  categoryGroupService = inject(ProductGroupService);
+  categoryService = inject(CategoryService);
+  alert = inject(SweetAlertService);
 
-          if(this.lstProductGroup.length > 0){
-            /* Load Product Categories for the first Group by default */
-            this.loadProductCategoriesByGroupID(this.lstProductGroup[0].groupid);
+  lstProductGroup: any[] = [];
+  lstProductCategory: any[] = [];
+  selectedGroupId: number | null = null;
+  isLoading = false;
+
+  ngOnInit(): void {
+    this.loadProductCategoryGroup();
+  }
+
+  loadProductCategoryGroup(): void {
+    this.lstProductGroup = [];
+    this.categoryGroupService.getCategoryGroups().subscribe({
+      next: (groups) => {
+        this.lstProductGroup = groups;
+
+        if (this.lstProductGroup.length > 0) {
+          this.selectedGroupId = this.lstProductGroup[0].groupid;
+          if (this.selectedGroupId !== null) {
+            this.loadProductCategoriesByGroupID(this.selectedGroupId);
           }
-        },
-        error: (err) => {
-          console.error(err);
         }
-      });
-    }
+      },
+      error: () => {
+        this.alert.error('Unable to load groups', 'Please try again later.');
+      }
+    });
+  }
 
-    /* Get Product Categories Based on Group ID */
-     lstProductCategory: any = [];
-    loadProductCategoriesByGroupID(groupID: number) {
-      this.lstProductCategory = [];
-      this.categoryService.getCategory(groupID).subscribe({
-        next: (CatResponse) => {
-          var Sno = 1;
-          for (let cat of CatResponse) {
-            this.lstProductCategory.push({ sno: Sno++, categoryid: cat.categoryid, categoryname: cat.categoryname });
-          }
-        },
-        error: (err) => {
-          console.error(err);
+  loadProductCategoriesByGroupID(groupID: number): void {
+    this.selectedGroupId = groupID;
+    this.lstProductCategory = [];
+    this.isLoading = true;
+
+    this.categoryService.getCategories(groupID).subscribe({
+      next: (categories) => {
+        this.lstProductCategory = categories.map((cat, index) => ({
+          sno: index + 1,
+          categoryid: cat.categoryid,
+          categoryname: cat.categoryname
+        }));
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+        this.alert.error('Unable to load categories', 'Please try again later.');
+      }
+    });
+  }
+
+  deleteCategory(categoryId: number): void {
+    this.categoryService.deleteCategory(categoryId, 1).subscribe({
+      next: () => {
+        this.alert.success('Deleted', 'Category has been removed.');
+        if (this.selectedGroupId !== null) {
+          this.loadProductCategoriesByGroupID(this.selectedGroupId);
         }
-      });
-    }
- 
+      },
+      error: () => {
+        this.alert.error('Unable to delete category', 'Please try again.');
+      }
+    });
+  }
 }

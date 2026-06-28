@@ -1,0 +1,72 @@
+[1m[33m
+Warning: [96msrc/app/views/dashboards/analytics/analytics.component.ts[0m:[93m16[0m:[93m9[0m - [93mwarning[0m[90m NG8113: [0mVisitorsComponent is not used within the template of AnalyticsComponent
+
+[7m16[0m         VisitorsComponent,
+[7m  [0m [93m        ~~~~~~~~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/dashboards/analytics/analytics.component.ts[0m:[93m17[0m:[93m9[0m - [93mwarning[0m[90m NG8113: [0mBrowserComponent is not used within the template of AnalyticsComponent
+
+[7m17[0m         BrowserComponent,
+[7m  [0m [93m        ~~~~~~~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/dashboards/analytics/analytics.component.ts[0m:[93m18[0m:[93m9[0m - [93mwarning[0m[90m NG8113: [0mTotalVisitsComponent is not used within the template of AnalyticsComponent
+
+[7m18[0m         TotalVisitsComponent,
+[7m  [0m [93m        ~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/dashboards/analytics/analytics.component.ts[0m:[93m19[0m:[93m9[0m - [93mwarning[0m[90m NG8113: [0mTrafficSourceComponent is not used within the template of AnalyticsComponent
+
+[7m19[0m         TrafficSourceComponent,
+[7m  [0m [93m        ~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/dashboards/analytics/analytics.component.ts[0m:[93m20[0m:[93m9[0m - [93mwarning[0m[90m NG8113: [0mOrganicTrafficComponent is not used within the template of AnalyticsComponent
+
+[7m20[0m         OrganicTrafficComponent,
+[7m  [0m [93m        ~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/order/details/orderdetails.component.ts[0m:[93m11[0m:[93m13[0m - [93mwarning[0m[90m NG8113: [0mRouterLink is not used within the template of OrderDetailsComponent
+
+[7m11[0m   imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+[7m  [0m [93m            ~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/product/entryform/product.component.ts[0m:[93m23[0m:[93m13[0m - [93mwarning[0m[90m NG8113: [0mQuillEditorComponent is not used within the template of ProductComponent
+
+[7m23[0m   imports: [QuillEditorComponent, RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+[7m  [0m [93m            ~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/productprice/productprice.component.ts[0m:[93m19[0m:[93m15[0m - [93mwarning[0m[90m NG8113: [0mRouterLink is not used within the template of ProductPriceComponent
+
+[7m19[0m     imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+[7m  [0m [93m              ~~~~~~~~~~[0m
+
+
+Warning: [96msrc/app/views/productstock/productstock.component.ts[0m:[93m19[0m:[93m15[0m - [93mwarning[0m[90m NG8113: [0mRouterLink is not used within the template of ProductStockComponent
+
+[7m19[0m     imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+[7m  [0m [93m              ~~~~~~~~~~[0m
+
+
+[39m[22m
+[1m[31m
+Error: [96msrc/app/views/product/details/productdetails.component.ts[0m:[93m68[0m:[93m41[0m - [91merror[0m[90m TS2345: [0mArgument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+
+[7m68[0m           this.loadProductsByCategoryID(this.selectedCategoryId);
+[7m  [0m [91m                                        ~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Error: [96msrc/app/views/productcategory/details/productcategorydetails.component.ts[0m:[93m39[0m:[93m47[0m - [91merror[0m[90m TS2345: [0mArgument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+
+[7m39[0m           this.loadProductCategoriesByGroupID(this.selectedGroupId);
+[7m  [0m [91m                                              ~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[39m[22m

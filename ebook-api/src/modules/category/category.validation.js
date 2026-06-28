@@ -1,35 +1,35 @@
 const Joi = require('joi');
 
 /**
- * Validation schema for creating a Category Group
+ * Validation schema for creating a Category
  */
 const createCategorySchema = Joi.object({
-  groupname: Joi.string().min(2).max(100).required(),
-  imagepath: Joi.string().allow('', null), // optional image path
-  createdBy: Joi.number().integer().required()
+  groupid: Joi.number().integer().required(),
+  categoryname: Joi.string().min(2).max(100).required(),
+  imagepath: Joi.string().allow('', null),
+  createdby: Joi.number().integer().required()
 });
 
 /**
- * Validation schema for updating a Category Group
+ * Validation schema for updating a Category
  */
 const updateCategorySchema = Joi.object({
-  groupname: Joi.string().min(2).max(100).required(),
-  imagepath: Joi.string().allow('', null), // optional image path
-  modifiedBy: Joi.number().integer().required()
+  categoryname: Joi.string().min(2).max(100).required(),
+  imagepath: Joi.string().allow('', null),
+  modifiedby: Joi.number().integer().required()
 });
 
 /**
- * Validation schema for deleting a Category Group
+ * Validation schema for retrieving a category by ID
  */
 const getCategoryByIdSchema = Joi.object({
   id: Joi.number().integer().required()
 });
 
 /**
- * Validation schema for deleting a Category Group
+ * Validation schema for deleting a Category
  */
 const deleteCategorySchema = Joi.object({
-  groupId: Joi.number().integer().required(),
   deletedBy: Joi.number().integer().required()
 });
 
@@ -91,6 +91,7 @@ const validateQuery = (schema) => (req, res, next) => {
 module.exports = {
   createCategorySchema,
   updateCategorySchema,
+  getCategoryByIdSchema,
   deleteCategorySchema,
   getCategorysSchema,
   validateBody,
