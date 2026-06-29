@@ -68,7 +68,7 @@ export class CartFacadeService {
    * ===================================================== */
   removeFromCart(cartid: number): void {
 
-    if (!this.user) return;
+    //if (!this.user) return;
 
     this.cartService.removeItem(cartid, this.user?.userid ?? 0).subscribe({
       next: () => {
