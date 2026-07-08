@@ -20,14 +20,21 @@
       <div class="card-body pt-0">
         <div class="row">
           <div class="col-md-6">
-              <div class="mb-3">
-                  <label class="form-label" for="exampleFormControlInput1">Search</label>
-                   <div class="input-group">
-                     <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Ex : Find Product">
-                      <button type="submit" class="btn btn-primary">Search</button>
-                   </div>
-                 
+            <div class="mb-3">
+              <label class="form-label" for="groupSearch">Search</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="groupSearch"
+                  placeholder="Ex : Find Product"
+                  [(ngModel)]="searchText"
+                >
+                <button type="button" class="btn btn-primary" (click)="searchGroups()">
+                  Search
+                </button>
               </div>
+            </div>
           </div>
         </div>
         <div class="table-responsive">
@@ -41,7 +48,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let data of lstProductGroup; let i = index">
-                <td>{{ i + 1 }}</td>
+                <td>{{ data.sno }}</td>
                 <td>{{ data.groupname }}</td>
                 <td class="text-center">
                   <button
@@ -62,6 +69,28 @@
             </tbody>
           </table>
           <!--end /table-->
+        </div>
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-3 gap-2" *ngIf="totalPages > 0">
+          <div class="text-muted">
+            Page {{ currentPage }} of {{ totalPages }} • Total Records: {{ totalRecords }}
+          </div>
+
+          <nav aria-label="Page navigation">
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <button class="page-link" type="button" (click)="goToPage(currentPage - 1)">Previous</button>
+              </li>
+
+              <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
+                <button class="page-link" type="button" (click)="goToPage(page)">{{ page }}</button>
+              </li>
+
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <button class="page-link" type="button" (click)="goToPage(currentPage + 1)">Next</button>
+              </li>
+            </ul>
+          </nav>
         </div>
         <!--end /tableresponsive-->
       </div>

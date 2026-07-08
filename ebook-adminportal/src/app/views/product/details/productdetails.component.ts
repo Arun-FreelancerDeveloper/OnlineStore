@@ -41,7 +41,7 @@ export class ProductDetailsComponent implements OnInit {
         this.lstProductGroup = groups;
         if (groups.length > 0) {
           this.selectedGroupId = groups[0].groupid;
-          this.loadProductCategoriesByGroupID(this.selectedGroupId);
+          this.loadProductCategoriesByGroupID(this.selectedGroupId || 0);
         }
       },
       error: () => {
@@ -65,7 +65,7 @@ export class ProductDetailsComponent implements OnInit {
 
         if (this.lstProductCategory.length > 0) {
           this.selectedCategoryId = this.lstProductCategory[0].categoryid;
-          this.loadProductsByCategoryID(this.selectedCategoryId);
+          this.loadProductsByCategoryID(this.selectedCategoryId || 0);
         }
       },
       error: () => {

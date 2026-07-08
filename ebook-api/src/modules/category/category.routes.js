@@ -5,7 +5,8 @@
 
 const express = require('express');
 const router = express.Router();
-const controller = require('./category.controller'); // or category.controller
+
+const controller = require('./category.controller');
 const { uploadCategoryImage } = require('../../middlewares/upload.middleware');
 
 const {
@@ -23,14 +24,14 @@ const {
  * @swagger
  * tags:
  *   name: Category
- *   description: 
+ *   description: Category Management APIs
  */
 
 /**
  * @swagger
  * /api/category:
  *   post:
- *     summary: Create category
+ *     summary: Create Category
  *     tags: [Category]
  *     requestBody:
  *       required: true
@@ -39,18 +40,27 @@ const {
  *           schema:
  *             type: object
  *             required:
+ *               - groupId
  *               - categoryname
  *             properties:
+ *               groupId:
+ *                 type: integer
+ *                 default: 0
  *               categoryname:
  *                 type: string
- *               createdby:
+ *               createdBy:
  *                 type: integer
+ *               imagePath:
+ *                 type: string
+ *                 default: content/Category/1/1-general-books.png
  *               image:
  *                 type: string
  *                 format: binary
  *     responses:
  *       200:
  *         description: Category created successfully
+ *       400:
+ *         description: Validation failed
  */
 router.post(
   '/',
@@ -63,7 +73,7 @@ router.post(
  * @swagger
  * /api/category:
  *   get:
- *     summary: Get all categories
+ *     summary: Get All Categories
  *     tags: [Category]
  *     parameters:
  *       - in: query
@@ -71,25 +81,29 @@ router.post(
  *         schema:
  *           type: integer
  *           default: 0
- *         description: Filter categories by group ID
+ *         description: Group ID
+ *
  *       - in: query
  *         name: page
  *         schema:
  *           type: integer
  *           default: 1
- *         description: Page number
+ *         description: Page Number
+ *
  *       - in: query
  *         name: pageSize
  *         schema:
  *           type: integer
  *           default: 10
- *         description: Number of records per page
+ *         description: Records per page
+ *
  *       - in: query
  *         name: findWhat
  *         schema:
  *           type: string
- *           default: ''
+ *           default: ""
  *         description: Search keyword
+ *
  *     responses:
  *       200:
  *         description: Category list retrieved successfully
@@ -104,7 +118,7 @@ router.get(
  * @swagger
  * /api/category/{id}:
  *   get:
- *     summary: Get category by ID
+ *     summary: Get Category By ID
  *     tags: [Category]
  *     parameters:
  *       - in: path
@@ -112,9 +126,12 @@ router.get(
  *         required: true
  *         schema:
  *           type: integer
+ *         description: Category ID
  *     responses:
  *       200:
- *         description: Category details
+ *         description: Category details retrieved successfully
+ *       404:
+ *         description: Category not found
  */
 router.get(
   '/:id',
@@ -126,7 +143,7 @@ router.get(
  * @swagger
  * /api/category/{id}:
  *   put:
- *     summary: Update category
+ *     summary: Update Category
  *     tags: [Category]
  *     parameters:
  *       - in: path
@@ -134,13 +151,21 @@ router.get(
  *         required: true
  *         schema:
  *           type: integer
+ *         description: Category ID
  *     requestBody:
+ *       required: true
  *       content:
  *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
+ *               groupId:
+ *                 type: integer
  *               categoryname:
+ *                 type: string
+ *               updatedBy:
+ *                 type: integer
+ *               imagePath:
  *                 type: string
  *               image:
  *                 type: string
@@ -148,10 +173,15 @@ router.get(
  *     responses:
  *       200:
  *         description: Category updated successfully
+ *       400:
+ *         description: Validation failed
+ *       404:
+ *         description: Category not found
  */
 router.put(
   '/:id',
   uploadCategoryImage,
+  validateParams(getCategoryByIdSchema),
   validateBody(updateCategorySchema),
   controller.updateCategory
 );
@@ -160,7 +190,7 @@ router.put(
  * @swagger
  * /api/category/{id}:
  *   delete:
- *     summary: Delete category
+ *     summary: Delete Category
  *     tags: [Category]
  *     parameters:
  *       - in: path
@@ -168,6 +198,7 @@ router.put(
  *         required: true
  *         schema:
  *           type: integer
+ *         description: Category ID
  *     requestBody:
  *       required: true
  *       content:
@@ -182,9 +213,14 @@ router.put(
  *     responses:
  *       200:
  *         description: Category deleted successfully
+ *       400:
+ *         description: Validation failed
+ *       404:
+ *         description: Category not found
  */
 router.delete(
   '/:id',
+  validateParams(getCategoryByIdSchema),
   validateBody(deleteCategorySchema),
   controller.deleteCategory
 );

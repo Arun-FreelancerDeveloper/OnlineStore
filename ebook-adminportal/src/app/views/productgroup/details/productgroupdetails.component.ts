@@ -1,13 +1,14 @@
 import { ProductGroupService } from '@/app/core/service/productgroup.service';
 import { SweetAlertService } from '@/app/core/service/sweet-alert.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-productgroupdetails',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, FormsModule],
   templateUrl: './productgroupdetails.component.html'
 })
 export class ProductGroupDetailsComponent {
@@ -18,19 +19,29 @@ export class ProductGroupDetailsComponent {
   router = inject(Router);
 
   lstProductGroup: any[] = [];
+  searchText = '';
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 0;
+  totalRecords = 0;
 
   constructor() {
     this.loadProductCategoryGroup();
   }
 
   /* Get Categories */
-  loadProductCategoryGroup() {
-    this.lstProductGroup = []; // ✅ clear before reload
+  loadProductCategoryGroup(page = 1) {
+    this.currentPage = page;
+    this.lstProductGroup = [];
 
-    this.categoryGroupService.getCategoryGroups().subscribe({
+    this.categoryGroupService.getAllCategoryGroups(page, this.pageSize, this.searchText).subscribe({
       next: (res) => {
-        let Sno = 1;
-        for (let cat of res) {
+        this.currentPage = res.currentPage;
+        this.totalPages = res.totalPages;
+        this.totalRecords = res.totalRecords;
+
+        let Sno = ((page - 1) * this.pageSize) + 1;
+        for (let cat of res.data) {
           this.lstProductGroup.push({
             sno: Sno++,
             groupid: cat.groupid,
@@ -41,6 +52,34 @@ export class ProductGroupDetailsComponent {
       },
       error: (err) => console.error(err)
     });
+  }
+
+  searchGroups() {
+    this.loadProductCategoryGroup(1);
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) {
+      return;
+    }
+
+    this.loadProductCategoryGroup(page);
+  }
+
+  getPageNumbers(): number[] {
+    if (this.totalPages <= 1) {
+      return [1];
+    }
+
+    const pages: number[] = [];
+    const start = Math.max(1, this.currentPage - 2);
+    const end = Math.min(this.totalPages, start + 4);
+
+    for (let page = start; page <= end; page++) {
+      pages.push(page);
+    }
+
+    return pages;
   }
 
   /* Edit */

@@ -14,9 +14,13 @@ const { pool } = require('../../config/database');
  * <returns>Promise resolving to the inserted category record.</returns>
  */
 exports.createCategory = async (data) => {
+
+  console.log('Creating category with data:', data);
   const imagepath =
     data.imagepath?.trim() ||
     'content/Category/1/1-general-books.png';
+
+
 
   const sql = `
     INSERT INTO tbcategory (

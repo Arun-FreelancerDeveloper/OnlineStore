@@ -7,8 +7,13 @@ const repo = require('./category.repository');
  * <param name="data">Category payload containing groupId, categoryName, imagepath, and createdby.</param>
  * <returns>Promise resolving to the inserted category record.</returns>
  */
-exports.createCategory = async (data) =>
-  await repo.createCategory(data);
+exports.createCategory = async (data, file) => {
+  if (file && !data.imagepath) {
+    data.imagepath = `uploads/category/${file.filename}`;
+  }
+
+  return await repo.createCategory(data);
+};
 
 /**
  * <summary>
@@ -43,8 +48,13 @@ exports.getCategoryById = async (categoryid) =>
  * <param name="data">Update details including categoryName, imagepath, and modifiedby.</param>
  * <returns>Promise resolving to the updated category record.</returns>
  */
-exports.updateCategory = async (categoryid, data) =>
-  await repo.updateCategory(categoryid, data);
+exports.updateCategory = async (categoryid, data, file) => {
+  if (file && !data.imagepath) {
+    data.imagepath = `uploads/category/${file.filename}`;
+  }
+
+  return await repo.updateCategory(categoryid, data);
+};
 
 /**
  * <summary>

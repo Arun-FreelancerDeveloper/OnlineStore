@@ -17,18 +17,57 @@ export class ProductGroupService {
   /* ----------------------------------
    * GET ALL CATEGORY GROUPS
    * ---------------------------------- */
-  getCategoryGroups(): Observable<CategoryGroup[]> {
+  getAllCategoryGroups(
+    page = 1,
+    pageSize = 10,
+    findWhat = ''
+  ): Observable<{
+    currentPage: number;
+    pageSize: number;
+    totalPages: number;
+    totalRecords: number;
+    data: CategoryGroup[];
+  }> {
+    const query = new URLSearchParams({
+      page: page.toString(),
+      pageSize: pageSize.toString(),
+      findWhat
+    });
+
     return this.http
-      .get<ApiResponse<{ data: any[] }>>(this.apiUrl)
+      .get<ApiResponse<any>>(`${this.apiUrl}?${query.toString()}`)
       .pipe(
-        map(res =>
-          (res.data?.data || []).map(item => ({
-            groupid: item.groupid,
-            groupname: item.groupname,
-            imagepath: item.imagepath
-          }))
-        )
+        map(res => {
+          const payload = res.data ?? {};
+          const groups = Array.isArray(payload.data)
+            ? payload.data
+            : Array.isArray(payload)
+              ? payload
+              : [];
+
+          return {
+            currentPage: payload.currentPage ?? page,
+            pageSize: payload.pageSize ?? pageSize,
+            totalPages: payload.totalPages ?? 0,
+            totalRecords: payload.totalRecords ?? groups.length,
+            data: groups.map((item: any) => ({
+              groupid: item.groupid,
+              groupname: item.groupname,
+              imagepath: item.imagepath
+            }))
+          };
+        })
       );
+  }
+
+  getCategoryGroups(
+    page = 1,
+    pageSize = 10,
+    findWhat = ''
+  ): Observable<CategoryGroup[]> {
+    return this.getAllCategoryGroups(page, pageSize, findWhat).pipe(
+      map(res => res.data)
+    );
   }
 
   /* ----------------------------------
@@ -97,7 +136,7 @@ export class ProductGroupService {
       'DELETE',
       `${this.apiUrl}/${groupId}`,
       {
-        body: { deletedBy }
+        body: { groupId, deletedBy }
       }
     );
   }

@@ -12,7 +12,18 @@ const ApiResponse = require('../../utils/apiResponse');
  */
 exports.createCategory = async (req, res, next) => {
   try {
-    const data = await service.createCategory(req.body, req.file);
+    const groupId = parseInt(req.body.groupid ?? req.body.groupId ?? req.query.groupId ?? 0) || 0;
+    const categoryName = req.body.categoryname ?? req.body.categoryName ?? '';
+    const imagepath = req.body.imagepath || (req.file ? `uploads/category/${req.file.filename}` : '');
+    const createdby = req.body.createdby ?? req.body.createdBy ?? 1;
+
+    const data = await service.createCategory({
+      groupId,
+      categoryName,
+      imagepath,
+      createdby
+    }, req.file);
+
     res.json(
       ApiResponse.success(data, 'Category created successfully.')
     );
@@ -85,9 +96,15 @@ exports.getCategoryById = async (req, res, next) => {
  */
 exports.updateCategory = async (req, res, next) => {
   try {
+    const payload = {
+      categoryName: req.body.categoryname ?? req.body.categoryName ?? '',
+      imagepath: req.body.imagepath || (req.file ? `uploads/category/${req.file.filename}` : ''),
+      modifiedby: req.body.modifiedby ?? req.body.modifiedBy ?? 1
+    };
+
     const data = await service.updateCategory(
       req.params.id,
-      req.body,
+      payload,
       req.file
     );
 
