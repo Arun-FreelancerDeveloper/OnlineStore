@@ -31,11 +31,46 @@ export class ProductCategoryComponent implements OnInit {
   lstProductGroup: any[] = [];
   loading = false;
 
+  isEditMode = false;
+  categoryId!: number;
+
   constructor() {
     this.productCategoryForm = this.fb.group({
       groupId: [null, Validators.required],
       categoryName: ['', Validators.required],
-      image: [null]
+      imagepath: ''
+    });
+     this.categoryId = Number(this.route.snapshot.paramMap.get('id'));
+
+    if (this.categoryId) {
+      this.isEditMode = true;
+      this.loadCategoryDetails();
+    }
+  }
+
+  /* ----------------------------------
+   * LOAD Category FOR EDIT
+   * ---------------------------------- */
+  loadCategoryDetails(): void {
+    this.loading = true;
+
+    this.categoryService.getCategoryById(this.categoryId).subscribe({
+      next: (category) => {
+        this.productCategoryForm.patchValue({
+          groupId: category.groupid,
+          categoryId: category.categoryid,
+          categoryName: category.categoryname,
+          imagepath : category.imagepath
+        });
+        this.loading = false;
+      },
+      error: () => {
+        this.alert.error(
+          'Unable to load product category  ',
+          'Please try again.'
+        );
+        this.loading = false;
+      }
     });
   }
 
@@ -73,7 +108,7 @@ export class ProductCategoryComponent implements OnInit {
       groupId: this.productCategoryForm.value.groupId,
       categoryName: this.productCategoryForm.value.categoryName.trim(),
       createdBy: 1,
-      image: this.productCategoryForm.value.image
+      imagepath: this.productCategoryForm.value.imagepath
     };
 
     this.categoryService.createCategory(payload).subscribe({

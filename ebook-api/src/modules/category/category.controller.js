@@ -12,10 +12,11 @@ const ApiResponse = require('../../utils/apiResponse');
  */
 exports.createCategory = async (req, res, next) => {
   try {
-    const groupId = parseInt(req.body.groupid ?? req.body.groupId ?? req.query.groupId ?? 0) || 0;
-    const categoryName = req.body.categoryname ?? req.body.categoryName ?? '';
+    console.log('Request body:', req.body);
+    const groupId = parseInt(req.body.groupId ?? req.body.groupid ?? req.query.groupId ?? 0) || 0;
+    const categoryName = req.body.categoryName ?? req.body.categoryname ?? '';
     const imagepath = req.body.imagepath || (req.file ? `uploads/category/${req.file.filename}` : '');
-    const createdby = req.body.createdby ?? req.body.createdBy ?? 1;
+    const createdby = req.body.createdBy ?? req.body.createdby ?? 1;
 
     const data = await service.createCategory({
       groupId,

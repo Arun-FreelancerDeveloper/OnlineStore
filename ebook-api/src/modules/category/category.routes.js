@@ -11,6 +11,7 @@ const { uploadCategoryImage } = require('../../middlewares/upload.middleware');
 
 const {
   validateBody,
+  validateCreateCategory,
   validateParams,
   validateQuery,
   createCategorySchema,
@@ -41,21 +42,18 @@ const {
  *             type: object
  *             required:
  *               - groupId
- *               - categoryname
+ *               - categoryName
  *             properties:
  *               groupId:
  *                 type: integer
  *                 default: 0
- *               categoryname:
+ *               categoryName:
  *                 type: string
  *               createdBy:
  *                 type: integer
  *               imagePath:
  *                 type: string
  *                 default: content/Category/1/1-general-books.png
- *               image:
- *                 type: string
- *                 format: binary
  *     responses:
  *       200:
  *         description: Category created successfully
@@ -64,10 +62,20 @@ const {
  */
 router.post(
   '/',
-  uploadCategoryImage,
-  validateBody(createCategorySchema),
+  (req, res, next) => {
+    if (req.is('multipart/form-data')) {
+      return uploadCategoryImage(req, res, next);
+    }
+    next();
+  },
+  validateCreateCategory,
   controller.createCategory
 );
+// router.post(
+//   '/',
+//   validateBody(createCategorySchema),
+//   controller.createCategory
+// );
 
 /**
  * @swagger
@@ -180,7 +188,7 @@ router.get(
  */
 router.put(
   '/:id',
-  uploadCategoryImage,
+  // uploadCategoryImage,
   validateParams(getCategoryByIdSchema),
   validateBody(updateCategorySchema),
   controller.updateCategory

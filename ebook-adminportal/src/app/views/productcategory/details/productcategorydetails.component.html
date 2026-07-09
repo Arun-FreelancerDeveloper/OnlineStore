@@ -61,7 +61,7 @@
                 <td>{{ data.sno }}</td>
                 <td>{{ data.categoryname }}</td>
                 <td class="text-center">
-                  <button class="btn btn-sm btn-primary me-2" disabled>
+                  <button class="btn btn-sm btn-primary me-2" (click)="editCategory(data.categoryid)">
                     <i class="las la-edit"></i>
                   </button>
                   <button

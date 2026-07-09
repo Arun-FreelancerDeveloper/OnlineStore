@@ -1,14 +1,48 @@
 const Joi = require('joi');
 
+const normalizeCategoryPayload = (body = {}) => {
+  if (!body || typeof body !== 'object') {
+    return body;
+  }
+
+  const normalized = { ...body };
+
+  if (normalized.groupId === undefined && normalized.groupid !== undefined) {
+    normalized.groupId = normalized.groupid;
+  }
+
+  if (normalized.categoryName === undefined && normalized.categoryname !== undefined) {
+    normalized.categoryName = normalized.categoryname;
+  }
+
+  if (normalized.createdBy === undefined && normalized.createdby !== undefined) {
+    normalized.createdBy = normalized.createdby;
+  }
+
+  if (normalized.modifiedBy === undefined && normalized.modifiedby !== undefined) {
+    normalized.modifiedBy = normalized.modifiedby;
+  }
+
+  if (normalized.deletedBy === undefined && normalized.deletedby !== undefined) {
+    normalized.deletedBy = normalized.deletedby;
+  }
+
+  return normalized;
+};
+
 /**
  * Validation schema for creating a Category
  */
 const createCategorySchema = Joi.object({
-  groupid: Joi.number().integer().required(),
-  categoryname: Joi.string().min(2).max(100).required(),
+  groupId: Joi.number().integer().required(),
+  groupid: Joi.number().integer(),
+  categoryName: Joi.string().trim().min(2).max(100).required(),
+  categoryname: Joi.string().trim().min(2).max(100),
   imagepath: Joi.string().allow('', null),
-  createdby: Joi.number().integer().required()
-});
+  imagePath: Joi.string().allow('', null),
+  createdBy: Joi.number().integer().required(),
+  createdby: Joi.number().integer()
+}).unknown(true);
 
 /**
  * Validation schema for updating a Category
@@ -47,13 +81,50 @@ const getCategorysSchema = Joi.object({
  * Middleware to validate request body
  */
 const validateBody = (schema) => (req, res, next) => {
-  const { error, value } = schema.validate(req.body, { abortEarly: false });
+  const normalizedBody = normalizeCategoryPayload(req.body);
+  const { error, value } = schema.validate(normalizedBody, { abortEarly: false });
   if (error) {
     return res.status(400).json({
       success: false,
       message: error.details.map(d => d.message).join(', ')
     });
   }
+  req.body = value;
+  next();
+};
+
+const validateCreateCategory = (req, res, next) => {
+  const normalizedBody = normalizeCategoryPayload(req.body);
+  const groupId = normalizedBody.groupId ?? normalizedBody.groupid;
+  const categoryName = normalizedBody.categoryName ?? normalizedBody.categoryname;
+  const createdBy = normalizedBody.createdBy ?? normalizedBody.createdby;
+
+  if (groupId === undefined || groupId === null || groupId === '') {
+    return res.status(400).json({ success: false, message: '"groupId" is required' });
+  }
+
+  if (categoryName === undefined || categoryName === null || categoryName === '') {
+    return res.status(400).json({ success: false, message: '"categoryName" is required' });
+  }
+
+  if (createdBy === undefined || createdBy === null || createdBy === '') {
+    return res.status(400).json({ success: false, message: '"createdBy" is required' });
+  }
+
+  const { error, value } = createCategorySchema.validate({
+    ...normalizedBody,
+    groupId,
+    categoryName,
+    createdBy
+  }, { abortEarly: false });
+
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.details.map(d => d.message).join(', ')
+    });
+  }
+
   req.body = value;
   next();
 };
@@ -95,6 +166,7 @@ module.exports = {
   deleteCategorySchema,
   getCategorysSchema,
   validateBody,
+  validateCreateCategory,
   validateParams,
   validateQuery
 };

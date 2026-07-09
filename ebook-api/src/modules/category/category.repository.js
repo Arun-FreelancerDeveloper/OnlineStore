@@ -29,9 +29,11 @@ exports.createCategory = async (data) => {
       imagepath,
       isactive,
       createdby,
-      modifiedby
+      modifiedby,
+      deletedby,
+      delflag
     )
-    VALUES ($1, $2, $3, true, $4, 0)
+    VALUES ($1, $2, $3, true, $4, 0 , 0, 0)
     RETURNING
       categoryid   AS "categoryId",
       categoryname AS "categoryName",

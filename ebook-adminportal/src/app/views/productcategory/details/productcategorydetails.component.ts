@@ -3,9 +3,8 @@ import { ProductGroupService } from '@/app/core/service/productgroup.service';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { SweetAlertService } from '@/app/core/service/sweet-alert.service';
-
+import { Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-productcategorydetails',
   standalone: true,
@@ -18,11 +17,13 @@ export class ProductCategoryDetailsComponent implements OnInit {
   categoryGroupService = inject(ProductGroupService);
   categoryService = inject(CategoryService);
   alert = inject(SweetAlertService);
+    router = inject(Router);
 
   lstProductGroup: any[] = [];
   lstProductCategory: any[] = [];
   selectedGroupId: number | null = null;
   isLoading = false;
+
 
   ngOnInit(): void {
     this.loadProductCategoryGroup();
@@ -68,6 +69,12 @@ export class ProductCategoryDetailsComponent implements OnInit {
     });
   }
 
+  // Edit
+  editCategory(categoryId: number): void {
+   this.router.navigate(['/productcategory/edit', categoryId]);
+    
+  }
+
   deleteCategory(categoryId: number): void {
     this.categoryService.deleteCategory(categoryId, 1).subscribe({
       next: () => {
@@ -81,4 +88,6 @@ export class ProductCategoryDetailsComponent implements OnInit {
       }
     });
   }
+
+
 }
