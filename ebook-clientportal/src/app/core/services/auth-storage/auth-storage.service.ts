@@ -28,6 +28,29 @@ export class AuthStorageService {
     return this.storage.get<any>(KEYS.AUTH);
   }
 
+  getCurrentUser() : object {
+
+    let userId: number = 0;
+    try {
+      userId = this.storage.get<any>(KEYS.AUTH);
+    }
+    catch(e){
+      userId = 0;
+    }
+
+    let guestCartId : number = 0;
+    try {
+      guestCartId = this.storage.get<any>(KEYS.GUEST_CART_ID);
+    } catch (e) {
+      guestCartId = this.generateGuestCartId();
+    }
+
+     return {
+       userid : userId,
+       guestCartId : guestCartId
+     }
+  }
+
   // ================= TOKEN =================
   getToken(): string | null {
     const user = this.getUser();
@@ -64,7 +87,12 @@ export class AuthStorageService {
   }
 
   getGuestCartId(): number | null {
-    return this.storage.get<number>(KEYS.GUEST_CART_ID);
+    try {
+      return this.storage.get<number>(KEYS.GUEST_CART_ID);
+    }
+    catch (e) {
+      return this.generateGuestCartId();
+    }
   }
 
   ensureGuestCartId(): number {

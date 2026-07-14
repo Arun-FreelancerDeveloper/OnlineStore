@@ -83,6 +83,7 @@ export class HeaderComponent implements OnInit {
     this.mail = config.company.support.email;
 
     // 🔥 Load on start
+    this.authStorage.ensureGuestCartId();
     this.cartFacade.loadCartCount();
 
     // 🔥 Force UI update after data change

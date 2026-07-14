@@ -323,8 +323,8 @@ getCartTotalTax(): number {
    * Get product image URL
    */
   getProductImage(item: CartModel): string {
-    return item.image
-      ? `${this.config.api.imageUrl}/${item.image}`
+    return item.ishasclude
+      ? `${item.cludeimage}`
       : `${this.config.api.imageUrl}/images/default.jpg`;
   }
 

@@ -101,8 +101,13 @@ export class FlashSaleService {
    * MAP PRODUCT
    * ===================================================== */
   private mapProduct(item: any): FlashSaleProductModel {
+
     const imagePath = item?.productimage
       ? `${this.config.api.imageUrl}/${item.productimage}`
+      : this.DEFAULT_IMAGE;
+
+    const cludeImagePath = item?.productcludeimage
+      ? `${item.productcludeimage}`
       : this.DEFAULT_IMAGE;
 
     return {
@@ -113,7 +118,7 @@ export class FlashSaleService {
 
       productimage: imagePath,
       ishasclude: Boolean(item?.ishasclude),
-      cludeimage: imagePath,
+      cludeimage: cludeImagePath,
 
       groupid: item?.groupid ?? 0,
       groupname: item?.groupname ?? '',

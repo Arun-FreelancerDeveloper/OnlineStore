@@ -7,7 +7,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, Route } from '@angular/router';
 import { CategoryService } from '@/app/core/service/category.service';
 import { ProductGroupService } from '@/app/core/service/productgroup.service';
 import { SweetAlertService } from '@/app/core/service/sweet-alert.service';
@@ -15,7 +15,7 @@ import { SweetAlertService } from '@/app/core/service/sweet-alert.service';
 @Component({
   selector: 'app-productcategory',
   standalone: true,
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterLink, Route, FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './productcategory.component.html',
   styles: ``
 })
@@ -26,6 +26,7 @@ export class ProductCategoryComponent implements OnInit {
   private alert = inject(SweetAlertService);
   private fb = inject(UntypedFormBuilder);
   private router = inject(Router);
+  
 
   productCategoryForm: UntypedFormGroup;
   lstProductGroup: any[] = [];

@@ -20,11 +20,14 @@ export class CartFacadeService {
 
   cartCount$ = this.cartService.cartCount$;
 
+
   /* =====================================================
    * USER HELPER
    * ===================================================== */
-  private get user() {
-    return this.authStorage.getUser();
+  private get user(): any {
+    return this.authStorage.getCurrentUser();
+
+    
   }
 
   /* =====================================================
@@ -33,7 +36,7 @@ export class CartFacadeService {
   addToCart(productId: number, qty: number = 1): void {
 
     var userid = this.user?.userid ?? 0;
-    var guestcartid =  this.GUEST_USER_ID ?? 0; // ⚠️ handle guest cart logic in API
+    var guestcartid =  this.user?.guestCartId ?? 0; // ⚠️ handle guest cart logic in API
 
 
     const payload = {
@@ -68,9 +71,10 @@ export class CartFacadeService {
    * ===================================================== */
   removeFromCart(cartid: number): void {
 
-    //if (!this.user) return;
+        var userid = this.user?.userid ?? 0;
+    var guestcartid =  this.user?.guestCartId ?? 0; // ⚠️ handle guest cart logic in API
 
-    this.cartService.removeItem(cartid, this.user?.userid ?? 0).subscribe({
+    this.cartService.removeItem(cartid, userid ?? 0).subscribe({
       next: () => {
 
         this.alertService.success('Item removed from cart');
@@ -95,9 +99,12 @@ export class CartFacadeService {
    * LOAD CART COUNT (ON APP START)
    * ===================================================== */
   loadCartCount(): void {
-    this.cartService.loadCartCount(this.user?.userid ?? 0, this.GUEST_USER_ID).subscribe({
+      var userid = this.user?.userid ?? 0;
+    var guestcartid =  this.user?.guestCartId ?? 0; // ⚠️ handle guest cart logic in API
+
+    this.cartService.loadCartCount(userid ?? 0, guestcartid).subscribe({
       next: (res) => {
-        console.log('CART API RESPONSE:', res); // 👈 check this
+//console.log('CART API RESPONSE:', res); // 👈 check this
       },
       error: () => this.cartService.setCartCount(0)
     });
@@ -107,7 +114,9 @@ export class CartFacadeService {
  * LOAD CART (ON APP START)
  * ===================================================== */
   getCartItems() {
-    return this.cartService.getCartItems(this.user?.userid ?? 0, this.GUEST_USER_ID);
+    const userid = this.user?.userid ?? 0;
+    const guestcartid = this.user?.guestCartId ?? 0; // ⚠️ handle guest cart logic in API
+    return this.cartService.getCartItems(userid, guestcartid);
   }
 
 

@@ -12,8 +12,11 @@ export interface CartModel {
   displayprice: string;
   amount: number;
   displayamountprice: string;
+  ishasclude : Boolean;
+  cludeimage :  String;
   image: {
     imagepath: string;
+    cludeimage :  String;
     isprimary: boolean;
     productimageid: number;
   },

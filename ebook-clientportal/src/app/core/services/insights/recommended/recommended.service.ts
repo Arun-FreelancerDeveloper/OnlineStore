@@ -106,8 +106,8 @@ export class RecommendedService {
       ? `${this.config.api.imageUrl}/${item.productimage}`
       : this.DEFAULT_IMAGE;
 
-    const cludeImagePath = item?.productimage
-      ? `${this.config.api.imageUrl}/${item.productimage}`
+    const cludeImagePath = item?.productcludeimage
+      ? `${item.productcludeimage}`
       : this.DEFAULT_IMAGE;
 
     return {
