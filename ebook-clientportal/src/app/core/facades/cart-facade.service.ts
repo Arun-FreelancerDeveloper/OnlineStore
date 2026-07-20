@@ -35,7 +35,7 @@ export class CartFacadeService {
    * ===================================================== */
   addToCart(productId: number, qty: number = 1): void {
 
-    var userid = this.user?.userid ?? 0;
+    var userid = this.user?.userid?.userid ?? 0;
     var guestcartid =  this.user?.guestCartId ?? 0; // ⚠️ handle guest cart logic in API
 
 
@@ -71,7 +71,7 @@ export class CartFacadeService {
    * ===================================================== */
   removeFromCart(cartid: number): void {
 
-        var userid = this.user?.userid ?? 0;
+        var userid = this.user?.userid?.userid ?? 0;
     var guestcartid =  this.user?.guestCartId ?? 0; // ⚠️ handle guest cart logic in API
 
     this.cartService.removeItem(cartid, userid ?? 0).subscribe({
@@ -99,7 +99,7 @@ export class CartFacadeService {
    * LOAD CART COUNT (ON APP START)
    * ===================================================== */
   loadCartCount(): void {
-      var userid = this.user?.userid ?? 0;
+      var userid = this.user?.userid?.userid ?? 0;
     var guestcartid =  this.user?.guestCartId ?? 0; // ⚠️ handle guest cart logic in API
 
     this.cartService.loadCartCount(userid ?? 0, guestcartid).subscribe({
@@ -114,7 +114,7 @@ export class CartFacadeService {
  * LOAD CART (ON APP START)
  * ===================================================== */
   getCartItems() {
-    const userid = this.user?.userid ?? 0;
+    var userid = this.user?.userid?.userid ?? 0;
     const guestcartid = this.user?.guestCartId ?? 0; // ⚠️ handle guest cart logic in API
     return this.cartService.getCartItems(userid, guestcartid);
   }
