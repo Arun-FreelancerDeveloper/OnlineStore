@@ -6,8 +6,8 @@
     "debug": true
   },
   "api": {
-    "baseUrl": "https://api.jaysltd.mtgapps.in/api",
-    "imageUrl": "https://api.jaysltd.mtgapps.in",
+    "baseUrl": "https://api.jaysltd.com/api",
+    "imageUrl": "https://api.jaysltd.com",
     "timeout": 10000,
     "retryAttempts": 3,
     "defaultImage": "/core/assets/images/bg/1-general-books.png"
@@ -35,13 +35,13 @@
     },
     "contact": {
       "primaryPhone": "+17674484024",
-      "displayPhone": "+1 (767) 448-4025",
+      "displayPhone": "+1 (767) 448-4024",
       "email": "manager@jaysltd.net"
     },
     "support": {
       "email": "support@jaysltd.net",
       "phone": "tel:+17674484024",
-      "displayPhone": "+1 (767) 448-4025",
+      "displayPhone": "+1 (767) 448-4024",
       "workingHours": "Mon-Fri 9:00 AM - 5:00 PM",
       "mapLink" : "https://www.facebook.com/JaysLimited"
     },
@@ -103,7 +103,7 @@
   "security": {
     "enableCSP": true,
     "allowedDomains": [
-      "https://api.jaysltd.mtgapps.in/"
+      "https://api.jaysltd.com/"
     ]
   },
   "location" : {

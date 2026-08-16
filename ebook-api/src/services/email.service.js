@@ -38,11 +38,11 @@ const sendWelcomeEmail = async ({ email, fullname }) => {
       <td align="center" style="padding:30px 10px;">
         <table width="100%" cellpadding="0" cellspacing="0"
           style="max-width:600px; background:#ffffff; border-radius:8px; overflow:hidden;">
-          
+
           <!-- Logo -->
           <tr>
             <td align="center" style="padding:20px 0;">
-              <img src="https://jaysltd.mtgapps.in/assets/images/logo/logo-png3.png"
+              <img src="https://jaysltd.com/assets/images/logo/logo-png3.png"
                    alt="JAYS Online Store"
                    width="140"
                    style="display:block; border:0;" />
@@ -80,7 +80,7 @@ const sendWelcomeEmail = async ({ email, fullname }) => {
 
               <!-- CTA -->
               <div style="text-align:center; margin:30px 0;">
-                <a href="https://jaysltd.mtgapps.in"
+                <a href="https://jaysltd.com"
                    style="background:#1d799b; color:#ffffff; text-decoration:none;
                           padding:12px 26px; border-radius:5px;
                           font-size:16px; display:inline-block;">
@@ -153,7 +153,7 @@ const sendOrderEmail = async ({
           <!-- Logo -->
           <tr>
             <td align="center" style="padding:22px 0;">
-              <img src="https://jaysltd.mtgapps.in/assets/images/logo/logo-png3.png"
+              <img src="https://jaysltd.com/assets/images/logo/logo-png3.png"
                    alt="JAYS Online Store"
                    width="150"
                    style="display:block; border:0;" />
@@ -201,7 +201,7 @@ const sendOrderEmail = async ({
 
               <!-- CTA -->
               <div style="text-align:center; margin:30px 0;">
-                <a href="https://jaysltd.mtgapps.in/order/${order_id}"
+                <a href="https://jaysltd.com/order/${order_id}"
                    style="background:#1d799b;
                           color:#ffffff;
                           text-decoration:none;
@@ -279,7 +279,7 @@ const sendResetPasswordEmail = async ({ email, fullname, resetLink }) => {
           <!-- Logo -->
           <tr>
             <td align="center" style="padding:20px 0;">
-              <img src="https://jaysltd.mtgapps.in/assets/images/logo/logo-png3.png"
+              <img src="https://jaysltd.com/assets/images/logo/logo-png3.png"
                    alt="JAYS Online Store"
                    width="150"
                    style="display:block; border:0;" />
