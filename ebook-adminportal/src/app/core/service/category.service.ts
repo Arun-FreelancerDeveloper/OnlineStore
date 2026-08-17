@@ -22,7 +22,7 @@ export class CategoryService {
         map(res =>
           (res.data?.data || []).map(item => ({
             categoryid: item.categoryid,
-            categoryname: item.categoryname
+            categoryname: item.categoryname,
             groupid: item.groupid,
             imagepath: item.imagepath
           }))
@@ -37,7 +37,7 @@ export class CategoryService {
       .pipe(
         map(res => ({
           categoryid: res.data.categoryid,
-          categoryname: res.data.categoryname
+          categoryname: res.data.categoryname,
           groupid: res.data.groupid,
           imagepath: res.data.imagepath
         }))
