@@ -23,6 +23,8 @@ export class CategoryService {
           (res.data?.data || []).map(item => ({
             categoryid: item.categoryid,
             categoryname: item.categoryname
+            groupid: item.groupid,
+            imagepath: item.imagepath
           }))
         ),
         shareReplay(1)
@@ -36,6 +38,8 @@ export class CategoryService {
         map(res => ({
           categoryid: res.data.categoryid,
           categoryname: res.data.categoryname
+          groupid: res.data.groupid,
+          imagepath: res.data.imagepath
         }))
       );
   }
